@@ -1,16 +1,13 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
-import android.databinding.ObservableField
-import android.databinding.ObservableFloat
-
 /**
  * 一つ一つのタイマー用モデル.
  * @param seconds 残り秒数.
  */
-data class TimerModel(var seconds: Float) {
+class TimerModel(var seconds: Float) {
 
     /// タイマー表記の文字列.
-    var text = ObservableField<String>(formatSeconds())
+    var text : String = formatSeconds(seconds)
 
     /**
      * 時間を経過させる.
@@ -19,7 +16,7 @@ data class TimerModel(var seconds: Float) {
     fun tick(deltaSeconds :Float) {
         val nextSeconds = seconds - deltaSeconds;
         seconds = if(nextSeconds > 0.0f) nextSeconds else 0.0f
-        text.set(formatSeconds())
+        text = formatSeconds(seconds)
     }
 
     /**
@@ -30,7 +27,7 @@ data class TimerModel(var seconds: Float) {
     /**
      * 内部の秒数をテキストに変換する.
      */
-    private fun formatSeconds() :String {
+    private fun formatSeconds(seconds: Float):String {
         val minutesInt = seconds.toInt() / 60
         val secondsInt = seconds.toInt() % 60
         return "%02d:%02d".format(minutesInt, secondsInt)
