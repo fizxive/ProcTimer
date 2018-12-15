@@ -1,13 +1,18 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
+import android.databinding.BaseObservable
+import android.databinding.Bindable
+
 /**
  * 一つ一つのタイマー用モデル.
  * @param seconds 残り秒数.
  */
-class TimerModel(var seconds: Float) {
+class TimerModel(var seconds: Float) : BaseObservable() {
 
-    /// タイマー表記の文字列.
+    /// タイマー表記の文字列. (外部からは読み込み専用)
+    @Bindable
     var text : String = formatSeconds(seconds)
+    private set
 
     /**
      * 時間を経過させる.

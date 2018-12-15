@@ -7,11 +7,11 @@
         tools:context=".ui.timer.TimerFragment">
 
     <data>
-        <variable name="primaryTimer" type="com.imaginaryrhombus.proctimer.ui.timer.TimerModel"/>
+        <variable name="timerViewModel" type="com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel"/>
     </data>
 
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="13dp"
             android:layout_height="wrap_content"
-            android:text="@{primaryTimer.text}" />
+            android:text="@{timerViewModel.timerText}"/>
 </layout>
