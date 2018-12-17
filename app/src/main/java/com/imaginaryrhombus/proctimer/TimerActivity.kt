@@ -14,6 +14,16 @@ class TimerActivity : AppCompatActivity() {
                 .replace(R.id.container, TimerFragment.newInstance())
                 .commitNow()
         }
+        instance = this
+    }
+
+    companion object {
+
+        private var instance : TimerActivity? = null
+        fun getTimerActivity() : TimerActivity? {
+            return instance
+        }
+
     }
 
 }
