@@ -13,5 +13,5 @@
     <TextView
             android:layout_width="13dp"
             android:layout_height="wrap_content"
-            android:text="@{timerViewModel.timerText}"/>
+            android:text="@{timerViewModel.toString()}"/>
 </layout>
