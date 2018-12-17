@@ -1,7 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.arch.lifecycle.ViewModelProviders
-import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -23,7 +22,6 @@ class TimerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         var binding = DataBindingUtil.inflate<TimerFragmentBinding>(inflater, R.layout.timer_fragment, container, false)
         return binding.root
     }
