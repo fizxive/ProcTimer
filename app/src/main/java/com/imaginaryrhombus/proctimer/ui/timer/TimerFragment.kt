@@ -32,11 +32,8 @@ class TimerFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
 
-        val timerTextObserver = Observer<String> { timerText ->
-            binding.timerText = timerText
-        }
-
-        viewModel.timerText.observe(this, timerTextObserver)
+        binding.timerViewModel = viewModel
+        binding.setLifecycleOwner(this)
 
         viewModel.startTick()
     }
