@@ -1,6 +1,5 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.imaginaryrhombus.proctimer.TimerActivity
@@ -15,7 +14,8 @@ class TimerModel : Closeable {
     var seconds = 0.0f
 
     /// タイマー表記の文字列. (外部からは読み込み専用)
-    var text : String = updateText()
+    /// TODO : TimerViewModel に移したほうがいい?
+    var text : String = ""
     private set
 
     /// ローカルデータ読み書き用.
@@ -26,6 +26,7 @@ class TimerModel : Closeable {
             PreferenceManager.getDefaultSharedPreferences(context).let { preferences ->
                 seconds = preferences.getFloat("seconds", 5 * 60.0f)
                 sharedPreferences = preferences
+                updateText()
             }
         }
     }
@@ -43,7 +44,7 @@ class TimerModel : Closeable {
     fun tick(deltaSeconds :Float) {
         val nextSeconds = seconds - deltaSeconds;
         seconds = if(nextSeconds > 0.0f) nextSeconds else 0.0f
-        text = updateText()
+        updateText()
     }
 
     /**
@@ -54,9 +55,9 @@ class TimerModel : Closeable {
     /**
      * 内部の秒数をテキストに変換する.
      */
-    private fun updateText():String {
+    private fun updateText() {
         val minutesInt = seconds.toInt() / 60
         val secondsInt = seconds.toInt() % 60
-        return "%02d:%02d".format(minutesInt, secondsInt)
+        text =  "%02d:%02d".format(minutesInt, secondsInt)
     }
 }

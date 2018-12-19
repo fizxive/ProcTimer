@@ -26,8 +26,6 @@ class TimerViewModel : ViewModel() {
      */
     class TimeTicker {
 
-        private val calender : Calendar = Calendar.getInstance(Locale.getDefault())
-
         private var prevMilliseconds = 0L
 
         var latestTick = 0.0f
@@ -38,7 +36,7 @@ class TimerViewModel : ViewModel() {
         }
 
         fun tick() {
-            val currentMilliseconds = calender.timeInMillis
+            val currentMilliseconds = Calendar.getInstance(Locale.getDefault()).timeInMillis
             val deltaMilliseconds = currentMilliseconds - prevMilliseconds
 
             latestTick = deltaMilliseconds / 1000.0f
@@ -48,14 +46,14 @@ class TimerViewModel : ViewModel() {
         }
 
         fun setPrevious() {
-            prevMilliseconds = calender.timeInMillis
+            prevMilliseconds = Calendar.getInstance(Locale.getDefault()).timeInMillis
         }
     }
 
     private var timeTicker = TimeTicker()
 
     /// 時間経過用のワーカー.
-    val tickRunner = object : Runnable {
+    private val tickRunner = object : Runnable {
 
         override fun run() {
 
@@ -69,6 +67,7 @@ class TimerViewModel : ViewModel() {
 
     init {
         timer.value = TimerModel()
+        startTick()
     }
 
     fun startTick() {
