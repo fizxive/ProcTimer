@@ -11,7 +11,10 @@ import java.util.*
 class TimerViewModel : ViewModel() {
 
     /// タイマー本体.(外部からの直接設定をしないようにする)
-    var timer = MutableLiveData<TimerModel>()
+    private var timer = TimerModel()
+
+    /// タイマーのテキスト化したときの表記.
+    var timerText = MutableLiveData<String>()
     private set
 
     /// 時間経過の判定を行う間隔.
@@ -59,14 +62,15 @@ class TimerViewModel : ViewModel() {
 
             timeTicker.tick()
 
-            timer.value!!.tick(timeTicker.latestTick)
+            timer.tick(timeTicker.latestTick)
+
+            updateText()
 
             tickHandler.postDelayed(this, tickInterval)
         }
     }
 
     init {
-        timer.value = TimerModel()
         startTick()
     }
 
@@ -77,5 +81,12 @@ class TimerViewModel : ViewModel() {
 
     fun stopTick() {
         tickHandler.removeCallbacks(tickRunner)
+    }
+
+    fun updateText() {
+        val timerSecondsInt = timer.seconds.toInt()
+        val minutes = timerSecondsInt / 60
+        val seconds = timerSecondsInt % 60
+        timerText.postValue("%02d:%02d".format(minutes, seconds))
     }
 }

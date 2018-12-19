@@ -1,5 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -30,6 +31,12 @@ class TimerFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
+
+        val timerTextObserver = Observer<String> { timerText ->
+            binding.timerText = timerText
+        }
+
+        viewModel.timerText.observe(this, timerTextObserver)
 
         viewModel.startTick()
     }
