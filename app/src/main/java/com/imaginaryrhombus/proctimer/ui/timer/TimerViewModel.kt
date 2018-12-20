@@ -1,57 +1,27 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.os.Handler
-import java.util.*
 
 /**
  * タイマー用の ViewModel.
  */
-class TimerViewModel : ViewModel() {
-
-    /// タイマー本体.(外部からの直接設定をしないようにする)
-    private var timer = TimerModel()
+class TimerViewModel(app : Application) : AndroidViewModel(app) {
 
     /// タイマーのテキスト化したときの表記.
     var timerText = MutableLiveData<String>()
-    private set
-
-    /// 時間経過の判定を行う間隔.
-    val tickInterval = 10L
-
-    /// 時間経過用のハンドラ.
-    val tickHandler = Handler()
-
-    /**
-     * 時間経過を司る内部クラス
-     * TODO : 別ファイルにする. テストしやすくするため.
-     */
-    class TimeTicker {
-
-        private var prevMilliseconds = 0L
-
-        var latestTick = 0.0f
         private set
 
-        init {
-            setPrevious()
-        }
+    /// タイマー本体.(外部からの直接設定をしないようにする)
+    private val timer = TimerModel(app.applicationContext)
 
-        fun tick() {
-            val currentMilliseconds = Calendar.getInstance(Locale.getDefault()).timeInMillis
-            val deltaMilliseconds = currentMilliseconds - prevMilliseconds
+    /// 時間経過の判定を行う間隔.
+    private val tickInterval = 10L
 
-            latestTick = deltaMilliseconds / 1000.0f
-            prevMilliseconds = currentMilliseconds
-
-            setPrevious()
-        }
-
-        fun setPrevious() {
-            prevMilliseconds = Calendar.getInstance(Locale.getDefault()).timeInMillis
-        }
-    }
+    /// 時間経過用のハンドラ.
+    private val tickHandler = Handler()
 
     private var timeTicker = TimeTicker()
 
@@ -83,7 +53,7 @@ class TimerViewModel : ViewModel() {
         tickHandler.removeCallbacks(tickRunner)
     }
 
-    fun updateText() {
+    private fun updateText() {
         val timerSecondsInt = timer.seconds.toInt()
         val minutes = timerSecondsInt / 60
         val seconds = timerSecondsInt % 60

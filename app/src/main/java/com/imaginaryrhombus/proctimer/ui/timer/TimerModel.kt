@@ -1,27 +1,26 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.imaginaryrhombus.proctimer.TimerActivity
+import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import java.io.Closeable
 
 /**
  * 一つ一つのタイマー用モデル.
  */
-class TimerModel : Closeable {
+class TimerModel(context : Context) : Closeable {
 
     /// 残り秒数.
     var seconds = 0.0f
 
     /// ローカルデータ読み書き用.
-    private var sharedPreferences : SharedPreferences? = null
+    private val sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
     init {
-        TimerActivity.getTimerActivity()?.applicationContext?.let { context ->
-            PreferenceManager.getDefaultSharedPreferences(context).let { preferences ->
-                seconds = preferences.getFloat("seconds", 5 * 60.0f)
-                sharedPreferences = preferences
-            }
+        sharedPreferences?.let { preferences ->
+            seconds = preferences.getFloat("seconds", 5 * 60.0f)
         }
     }
 
@@ -36,7 +35,7 @@ class TimerModel : Closeable {
      * @param deltaSeconds 経過時間.
      */
     fun tick(deltaSeconds :Float) {
-        val nextSeconds = seconds - deltaSeconds;
+        val nextSeconds = seconds - deltaSeconds
         seconds = if(nextSeconds > 0.0f) nextSeconds else 0.0f
     }
 
