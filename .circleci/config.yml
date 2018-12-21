@@ -2,12 +2,26 @@ version: 2
 jobs:
     build:
         docker:
-            - image: debian:stretch
+            - image: circleci/android:api-28
+        enviroment:
+            JVM_OPTS : -Xmx3200m
         steps:
             - checkout
+            - restre_cache:
+                key : jars-{{ checksum "build.gradle" }}-{{ checksum "ProcTimer/build.gradle" }}
             - run :
-                name : Greeting
-                command : echo Hello, world.
+                name : Download Dependencies
+                command : ./gradlew androidDependencies
+            - save_cache :
+                paths :
+                    - ~/.gradle
+                key : jars-{{ checksum "build.gradle" }}-{{ checksum "ProcTimer/build.gradle" }}
             - run :
-                name : Print the Current Time
-                command : date
+                name : Run Tests
+                command : ./gradlew lint test
+            - store_artifacts :
+                path : ProcTimer/build/reports
+                destination : reports
+            - store_test_results :
+                path : ProcTimer/build/test-results
+
