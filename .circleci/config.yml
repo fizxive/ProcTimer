@@ -3,13 +3,15 @@ jobs:
     build:
         working_directory : ~/code
         docker:
-            - image: circleci/android:api-28
+            - image: circleci/android:latest
         enviroment:
             JVM_OPTS : -Xmx3200m
         steps:
             - checkout
             - restore_cache:
-                key : jars-{{ checksum "build.gradle" }}-{{ checksum "ProcTimer/build.gradle" }}
+                keys : 
+                    - jars-{{ checksum "build.gradle" }}-{{ checksum "ProcTimer/build.gradle" }}
+                    - jars-
             - run :
                 name : Download Dependencies
                 command : ./gradlew androidDependencies
