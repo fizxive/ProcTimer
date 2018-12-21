@@ -8,6 +8,9 @@ jobs:
             JVM_OPTS : -Xmx4G
         steps:
             - checkout
+            - run : 
+                name : Chmod permissions
+                command : sudo chmod +x ./gradlew
             - restore_cache:
                 keys : 
                     - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
