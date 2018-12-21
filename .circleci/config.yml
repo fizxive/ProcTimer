@@ -5,12 +5,12 @@ jobs:
         docker:
             - image: circleci/android:api-28
         enviroment:
-            JVM_OPTS : -Xmx3200m
+            JVM_OPTS : -Xmx4G
         steps:
             - checkout
             - restore_cache:
                 keys : 
-                    - jars-{{ checksum "build.gradle" }}-{{ checksum "ProcTimer/build.gradle" }}
+                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
                     - jars-
             - run :
                 name : Download Dependencies
@@ -18,13 +18,13 @@ jobs:
             - save_cache :
                 paths :
                     - ~/.gradle
-                key : jars-{{ checksum "build.gradle" }}-{{ checksum "ProcTimer/build.gradle" }}
+                key : jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             - run :
                 name : Run Tests
                 command : ./gradlew lint test
             - store_artifacts :
-                path : ProcTimer/build/reports
+                path : app/build/reports
                 destination : reports
             - store_test_results :
-                path : ProcTimer/build/test-results
+                path : app/build/test-results
 
