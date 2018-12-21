@@ -29,7 +29,7 @@ class TimerModelTest {
     private fun createTimerModel(seconds : Float) : TimerModel {
         val context = testActivity.applicationContext
         context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
-            .edit().putFloat(TimerConstants.PREFERENCE_PARAM_SEC_NAME, seconds)
+            .edit().putFloat(TimerConstants.PREFERENCE_PARAM_SEC_NAME, seconds).apply()
         return TimerModel(context)
     }
 
