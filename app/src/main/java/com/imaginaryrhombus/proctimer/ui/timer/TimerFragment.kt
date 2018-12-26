@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
+import kotlinx.android.synthetic.main.timer_fragment.*
 
 class TimerFragment : Fragment() {
 
@@ -35,6 +36,12 @@ class TimerFragment : Fragment() {
         binding.timerViewModel = viewModel
         binding.setLifecycleOwner(this)
 
-        viewModel.startTick()
+        startButton.setOnClickListener {
+            viewModel.startTick()
+        }
+
+        stopButton.setOnClickListener {
+            viewModel.stopTick()
+        }
     }
 }

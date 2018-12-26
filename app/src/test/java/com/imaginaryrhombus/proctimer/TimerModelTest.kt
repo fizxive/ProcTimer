@@ -17,6 +17,7 @@ const val TEST_TIMES : Int = 50
 class TimerModelTest {
 
     /// テスト用の Activity.
+    /// MEMO : ActivityController は今は不要なので buildActivity() ではなく setupActivity() を使用する.
     private val testActivity = Robolectric.setupActivity(TimerActivity::class.java)!!
 
     /// 秒数設定のための無作為な少数を生成する.
