@@ -18,6 +18,7 @@ class TimerModel(context : Context) : Closeable {
     init {
         sharedPreferences?.let { preferences ->
             seconds = preferences.getFloat("seconds", 30.0f)
+            adjustSeconds()
         }
     }
 
@@ -30,12 +31,19 @@ class TimerModel(context : Context) : Closeable {
      * @param deltaSeconds 経過時間.
      */
     fun tick(deltaSeconds :Float) {
-        val nextSeconds = seconds - deltaSeconds
-        seconds = if(nextSeconds > 0.0f) nextSeconds else 0.0f
+        seconds -= deltaSeconds
+        adjustSeconds()
     }
 
     /**
      * 現在のタイマーが終了しているか.
      */
     fun isEnded() : Boolean {return seconds <= 0.0f}
+
+    /**
+     * 負の値になっていたら修正する.
+     */
+    private fun adjustSeconds() {
+        if (seconds < 0.0f) seconds = 0.0f
+    }
 }

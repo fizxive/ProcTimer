@@ -5,8 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import android.os.Handler
 import android.widget.Toast
-import kotlin.math.nextUp
-import kotlin.math.roundToInt
+import java.util.concurrent.TimeUnit
 
 /**
  * タイマー用の ViewModel.
@@ -71,10 +70,10 @@ class TimerViewModel(val app : Application) : AndroidViewModel(app) {
     }
 
     private fun updateText() {
-        val milliseconds = (timer.seconds * 1000.0f).toInt() % 1000
-        val timerSecondsInt = timer.seconds.toInt()
-        val minutes = timerSecondsInt / 60
-        val seconds = timerSecondsInt % 60
+        val timerMilliseconds = timer.seconds.times(1000.0f).toLong()
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
+        val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
         timerText.postValue("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
     }
 }
