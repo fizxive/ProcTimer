@@ -1,14 +1,16 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import android.os.Handler
+import android.widget.Toast
+import java.util.concurrent.TimeUnit
 
 /**
  * タイマー用の ViewModel.
  */
-class TimerViewModel(app : Application) : AndroidViewModel(app) {
+class TimerViewModel(val app : Application) : AndroidViewModel(app) {
 
     /// タイマーのテキスト化したときの表記.
     var timerText = MutableLiveData<String>()
@@ -36,27 +38,42 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
 
             updateText()
 
-            tickHandler.postDelayed(this, tickInterval)
+            if (timer.isEnded()) {
+                /// TODO : ダイアログを表示するなどしたい. Fragment に委ねる?
+                Toast.makeText(app.applicationContext, "Timer Ended", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                tickHandler.postDelayed(this, tickInterval)
+            }
         }
     }
 
+    private var isTicking = false
+
     init {
-        startTick()
+        updateText()
     }
 
     fun startTick() {
         timeTicker.setPrevious()
-        tickHandler.post(tickRunner)
+        if (isTicking.not()) {
+            tickHandler.post(tickRunner)
+            isTicking = true
+        }
     }
 
     fun stopTick() {
-        tickHandler.removeCallbacks(tickRunner)
+        if (isTicking) {
+            tickHandler.removeCallbacks(tickRunner)
+            isTicking = false
+        }
     }
 
     private fun updateText() {
-        val timerSecondsInt = timer.seconds.toInt()
-        val minutes = timerSecondsInt / 60
-        val seconds = timerSecondsInt % 60
-        timerText.postValue("%02d:%02d".format(minutes, seconds))
+        val timerMilliseconds = timer.seconds.times(1000.0f).toLong()
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
+        val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
+        timerText.postValue("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
     }
 }

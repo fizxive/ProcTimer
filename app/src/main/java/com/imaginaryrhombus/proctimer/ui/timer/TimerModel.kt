@@ -1,9 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import com.imaginaryrhombus.proctimer.TimerActivity
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import java.io.Closeable
 
@@ -20,14 +17,13 @@ class TimerModel(context : Context) : Closeable {
 
     init {
         sharedPreferences?.let { preferences ->
-            seconds = preferences.getFloat("seconds", 5 * 60.0f)
+            seconds = preferences.getFloat("seconds", 30.0f)
+            adjustSeconds()
         }
     }
 
     override fun close() {
-        sharedPreferences?.let { preferences ->
-            preferences.edit().putFloat("seconds", seconds).apply()
-        }
+        sharedPreferences?.edit()?.putFloat("seconds", seconds)?.apply()
     }
 
     /**
@@ -35,12 +31,19 @@ class TimerModel(context : Context) : Closeable {
      * @param deltaSeconds 経過時間.
      */
     fun tick(deltaSeconds :Float) {
-        val nextSeconds = seconds - deltaSeconds
-        seconds = if(nextSeconds > 0.0f) nextSeconds else 0.0f
+        seconds -= deltaSeconds
+        adjustSeconds()
     }
 
     /**
      * 現在のタイマーが終了しているか.
      */
-    fun isEnded() {seconds <= 0.0f}
+    fun isEnded() : Boolean {return seconds <= 0.0f}
+
+    /**
+     * 負の値になっていたら修正する.
+     */
+    private fun adjustSeconds() {
+        if (seconds < 0.0f) seconds = 0.0f
+    }
 }
