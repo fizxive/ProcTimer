@@ -7,7 +7,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
 /// テスト試行回数.
-const val TEST_TIMES : Int = 50
+const val TEST_TIMES : Int = 10
 
 @RunWith(RobolectricTestRunner::class)
 class TimerModelTest {
