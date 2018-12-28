@@ -24,7 +24,7 @@ class TimerModelTest {
         repeat(TEST_TIMES, fun (_: Int) {
             val testSeconds = TimerModelTestUtility.getRandomFloat()
             val timerModel = TimerModelTestUtility.createTimerModel(testSeconds, testActivity)
-            assertEquals(testSeconds, timerModel.seconds)
+            assertEquals(testSeconds, timerModel.seconds.value)
         })
     }
 
@@ -38,10 +38,33 @@ class TimerModelTest {
             val testTickSeconds = TimerModelTestUtility.getRandomFloat() / 2
             val timerModel = TimerModelTestUtility.createTimerModel(testSeconds, testActivity)
 
-            timerModel.tick(testTickSeconds)
+            /// private メソッドのテストになるのでリフレクションを使用してテスト.
+            val tickMethod = timerModel.javaClass.getDeclaredMethod("tick", Float::class.java)
+            tickMethod.isAccessible = true
+            tickMethod.invoke(timerModel, testTickSeconds)
 
             val actualSeconds = if(testSeconds > testTickSeconds) testSeconds - testTickSeconds else 0.0f
-            assertEquals(actualSeconds, timerModel.seconds)
+            assertEquals(actualSeconds, timerModel.seconds.value)
         })
+    }
+
+    /// 秒数が正常にフォーマットされているか.
+    @Test
+    fun testText() {
+
+        fun testImpl(seconds : Float, timerText : String) {
+            TimerModelTestUtility.createTimerModel(seconds, testActivity).run {
+                assertEquals(text.value, timerText)
+            }
+        }
+
+        testImpl(30.0f, "00:30.000")
+        testImpl(60.0f, "01:00.000")
+        testImpl(75.0f, "01:15.000")
+        testImpl(0.0f, "00:00.000")
+        testImpl(-10.0f, "00:00.000")
+        testImpl(10.110f, "00:10.110")
+        testImpl(60.085f, "01:00.085")
+        testImpl(66.666f, "01:06.666")
     }
 }
