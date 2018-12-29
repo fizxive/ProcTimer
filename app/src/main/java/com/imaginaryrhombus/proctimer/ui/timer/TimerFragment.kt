@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
+import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
 
 class TimerFragment : Fragment() {
@@ -42,6 +43,11 @@ class TimerFragment : Fragment() {
 
         stopButton.setOnClickListener {
             viewModel.stopTick()
+        }
+
+        currentTimerText.setOnClickListener {
+            val pickerFragment = TimerPickerFragment()
+            pickerFragment.show(fragmentManager, "PickerDialog")
         }
     }
 }

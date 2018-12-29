@@ -25,6 +25,4 @@ class TimerViewModel(val app : Application) : AndroidViewModel(app) {
     fun stopTick() {
         timer.stopTick()
     }
-
-    /// TODO : タイマーを変更するために新しい Fragment を追加して、ここで開いて Model を修正するようにしたい.
 }
