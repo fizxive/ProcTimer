@@ -25,6 +25,7 @@ class TimerModelTest {
             val testSeconds = TimerModelTestUtility.getRandomFloat()
             val timerModel = TimerModelTestUtility.createTimerModel(testSeconds, testActivity)
             assertEquals(testSeconds, timerModel.seconds.value)
+            assertEquals(timerModel.isEnded, testSeconds <= 0.0f)
         })
     }
 
@@ -44,7 +45,8 @@ class TimerModelTest {
             tickMethod.invoke(timerModel, testTickSeconds)
 
             val actualSeconds = if(testSeconds > testTickSeconds) testSeconds - testTickSeconds else 0.0f
-            assertEquals(actualSeconds, timerModel.seconds.value)
+            assertEquals(timerModel.seconds.value, actualSeconds)
+            assertEquals(timerModel.isEnded, actualSeconds <= 0.0f)
         })
     }
 
