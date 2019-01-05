@@ -1,5 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
+import android.content.res.Resources
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
@@ -32,7 +33,10 @@ class TimerFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
+
+        activity?.run {
+            viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
+        } ?: throw Resources.NotFoundException("Activity Not found.")
 
         binding.timerViewModel = viewModel
         binding.setLifecycleOwner(this)
