@@ -21,7 +21,7 @@ class TimerModel(context : Context) : Closeable {
     set(value) {
         field = value
         if (field < 0.0f) field = 0.0f
-        seconds.value = field
+        seconds.postValue(field)
         updateText()
     }
 
