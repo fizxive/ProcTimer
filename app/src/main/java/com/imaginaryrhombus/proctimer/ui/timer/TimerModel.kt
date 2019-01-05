@@ -46,6 +46,14 @@ class TimerModel(context : Context) : Closeable {
     }
 
     /**
+     * 秒数を設定する.
+     */
+    fun setSeconds(seconds: Float) {
+        if (isTicking) stopTick()
+        _seconds = seconds
+    }
+
+    /**
      * 時間を経過させる.
      * @param deltaSeconds 経過時間.
      */
