@@ -7,7 +7,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
 /// テスト試行回数.
-const val TEST_TIMES : Int = 50
+const val TEST_TIMES : Int = 10
 
 @RunWith(RobolectricTestRunner::class)
 class TimerModelTest {
@@ -24,7 +24,8 @@ class TimerModelTest {
         repeat(TEST_TIMES, fun (_: Int) {
             val testSeconds = TimerModelTestUtility.getRandomFloat()
             val timerModel = TimerModelTestUtility.createTimerModel(testSeconds, testActivity)
-            assertEquals(testSeconds, timerModel.seconds)
+            assertEquals(testSeconds, timerModel.seconds.value)
+            assertEquals(timerModel.isEnded, testSeconds <= 0.0f)
         })
     }
 
@@ -38,10 +39,53 @@ class TimerModelTest {
             val testTickSeconds = TimerModelTestUtility.getRandomFloat() / 2
             val timerModel = TimerModelTestUtility.createTimerModel(testSeconds, testActivity)
 
-            timerModel.tick(testTickSeconds)
+            /// private メソッドのテストになるのでリフレクションを使用してテスト.
+            val tickMethod = timerModel.javaClass.getDeclaredMethod("tick", Float::class.java)
+            tickMethod.isAccessible = true
+            tickMethod.invoke(timerModel, testTickSeconds)
 
             val actualSeconds = if(testSeconds > testTickSeconds) testSeconds - testTickSeconds else 0.0f
-            assertEquals(actualSeconds, timerModel.seconds)
+            assertEquals(timerModel.seconds.value, actualSeconds)
+            assertEquals(timerModel.isEnded, actualSeconds <= 0.0f)
         })
+    }
+
+    /// 秒数が正常にフォーマットされているか.
+    @Test
+    fun testText() {
+
+        fun testImpl(seconds : Float, timerText : String) {
+            TimerModelTestUtility.createTimerModel(seconds, testActivity).run {
+                assertEquals(text.value, timerText)
+            }
+        }
+
+        testImpl(30.0f, "00:30.000")
+        testImpl(60.0f, "01:00.000")
+        testImpl(75.0f, "01:15.000")
+        testImpl(0.0f, "00:00.000")
+        testImpl(-10.0f, "00:00.000")
+        testImpl(10.110f, "00:10.110")
+        testImpl(60.085f, "01:00.085")
+        testImpl(66.666f, "01:06.666")
+    }
+
+    @Test
+    fun setSecondsTest() {
+
+        val model = TimerModelTestUtility.createTimerModel(5.0f, testActivity)
+        assertEquals(model.seconds.value, 5.0f)
+
+        model.setSeconds(99.0f)
+        assertEquals(model.seconds.value, 99.0f)
+        assertFalse(model.isEnded)
+
+        model.setSeconds(0.0f)
+        assertEquals(model.seconds.value, 0.0f)
+        assertTrue(model.isEnded)
+
+        model.setSeconds(-1.0f)
+        assertEquals(model.seconds.value, 0.0f)
+        assertTrue(model.isEnded)
     }
 }
