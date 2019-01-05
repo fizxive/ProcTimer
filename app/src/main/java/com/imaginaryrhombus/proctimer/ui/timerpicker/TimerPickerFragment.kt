@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.imaginaryrhombus.proctimer.R
+import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
+import kotlinx.android.synthetic.main.timer_picker_fragment.*
 import kotlinx.android.synthetic.main.timer_picker_fragment.view.*
 
 class TimerPickerFragment : DialogFragment() {
@@ -18,8 +20,7 @@ class TimerPickerFragment : DialogFragment() {
     companion object {
         fun newInstance() = TimerPickerFragment()
     }
-
-    private lateinit var viewModel: TimerPickerViewModel
+    private lateinit var timerViewModel: TimerViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,12 +75,6 @@ class TimerPickerFragment : DialogFragment() {
         }
 
         return builder.create()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(TimerPickerViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 }
