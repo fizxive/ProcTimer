@@ -2,11 +2,12 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.Application
 import androidx.lifecycle.*
+import java.util.concurrent.TimeUnit
 
 /**
  * タイマー用の ViewModel.
  */
-class TimerViewModel(val app : Application) : AndroidViewModel(app) {
+class TimerViewModel(app : Application) : AndroidViewModel(app) {
 
     /// タイマー本体.(外部からの直接設定をしないようにする)
     var timer = TimerModel(app.applicationContext)
@@ -24,5 +25,24 @@ class TimerViewModel(val app : Application) : AndroidViewModel(app) {
      */
     fun stopTick() {
         timer.stopTick()
+    }
+
+    /**
+     * テキスト情報からタイマーを設定する.
+     */
+    fun setTimerFrom(minutes: String, seconds: String) {
+        val minutesLong = minutes.toLong()
+        val secondsLong = seconds.toLong()
+
+        timer.setSeconds((TimeUnit.MINUTES.toSeconds(minutesLong) + secondsLong).toFloat())
+    }
+
+    /**
+     * タイマー情報からテキスト情報に変換する.
+     * @return 分、秒の順番で格納された文字列.
+     */
+    fun toTimerString() : Pair<String, String> {
+        val secondsLong = timer.seconds.value!!.toLong()
+        return Pair((secondsLong / 60).toString(), (secondsLong % 60).toString())
     }
 }
