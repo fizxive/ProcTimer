@@ -69,4 +69,23 @@ class TimerModelTest {
         testImpl(60.085f, "01:00.085")
         testImpl(66.666f, "01:06.666")
     }
+
+    @Test
+    fun setSecondsTest() {
+
+        val model = TimerModelTestUtility.createTimerModel(5.0f, testActivity)
+        assertEquals(model.seconds.value, 5.0f)
+
+        model.setSeconds(99.0f)
+        assertEquals(model.seconds.value, 99.0f)
+        assertFalse(model.isEnded)
+
+        model.setSeconds(0.0f)
+        assertEquals(model.seconds.value, 0.0f)
+        assertTrue(model.isEnded)
+
+        model.setSeconds(-1.0f)
+        assertEquals(model.seconds.value, 0.0f)
+        assertTrue(model.isEnded)
+    }
 }
