@@ -1,9 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.res.Resources
-import android.media.RingtoneManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
@@ -39,25 +36,6 @@ class TimerFragment : Fragment() {
 
         activity?.run {
             viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
-
-            val timerEndListener = object : TimerModel.OnEndedListener {
-                override fun onEnded() {
-
-                    // 規定のアラーム音を鳴らす、ダイアログを閉じると止まる.
-                    val ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-                    val ringtone = RingtoneManager.getRingtone(this@run, ringtoneUri)
-                    ringtone.play()
-
-                    val alertBuilder = AlertDialog.Builder(this@run).run {
-                        setPositiveButton("Close") { _: DialogInterface, _: Int ->
-                            ringtone.stop()
-                        }
-                    }
-                    alertBuilder.show()
-                }
-            }
-
-            viewModel.setTimerEndListener(timerEndListener)
         } ?: throw Resources.NotFoundException("Activity Not found.")
 
         binding.timerViewModel = viewModel
