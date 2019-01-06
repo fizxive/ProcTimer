@@ -120,9 +120,4 @@ class TimerModel(context : Context) {
             isTicking = false
         }
     }
-
-    fun reset() {
-        if (isTicking) stopTick()
-        _seconds = defaultSeconds
-    }
 }

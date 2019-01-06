@@ -8,5 +8,4 @@
     <string name="timer_dialog_positive_button">Set</string>
     <string name="timer_end_dialog_text">Timer End</string>
     <string name="timer_end_dialog_button">Next</string>
-    <string name="button_reset">RESET</string>
 </resources>

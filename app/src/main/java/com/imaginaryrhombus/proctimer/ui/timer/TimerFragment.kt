@@ -72,10 +72,6 @@ class TimerFragment : Fragment() {
             viewModel.stopTick()
         }
 
-        resetButton.setOnClickListener {
-            viewModel.resetTimer()
-        }
-
         currentTimerText.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
             pickerFragment.show(fragmentManager, "PickerDialog")

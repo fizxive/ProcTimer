@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">連続タイマー</string>
     <string name="timer_default_text" translatable="false">00:00</string>
-    <string name="button_start">スタート</string>
-    <string name="button_stop">ストップ</string>
+    <string name="button_start">START</string>
+    <string name="button_stop">STOP</string>
     <string name="timer_dialog_colon" translatable="false">:</string>
     <string name="timer_dialog_text">時間設定</string>
     <string name="timer_dialog_negative_button">キャンセル</string>
     <string name="timer_dialog_positive_button">設定</string>
     <string name="timer_end_dialog_text">時間終了</string>
     <string name="timer_end_dialog_button">次へ</string>
-    <string name="button_reset">リセット</string>
 </resources>
