@@ -45,4 +45,8 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
         val secondsLong = timer.seconds.value!!.toLong()
         return Pair((secondsLong / 60).toString(), (secondsLong % 60).toString())
     }
+
+    fun setTimerEndListener(listener: TimerModel.OnEndedListener?) {
+        timer.onEndedListener = listener
+    }
 }

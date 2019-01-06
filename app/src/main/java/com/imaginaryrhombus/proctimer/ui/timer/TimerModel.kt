@@ -4,13 +4,17 @@ import android.content.Context
 import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
-import java.io.Closeable
 import java.util.concurrent.TimeUnit
 
 /**
  * 一つ一つのタイマー用モデル.
  */
-class TimerModel(context : Context) : Closeable {
+class TimerModel(context : Context) {
+
+    interface OnEndedListener {
+        fun onEnded() {
+        }
+    }
 
     /// 残り秒数.
     var seconds = MutableLiveData<Float>()
@@ -25,6 +29,9 @@ class TimerModel(context : Context) : Closeable {
         updateText()
     }
 
+    /// 初期秒数.
+    private var defaultSeconds = 0.0f
+
     /// このタイマーをテキスト化したときの表示.
     var text = MutableLiveData<String>()
     private set
@@ -33,16 +40,16 @@ class TimerModel(context : Context) : Closeable {
     val isEnded : Boolean
     get() = _seconds <= 0.0f
 
+    /// 終了時のコールバック
+    var onEndedListener : OnEndedListener? = null
+
     /// ローカルデータ読み書き用.
     private val sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
     init {
         _seconds = sharedPreferences?.getFloat(TimerConstants.PREFERENCE_PARAM_SEC_NAME, TimerConstants.TIMER_DEFAULT_SECONDS)
             ?: TimerConstants.TIMER_DEFAULT_SECONDS
-    }
-
-    override fun close() {
-        sharedPreferences?.edit()?.putFloat("seconds", _seconds)?.apply()
+        defaultSeconds = _seconds
     }
 
     /**
@@ -51,6 +58,8 @@ class TimerModel(context : Context) : Closeable {
     fun setSeconds(seconds: Float) {
         if (isTicking) stopTick()
         _seconds = seconds
+        sharedPreferences?.edit()?.putFloat("seconds", _seconds)?.apply()
+        defaultSeconds = _seconds
     }
 
     /**
@@ -89,7 +98,7 @@ class TimerModel(context : Context) : Closeable {
             tick(timeTicker.latestTick)
 
             if (isEnded) {
-                /// TODO : ダイアログを表示するなどしたい. Fragment に委ねる?
+                onEndedListener?.onEnded()
             }
             else {
                 tickHandler.postDelayed(this, tickInterval)
