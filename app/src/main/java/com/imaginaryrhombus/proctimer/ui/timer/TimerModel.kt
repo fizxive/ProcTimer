@@ -12,11 +12,6 @@ import java.util.concurrent.TimeUnit
  */
 class TimerModel(context : Context) : Closeable {
 
-    interface OnEndedListener {
-        fun onEnded() {
-        }
-    }
-
     /// 残り秒数.
     var seconds = MutableLiveData<Float>()
     private set
@@ -37,9 +32,6 @@ class TimerModel(context : Context) : Closeable {
     /// 現在のタイマーが終了しているか.
     val isEnded : Boolean
     get() = _seconds <= 0.0f
-
-    /// 終了時のコールバック
-    var onEndedListener : OnEndedListener? = null
 
     /// ローカルデータ読み書き用.
     private val sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -97,7 +89,7 @@ class TimerModel(context : Context) : Closeable {
             tick(timeTicker.latestTick)
 
             if (isEnded) {
-                onEndedListener?.onEnded()
+                /// TODO : ダイアログを表示するなどしたい. Fragment に委ねる?
             }
             else {
                 tickHandler.postDelayed(this, tickInterval)
