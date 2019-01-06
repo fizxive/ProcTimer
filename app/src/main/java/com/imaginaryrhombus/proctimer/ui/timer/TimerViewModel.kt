@@ -28,6 +28,13 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     /**
+     * タイマーをリセットする.
+     */
+    fun resetTimer() {
+        timer.reset()
+    }
+
+    /**
      * テキスト情報からタイマーを設定する.
      */
     fun setTimerFrom(minutes: String, seconds: String) {
