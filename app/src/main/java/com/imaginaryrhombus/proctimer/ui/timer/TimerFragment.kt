@@ -54,7 +54,9 @@ class TimerFragment : Fragment() {
                             ringtone.stop()
                         }
                     }
-                    alertBuilder.show()
+                    val dialog = alertBuilder.create()
+                    dialog.setCanceledOnTouchOutside(false)
+                    dialog.show()
                 }
             }
 
