@@ -102,6 +102,9 @@ class TimerPickerFragment : DialogFragment() {
             builder.setView(view)
         }
 
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+
+        return dialog
     }
 }
