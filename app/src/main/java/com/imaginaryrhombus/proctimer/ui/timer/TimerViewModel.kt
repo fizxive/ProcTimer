@@ -10,8 +10,12 @@ import java.util.concurrent.TimeUnit
 class TimerViewModel(app : Application) : AndroidViewModel(app) {
 
     /// タイマー本体.(外部からの直接設定をしないようにする)
-    var timer = TimerModel(app.applicationContext)
-    private set
+    val timer : TimerModel
+    get() {
+        return multiTimerModel.activeTimerModel
+    }
+
+    private var multiTimerModel = MultiTimerModel(app.applicationContext)
 
     /**
      * タイマーのスタートを Model に伝える.
@@ -32,6 +36,13 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
      */
     fun resetTimer() {
         timer.reset()
+    }
+
+    /**
+     * タイマーを次のものにする.
+     */
+    fun nextTimer() {
+        multiTimerModel.next()
     }
 
     /**
