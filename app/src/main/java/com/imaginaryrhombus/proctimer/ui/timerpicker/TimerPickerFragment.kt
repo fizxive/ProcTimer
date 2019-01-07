@@ -29,13 +29,6 @@ class TimerPickerFragment : DialogFragment() {
     /// ダイアログを閉じるときに設定するようの値,秒.
     private lateinit var secondsString: String
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.timer_picker_fragment, container, false)
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
 
@@ -111,11 +104,4 @@ class TimerPickerFragment : DialogFragment() {
 
         return builder.create()
     }
-
-    override fun onStop() {
-        super.onStop()
-
-
-    }
-
 }
