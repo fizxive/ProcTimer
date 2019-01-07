@@ -2,7 +2,9 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.content.Context
 import android.os.Handler
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import java.util.concurrent.TimeUnit
 
@@ -17,8 +19,7 @@ class TimerModel(context : Context) {
     }
 
     /// 残り秒数.
-    var seconds = MutableLiveData<Float>()
-    private set
+    val seconds = MutableLiveData<Float>()
 
     /// 残り秒数(バッキングプロパティ).
     private var _seconds = 0.0f
@@ -26,15 +27,19 @@ class TimerModel(context : Context) {
         field = value
         if (field < 0.0f) field = 0.0f
         seconds.postValue(field)
-        updateText()
     }
 
     /// 初期秒数.
     private var defaultSeconds = 0.0f
 
     /// このタイマーをテキスト化したときの表示.
-    var text = MutableLiveData<String>()
-    private set
+    val text : LiveData<String> = Transformations.map(seconds) {
+        val timerMilliseconds = _seconds.times(1000.0f).toLong()
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
+        val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
+        ("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
+    }
 
     /// 現在のタイマーが終了しているか.
     val isEnded : Boolean
@@ -68,17 +73,6 @@ class TimerModel(context : Context) {
      */
     private fun tick(deltaSeconds :Float) {
         _seconds -= deltaSeconds
-    }
-
-    /**
-     * 秒数に合わせてテキストを更新する.
-     */
-    private fun updateText() {
-        val timerMilliseconds = _seconds.times(1000.0f).toLong()
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
-        val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
-        text.value = ("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
     }
 
     /// 時間経過の判定を行う間隔.
