@@ -2,6 +2,7 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.Application
 import androidx.lifecycle.*
+import kotlin.math.max
 import java.util.concurrent.TimeUnit
 
 /**
@@ -74,9 +75,14 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     private companion object {
+        /**
+         * 秒数からフォーマットした文字列に変更.
+         * @param inputSeconds 秒数.
+         * @note 秒数が負の値の場合は0病として扱う.
+         */
         @JvmStatic
         fun createTimerStringFromSeconds(inputSeconds: Float): String {
-            val timerMilliseconds = inputSeconds.times(1000.0f).toLong()
+            val timerMilliseconds = max(inputSeconds.times(1000.0f).toLong(), 0)
             val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
             val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
             val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
