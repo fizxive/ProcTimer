@@ -21,7 +21,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="@{timerViewModel.timer.text, default=@string/timer_default_text}"
+            android:text="@{timerViewModel.currentTimerText, default=@string/timer_default_text}"
             android:textSize="30sp"/>
         <TextView
             android:id="@+id/nextTimerText1"

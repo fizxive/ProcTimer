@@ -32,15 +32,6 @@ class TimerModel(context : Context) {
     /// 初期秒数.
     private var defaultSeconds = 0.0f
 
-    /// このタイマーをテキスト化したときの表示.
-    val text : LiveData<String> = Transformations.map(seconds) {
-        val timerMilliseconds = _seconds.times(1000.0f).toLong()
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
-        val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
-        ("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
-    }
-
     /// 現在のタイマーが終了しているか.
     val isEnded : Boolean
     get() = _seconds <= 0.0f

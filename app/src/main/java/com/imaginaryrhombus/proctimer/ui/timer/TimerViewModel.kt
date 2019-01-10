@@ -9,13 +9,18 @@ import java.util.concurrent.TimeUnit
  */
 class TimerViewModel(app : Application) : AndroidViewModel(app) {
 
-    /// タイマー本体.(外部からの直接設定をしないようにする)
+    /// 複数のタイマーを管理するタイマー本体.
+    private var multiTimerModel = MultiTimerModel(app.applicationContext)
+
+    /// タイマー本体からの動作中のタイマーの参照.
     val timer : TimerModel
     get() {
         return multiTimerModel.activeTimerModel
     }
 
-    private var multiTimerModel = MultiTimerModel(app.applicationContext)
+    val currentTimerText : LiveData<String> = Transformations.map(timer.seconds) {
+        createTimerStringFromSeconds(it)
+    }
 
     /**
      * タイマーのスタートを Model に伝える.
@@ -66,5 +71,15 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
 
     fun setTimerEndListener(listener: TimerModel.OnEndedListener?) {
         timer.onEndedListener = listener
+    }
+
+    companion object {
+        private fun createTimerStringFromSeconds(inputSeconds: Float) : String {
+            val timerMilliseconds = inputSeconds.times(1000.0f).toLong()
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
+            val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
+            val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
+            return ("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
+        }
     }
 }
