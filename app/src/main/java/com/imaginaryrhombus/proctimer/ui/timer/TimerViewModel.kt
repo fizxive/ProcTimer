@@ -78,7 +78,7 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
         /**
          * 秒数からフォーマットした文字列に変更.
          * @param inputSeconds 秒数.
-         * @note 秒数が負の値の場合は0病として扱う.
+         * @note 秒数が負の値の場合は0秒として扱う.
          */
         @JvmStatic
         fun createTimerStringFromSeconds(inputSeconds: Float): String {
