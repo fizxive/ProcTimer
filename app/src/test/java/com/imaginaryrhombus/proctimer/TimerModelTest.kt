@@ -50,26 +50,6 @@ class TimerModelTest {
         })
     }
 
-    /// 秒数が正常にフォーマットされているか.
-    @Test
-    fun testText() {
-
-        fun testImpl(seconds : Float, timerText : String) {
-            TimerModelTestUtility.createTimerModel(seconds, testActivity).run {
-                assertEquals(text.value, timerText)
-            }
-        }
-
-        testImpl(30.0f, "00:30.000")
-        testImpl(60.0f, "01:00.000")
-        testImpl(75.0f, "01:15.000")
-        testImpl(0.0f, "00:00.000")
-        testImpl(-10.0f, "00:00.000")
-        testImpl(10.110f, "00:10.110")
-        testImpl(60.085f, "01:00.085")
-        testImpl(66.666f, "01:06.666")
-    }
-
     @Test
     fun setSecondsTest() {
 

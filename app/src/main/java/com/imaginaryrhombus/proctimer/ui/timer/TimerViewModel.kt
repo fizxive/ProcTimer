@@ -73,8 +73,9 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
         timer.onEndedListener = listener
     }
 
-    companion object {
-        private fun createTimerStringFromSeconds(inputSeconds: Float) : String {
+    private companion object {
+        @JvmStatic
+        fun createTimerStringFromSeconds(inputSeconds: Float): String {
             val timerMilliseconds = inputSeconds.times(1000.0f).toLong()
             val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
             val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
