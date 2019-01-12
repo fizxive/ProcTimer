@@ -2,11 +2,8 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.content.Context
 import android.os.Handler
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
-import java.util.concurrent.TimeUnit
 
 /**
  * 一つ一つのタイマー用モデル.
@@ -29,7 +26,7 @@ class TimerModel(context : Context) {
     set(value) {
         field = value
         if (field < 0.0f) field = 0.0f
-        seconds.postValue(field)
+        seconds.value = field
     }
 
     /// 初期秒数.
