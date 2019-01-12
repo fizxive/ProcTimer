@@ -1,7 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.content.Context
-import java.util.*
 import kotlin.math.min
 
 /**

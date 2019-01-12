@@ -40,7 +40,7 @@ class TimerModelTest {
             val timerModel = TimerModelTestUtility.createTimerModel(testSeconds, testActivity)
 
             /// private メソッドのテストになるのでリフレクションを使用してテスト.
-            val tickMethod = timerModel.javaClass.getDeclaredMethod("tick", Float::class.java)
+            val tickMethod = timerModel.javaClass.getDeclaredMethod("saveTick", Float::class.java)
             tickMethod.isAccessible = true
             tickMethod.invoke(timerModel, testTickSeconds)
 

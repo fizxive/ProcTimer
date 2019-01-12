@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Resources
 import android.media.RingtoneManager
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
@@ -30,12 +29,14 @@ class TimerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate<TimerFragmentBinding>(inflater, R.layout.timer_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.timer_fragment, container, false)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        // viewModel 初期化, ダイアログの出現の設定.
 
         activity?.run {
             viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
@@ -66,6 +67,8 @@ class TimerFragment : Fragment() {
 
         binding.timerViewModel = viewModel
         binding.setLifecycleOwner(this)
+
+        // 各種リスナー設定.
 
         startButton.setOnClickListener {
             viewModel.startTick()

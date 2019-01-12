@@ -79,7 +79,7 @@ class TimerModel(context : Context) {
 
         override fun run() {
 
-            timeTicker.tick()
+            timeTicker.saveTick()
             tick(timeTicker.latestTick)
 
             if (isEnded) {
@@ -91,14 +91,20 @@ class TimerModel(context : Context) {
         }
     }
 
+    /**
+     * 時間計測を開始.
+     */
     fun startTick() {
-        timeTicker.setPrevious()
+        timeTicker.resetTickSeconds()
         if (isTicking.not()) {
             tickHandler.post(tickRunner)
             isTicking = true
         }
     }
 
+    /**
+     * 動作している時間計測を停止する.
+     */
     fun stopTick() {
         if (isTicking) {
             tickHandler.removeCallbacks(tickRunner)
@@ -106,6 +112,9 @@ class TimerModel(context : Context) {
         }
     }
 
+    /**
+     * 経過時間をリセット.
+     */
     fun reset() {
         if (isTicking) stopTick()
         _seconds = defaultSeconds
