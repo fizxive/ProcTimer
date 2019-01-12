@@ -41,7 +41,7 @@ class TimerFragment : Fragment() {
             viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
 
             val timerEndListener = object : TimerModel.OnEndedListener {
-                override fun onEnded() {
+                override fun onEnd() {
 
                     // 規定のアラーム音を鳴らす、ダイアログを閉じると止まる.
                     val ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)

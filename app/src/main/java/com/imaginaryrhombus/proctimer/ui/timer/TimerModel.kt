@@ -13,9 +13,12 @@ import java.util.concurrent.TimeUnit
  */
 class TimerModel(context : Context) {
 
+    /// タイマー終了時リスナー
     interface OnEndedListener {
-        fun onEnded() {
-        }
+        /**
+         * タイマーが終了したときに呼ばれる.
+         */
+        fun onEnd()
     }
 
     /// 残り秒数.
@@ -37,7 +40,7 @@ class TimerModel(context : Context) {
     get() = _seconds <= 0.0f
 
     /// 終了時のコールバック
-    var onEndedListener : OnEndedListener? = null
+    var onEndListener : OnEndedListener? = null
 
     /// ローカルデータ読み書き用.
     private val sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -83,7 +86,7 @@ class TimerModel(context : Context) {
             tick(timeTicker.latestTick)
 
             if (isEnded) {
-                onEndedListener?.onEnded()
+                onEndListener?.onEnd()
             }
             else {
                 tickHandler.postDelayed(this, tickInterval)
