@@ -8,8 +8,9 @@ import com.imaginaryrhombus.proctimer.R
 
 /**
  * タイマー用の ViewModel.
+ * @param app アプリケーション.(ViewModelProvider を使用する限り、特に意識する必要はない.)
  */
-class TimerViewModel(app : Application) : AndroidViewModel(app) {
+class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
 
     /// 複数のタイマーを管理するタイマー本体.
     private var multiTimerModel = MultiTimerModel(app.applicationContext)
@@ -21,9 +22,8 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     /// 現在のタイマーのテキスト.
-    val currentTimerText : LiveData<String> = Transformations.map(timer.seconds) {
-        createTimerStringFromSeconds(it)
-    }
+    lateinit var currentTimerText : LiveData<String>
+    private set
 
     /**
      * 準備中のタイマーをテキスト表示する数.
@@ -36,23 +36,15 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
 
     private val timerChangedListener = object : MultiTimerModel.OnTimerChangedListener {
         override fun onTimerChanged() {
-            // 予めタイマーが無い文字列で初期化してからタイマーを取得して文字列を更新する.
-            nextTimerStrings.forEach {
-                it.postValue(app.applicationContext.getString(R.string.timer_invalid_text))
-            }
-
-            val timers = multiTimerModel.getTimers(nextTimerStrings.size)
-            nextTimerStrings.forEachIndexed { index, timerText ->
-                timers[index]?.let {
-                    timerText.postValue(createTimerStringFromSeconds(it.seconds.value!!))
-                }
-            }
+            updateTimerText()
         }
     }
 
     init {
         // 初期化子で設定を行うと 'Type checking has run into a recursive problem.' が発生してしまうのでここで行う.
         multiTimerModel.onTimerChangedListener = timerChangedListener
+        // テキストが空白なので、更新する
+        updateTimerText()
     }
 
     /**
@@ -108,6 +100,28 @@ class TimerViewModel(app : Application) : AndroidViewModel(app) {
      */
     fun setTimerEndListener(listener: TimerModel.OnEndedListener?) {
         multiTimerModel.onEachTimerEndedListener = listener
+    }
+
+    /**
+     * 次のタイマーの表示を更新する.
+     */
+    private fun updateTimerText() {
+        // 予めタイマーが無い文字列で初期化してからタイマーを取得して文字列を更新する.
+        nextTimerStrings.forEach {
+            it.postValue(app.applicationContext.getString(R.string.timer_invalid_text))
+        }
+
+        val timers = multiTimerModel.getTimers(nextTimerStrings.size)
+        nextTimerStrings.forEachIndexed { index, timerText ->
+            timers[index]?.let {
+                timerText.postValue(createTimerStringFromSeconds(it.seconds.value!!))
+            }
+        }
+
+        // 前のタイマーを参照したままになっているので、タイマーのテキストの監視元を改めて設定する.
+        currentTimerText = Transformations.map(timer.seconds) {
+            createTimerStringFromSeconds(it)
+        }
     }
 
     private companion object {
