@@ -82,7 +82,7 @@ class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
         val minutesLong = minutes.toLong()
         val secondsLong = seconds.toLong()
 
-        timer.setSeconds((TimeUnit.MINUTES.toSeconds(minutesLong) + secondsLong).toFloat())
+        multiTimerModel.setActiveTimerSeconds((TimeUnit.MINUTES.toSeconds(minutesLong) + secondsLong).toFloat())
     }
 
     /**

@@ -1,14 +1,12 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
-import android.content.Context
 import android.os.Handler
 import androidx.lifecycle.MutableLiveData
-import com.imaginaryrhombus.proctimer.constants.TimerConstants
 
 /**
  * 一つ一つのタイマー用モデル.
  */
-class TimerModel(context : Context) {
+class TimerModel{
 
     /// タイマー終了時リスナー
     interface OnEndedListener {
@@ -30,7 +28,8 @@ class TimerModel(context : Context) {
     }
 
     /// 初期秒数.
-    private var defaultSeconds = 0.0f
+    var defaultSeconds = 0.0f
+    private set
 
     /// 現在のタイマーが終了しているか.
     val isEnded : Boolean
@@ -39,22 +38,12 @@ class TimerModel(context : Context) {
     /// 終了時のコールバック
     var onEndListener : OnEndedListener? = null
 
-    /// ローカルデータ読み書き用.
-    private val sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
-
-    init {
-        _seconds = sharedPreferences?.getFloat(TimerConstants.PREFERENCE_PARAM_SEC_NAME, TimerConstants.TIMER_DEFAULT_SECONDS)
-            ?: TimerConstants.TIMER_DEFAULT_SECONDS
-        defaultSeconds = _seconds
-    }
-
     /**
      * 秒数を設定する.
      */
     fun setSeconds(seconds: Float) {
         if (isTicking) stopTick()
         _seconds = seconds
-        sharedPreferences?.edit()?.putFloat("seconds", _seconds)?.apply()
         defaultSeconds = _seconds
     }
 

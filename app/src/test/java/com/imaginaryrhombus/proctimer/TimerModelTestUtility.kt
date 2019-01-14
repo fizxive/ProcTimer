@@ -23,7 +23,7 @@ class TimerModelTestUtility {
          */
         fun createTimerModel(seconds: Float, context: Context): TimerModel {
             setTimerSecondsToSharedPreferences(seconds, context)
-            return TimerModel(context)
+            return TimerModel()
         }
     }
 }
