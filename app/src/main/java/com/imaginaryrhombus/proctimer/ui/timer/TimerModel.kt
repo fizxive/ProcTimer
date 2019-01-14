@@ -60,7 +60,11 @@ class TimerModel{
 
     /// 時間経過用のハンドラ.
     private val tickHandler = Handler()
+
+    /// 時間経過制御用クラス.
     private var timeTicker = TimeTicker()
+
+    /// 動作中かのフラグ.
     private var isTicking = false
 
     /// 時間経過用のワーカー.
