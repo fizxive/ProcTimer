@@ -17,7 +17,9 @@ class TimerModel{
     }
 
     /// 残り秒数.
-    val seconds = MutableLiveData<Float>()
+    val seconds = MutableLiveData<Float>().apply {
+        value = 0.0f
+    }
 
     /// 残り秒数(バッキングプロパティ).
     private var _seconds = 0.0f
