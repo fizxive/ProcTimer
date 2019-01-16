@@ -47,4 +47,33 @@ class MultiTimerModelTest {
         })
     }
 
+    /**
+     * SharedPreferences への保存/読み出しが正常か確認する.
+     */
+    @Test
+    fun testSaveAndRestore() {
+        _sharedPreferences.edit().clear()
+
+        val multiTimerModel = MultiTimerModel(_testActivity)
+
+        assertTrue(_sharedPreferences.contains(TimerConstants.PREFERENCE_SAVE_VERSION_NAME))
+        assertEquals(_sharedPreferences.getInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION_INVALID), TimerConstants.PREFERENCE_SAVE_VERSION)
+        assertNotEquals(_sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, ""), "")
+
+        multiTimerModel.addTimer()
+        multiTimerModel.setActiveTimerSeconds(10.0f)
+
+        val multiTimerModel2 = MultiTimerModel(_testActivity)
+
+        val timers = multiTimerModel.getTimers(-1, true)
+        val timers2 = multiTimerModel2.getTimers(-1, true)
+
+        assertEquals(timers.size, timers2.size)
+
+        for (index in 0 until timers.size) {
+            assertEquals(timers[index]?.seconds, timers2[index]?.seconds)
+            assertEquals(timers[index]?.defaultSeconds, timers2[index]?.defaultSeconds)
+        }
+    }
+
 }

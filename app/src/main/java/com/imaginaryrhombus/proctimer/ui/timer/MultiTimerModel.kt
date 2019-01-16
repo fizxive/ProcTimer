@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import kotlin.math.min
+import kotlin.math.sign
 
 /**
  * 複数のタイマーを管理する Model.
@@ -93,13 +94,14 @@ class MultiTimerModel(context: Context) {
 
     /**
      * 指定された個数の TimeModel をアクティブに近い順に返す,
-     * @param count 個数.
+     * @param count 個数, 負数を入力するとすべてのタイマーを取得する.
      * @param includeActive 現在アクティブなタイマーを含むか.
      * @return タイマーのリスト.(個数が count よりも少ない場合はその分 null が入る)
      *
      */
     fun getTimers(count: Int, includeActive: Boolean = false) : List<TimerModel?> {
-        val ret = MutableList<TimerModel?>(count) { null }
+        val retCount = if (count.sign == -1) _timers.size else count
+        val ret = MutableList<TimerModel?>(retCount) { null }
         // includeActive が false の場合、アクティブタイマーの分だけ数を減らして考える.
         val timerCount = _timers.size - (if (includeActive.not()) 1 else 0)
         for (i in 0 until (min(timerCount, count))) {
