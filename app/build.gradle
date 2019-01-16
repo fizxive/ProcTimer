@@ -35,9 +35,9 @@ ktlint {
     version = "0.22.0"
     debug = true
     verbose = true
-    android = false
+    android = true
     outputToConsole = true
-    reporters = [ReporterType.PLAIN, ReporterType.CHECKSTYLE]
+    reporters = [ReporterType.CHECKSTYLE]
     ignoreFailures = true
     filter {
         exclude("**/generated/**")
