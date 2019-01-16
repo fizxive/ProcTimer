@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Resources
 import android.media.RingtoneManager
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
@@ -30,18 +29,20 @@ class TimerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate<TimerFragmentBinding>(inflater, R.layout.timer_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.timer_fragment, container, false)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        // viewModel 初期化, ダイアログの出現の設定.
+
         activity?.run {
             viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
 
             val timerEndListener = object : TimerModel.OnEndedListener {
-                override fun onEnded() {
+                override fun onEnd() {
 
                     // 規定のアラーム音を鳴らす、ダイアログを閉じると止まる.
                     val ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
@@ -52,6 +53,7 @@ class TimerFragment : Fragment() {
                         setTitle(R.string.timer_end_dialog_text)
                         setPositiveButton(R.string.timer_end_dialog_button) { _: DialogInterface, _: Int ->
                             ringtone.stop()
+                            viewModel.nextTimer()
                         }
                     }
                     val dialog = alertBuilder.create()
@@ -65,6 +67,8 @@ class TimerFragment : Fragment() {
 
         binding.timerViewModel = viewModel
         binding.setLifecycleOwner(this)
+
+        // 各種リスナー設定.
 
         startButton.setOnClickListener {
             viewModel.startTick()

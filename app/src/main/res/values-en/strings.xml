@@ -9,4 +9,7 @@
     <string name="timer_end_dialog_text">Timer End</string>
     <string name="timer_end_dialog_button">Next</string>
     <string name="button_reset">RESET</string>
+    <string name="timer_default_text">00:00:000</string>
+    <string name="timer_dialog_colon">:</string>
+    <string name="timer_invalid_text">--:--:---</string>
 </resources>
