@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 android {
     compileSdkVersion 28
@@ -30,6 +31,20 @@ android {
     }
 }
 
+ktlint {
+    version = "0.22.0"
+    debug = true
+    verbose = true
+    android = false
+    outputToConsole = true
+    reporters = [ReporterType.PLAIN, ReporterType.CHECKSTYLE]
+    ignoreFailures = true
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -38,7 +53,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:4.1'
     androidTestImplementation 'androidx.test:core:1.1.0'
