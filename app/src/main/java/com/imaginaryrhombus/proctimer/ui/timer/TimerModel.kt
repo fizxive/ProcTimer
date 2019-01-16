@@ -8,7 +8,9 @@ import androidx.lifecycle.MutableLiveData
  */
 class TimerModel{
 
-    /// タイマー終了時リスナー
+    /**
+     * タイマー終了時リスナー.
+     */
     interface OnEndedListener {
         /**
          * タイマーが終了したときに呼ばれる.
@@ -16,12 +18,16 @@ class TimerModel{
         fun onEnd()
     }
 
-    /// 残り秒数.
+    /**
+     * 残り秒数.
+     */
     val seconds = MutableLiveData<Float>().apply {
         value = 0.0f
     }
 
-    /// 残り秒数(バッキングプロパティ).
+    /**
+     * 残り秒数(バッキングプロパティ).
+     */
     private var _seconds = 0.0f
     set(value) {
         field = value
@@ -29,15 +35,21 @@ class TimerModel{
         seconds.value = field
     }
 
-    /// 初期秒数.
+    /**
+     * 初期秒数.
+     */
     var defaultSeconds = 0.0f
     private set
 
-    /// 現在のタイマーが終了しているか.
+    /**
+     * 現在のタイマーが終了しているか.
+     */
     val isEnded : Boolean
     get() = _seconds <= 0.0f
 
-    /// 終了時のコールバック
+    /**
+     * 終了時のコールバック.
+     */
     var onEndListener : OnEndedListener? = null
 
     /**
@@ -50,28 +62,29 @@ class TimerModel{
     }
 
     /**
-     * 時間を経過させる.
-     * @param deltaSeconds 経過時間.
+     * 時間経過の判定を行う間隔.
      */
-    private fun tick(deltaSeconds :Float) {
-        _seconds -= deltaSeconds
-    }
-
-    /// 時間経過の判定を行う間隔.
     private val tickInterval = 10L
 
-    /// 時間経過用のハンドラ.
+    /**
+     * 時間経過用のハンドラ.
+     */
     private val tickHandler = Handler()
 
-    /// 時間経過制御用クラス.
+    /**
+     * 時間経過制御用クラス.
+     */
     private var timeTicker = TimeTicker()
 
-    /// 動作中かのフラグ.
+    /**
+     * 動作中かのフラグ.
+     */
     private var isTicking = false
 
-    /// 時間経過用のワーカー.
+    /**
+     * 時間経過用のワーカー.
+     */
     private val tickRunner = object : Runnable {
-
         override fun run() {
 
             timeTicker.saveTick()
@@ -113,5 +126,13 @@ class TimerModel{
     fun reset() {
         if (isTicking) stopTick()
         _seconds = defaultSeconds
+    }
+
+    /**
+     * 時間を経過させる.
+     * @param deltaSeconds 経過時間.
+     */
+    private fun tick(deltaSeconds :Float) {
+        _seconds -= deltaSeconds
     }
 }

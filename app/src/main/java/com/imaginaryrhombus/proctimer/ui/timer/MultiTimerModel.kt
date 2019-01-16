@@ -11,7 +11,9 @@ import kotlin.math.sign
  */
 class MultiTimerModel(context: Context) {
 
-    /// タイマー切り替わり時のリスナーインターフェース.
+    /**
+     * タイマー切り替わり時のリスナーインターフェース.
+     */
     interface OnTimerChangedListener {
         /**
          * タイマーが切り替わるときに呼ばれる.
@@ -19,32 +21,46 @@ class MultiTimerModel(context: Context) {
         fun onTimerChanged()
     }
 
-    /// 現在の動作しているタイマーを取得する.
+    /**
+     * 現在の動作しているタイマーを取得する.
+     */
     val activeTimerModel : TimerModel
     get() {
         return _timers[_currentTimerIndex]
     }
 
-    /// 動作中タイマーのインデックス.
+    /**
+     * 動作中タイマーのインデックス.
+     */
     private var _currentTimerIndex = 0
     set(value) {
         field = value
         onTimerChangedListener?.onTimerChanged()
     }
 
-    /// 全タイマー.
+    /**
+     * 全タイマー.
+     */
     private var _timers = MutableList(0) { TimerModel() }
 
-    /// 各タイマー終了時のリスナー.
+    /**
+     * 各タイマー終了時のリスナー.
+     */
     var onEachTimerEndedListener : TimerModel.OnEndedListener? = null
 
-    /// タイマーが切り替わったときのリスナー.
+    /**
+     * タイマーが切り替わったときのリスナー.
+     */
     var onTimerChangedListener : OnTimerChangedListener? = null
 
-    /// ローカルデータ読み書き用.
+    /**
+     * ローカルデータ読み書き用.
+     */
     private val _sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
-    /// json 読み書き用.
+    /**
+     * json 読み書き用.
+     */
     private val _gson = Gson()
 
     init {

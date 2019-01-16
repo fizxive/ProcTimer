@@ -12,18 +12,10 @@ import com.imaginaryrhombus.proctimer.R
  */
 class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
 
-    /// 複数のタイマーを管理するタイマー本体.
+    /**
+     * 複数のタイマーを管理するタイマー本体.
+     */
     private var multiTimerModel = MultiTimerModel(app.applicationContext)
-
-    /// タイマー本体からの動作中のタイマーの参照.
-    val timer : TimerModel
-    get() {
-        return multiTimerModel.activeTimerModel
-    }
-
-    /// 現在のタイマーのテキスト.
-    lateinit var currentTimerText : LiveData<String>
-    private set
 
     /**
      * 準備中のタイマーをテキスト表示する数.
@@ -31,9 +23,28 @@ class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
      */
     private val displayNextTimerCount = 3
 
-    /// 準備中のタイマーのテキスト.
+    /**
+     * タイマー本体からの動作中のタイマーの参照.
+     */
+    val timer : TimerModel
+    get() {
+        return multiTimerModel.activeTimerModel
+    }
+
+    /**
+     * 現在のタイマーのテキスト.
+     */
+    lateinit var currentTimerText : LiveData<String>
+    private set
+
+    /**
+     * 準備中のタイマーのテキスト.
+     */
     val nextTimerStrings = MutableList (displayNextTimerCount) { MutableLiveData<String>() }
 
+    /**
+     * タイマーが変更されたときのリスナー.
+     */
     private val timerChangedListener = object : MultiTimerModel.OnTimerChangedListener {
         override fun onTimerChanged() {
             updateTimerText()

@@ -10,10 +10,14 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class TimerViewModelTest {
 
-    /// テスト用の Activity.
+    /**
+     * テスト用の Activity.
+     */
     private val testActivity = Robolectric.setupActivity(TimerActivity::class.java)!!
 
-    /// 秒数が正常にフォーマットされているか.
+    /**
+     * 秒数が正常にフォーマットされているか.
+     */
     @Test
     fun testText() {
 

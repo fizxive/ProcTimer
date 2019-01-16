@@ -24,9 +24,13 @@ class TimerPickerFragment : DialogFragment() {
     }
     private lateinit var timerViewModel: TimerViewModel
 
-    /// ダイアログを閉じるときに設定するようの値,分.
+    /**
+     * ダイアログを閉じるときに設定するようの値,分.
+     */
     private lateinit var minutesString: String
-    /// ダイアログを閉じるときに設定するようの値,秒.
+    /**
+     * ダイアログを閉じるときに設定するようの値,秒.
+     */
     private lateinit var secondsString: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
