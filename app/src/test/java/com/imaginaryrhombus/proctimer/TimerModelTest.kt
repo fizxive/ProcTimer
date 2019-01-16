@@ -6,7 +6,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
-/// テスト試行回数.
+/**
+ * テスト試行回数.
+ */
 const val TEST_TIMES : Int = 10
 
 @RunWith(RobolectricTestRunner::class)
@@ -65,7 +67,7 @@ class TimerModelTest {
             val timerModel = TimerModel()
             timerModel.setSeconds(testSeconds)
 
-            /// private メソッドのテストになるのでリフレクションを使用してテスト.
+            // private メソッドのテストになるのでリフレクションを使用してテスト.
             val tickMethod = timerModel.javaClass.getDeclaredMethod("tick", Float::class.java)
             tickMethod.isAccessible = true
             tickMethod.invoke(timerModel, testTickSeconds)
