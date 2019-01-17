@@ -24,7 +24,7 @@ class MultiTimerModel(context: Context) {
     /**
      * 現在の動作しているタイマーを取得する.
      */
-    val activeTimerModel : TimerModel
+    val activeTimerModel: TimerModel
     get() {
         return timers[currentTimerIndex]
     }
@@ -46,17 +46,18 @@ class MultiTimerModel(context: Context) {
     /**
      * 各タイマー終了時のリスナー.
      */
-    var onEachTimerEndedListener : TimerModel.OnEndedListener? = null
+    var onEachTimerEndedListener: TimerModel.OnEndedListener? = null
 
     /**
      * タイマーが切り替わったときのリスナー.
      */
-    var onTimerChangedListener : OnTimerChangedListener? = null
+    var onTimerChangedListener: OnTimerChangedListener? = null
 
     /**
      * ローカルデータ読み書き用.
      */
-    private val _sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+    private val _sharedPreferences =
+        context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
     /**
      * json 読み書き用.
@@ -104,7 +105,7 @@ class MultiTimerModel(context: Context) {
      * @param deltaFromCurrent 差分量
      * @return 現在地から差分料をとったタイマー.
      */
-    private fun getTimer(deltaFromCurrent : Int) : TimerModel {
+    private fun getTimer(deltaFromCurrent: Int): TimerModel {
         return timers[adjustedIndexOf(currentTimerIndex + deltaFromCurrent)]
     }
 
@@ -115,13 +116,13 @@ class MultiTimerModel(context: Context) {
      * @return タイマーのリスト.(個数が count よりも少ない場合はその分 null が入る)
      *
      */
-    fun getTimers(count: Int, includeActive: Boolean = false) : List<TimerModel?> {
+    fun getTimers(count: Int, includeActive: Boolean = false): List<TimerModel?> {
         val retCount = if (count.sign == -1) timers.size else count
         val ret = MutableList<TimerModel?>(retCount) { null }
         // includeActive が false の場合、アクティブタイマーの分だけ数を減らして考える.
         val timerCount = timers.size - (if (includeActive.not()) 1 else 0)
         for (i in 0 until (min(timerCount, count))) {
-            val timerIndex = if(includeActive) i else i + 1
+            val timerIndex = if (includeActive) i else i + 1
             ret[i] = getTimer(timerIndex)
         }
         return ret.toList()
@@ -130,7 +131,7 @@ class MultiTimerModel(context: Context) {
     /**
      * アクティブなタイマーの時間を設定する.
      */
-    fun setActiveTimerSeconds(seconds : Float) {
+    fun setActiveTimerSeconds(seconds: Float) {
         activeTimerModel.setSeconds(seconds)
         saveTimerPreferences()
     }
@@ -139,9 +140,9 @@ class MultiTimerModel(context: Context) {
      * 設定がなされた TimerModel を作成.
      * @note この関数を通さないと終了時リスナーが働かない.
      */
-    private fun createTimerModel() : TimerModel {
+    private fun createTimerModel(): TimerModel {
         return TimerModel().apply {
-            onEndListener = object : TimerModel.OnEndedListener{
+            onEndListener = object : TimerModel.OnEndedListener {
                 override fun onEnd() {
                     onTimerEnd()
                 }
@@ -155,7 +156,7 @@ class MultiTimerModel(context: Context) {
      * @param index タイマーを指定するインデックス.
      * @return 丸められたインデックス.
      */
-    private fun adjustedIndexOf(index : Int) : Int {
+    private fun adjustedIndexOf(index: Int): Int {
         return index % timers.size
     }
 
@@ -172,8 +173,10 @@ class MultiTimerModel(context: Context) {
     private fun saveTimerPreferences() {
         val timerSecondsArray = Array(timers.size) { index -> timers[index].defaultSeconds }
         _sharedPreferences.edit().apply {
-            putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, gson.toJson(timerSecondsArray))
-            putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION)
+            putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME,
+                gson.toJson(timerSecondsArray))
+            putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME,
+                TimerConstants.PREFERENCE_SAVE_VERSION)
         }.apply()
     }
 
@@ -181,10 +184,13 @@ class MultiTimerModel(context: Context) {
      * タイマーの秒数/個数を SharedPreferences から復元する.
      * @return 復元に成功した場合は true. 失敗した場合は false.
      */
-    private fun restoreTimerPreferences() : Boolean {
-        val saveVersion = _sharedPreferences.getInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION_INVALID)
+    private fun restoreTimerPreferences(): Boolean {
+        val saveVersion = _sharedPreferences.getInt(
+            TimerConstants.PREFERENCE_SAVE_VERSION_NAME,
+            TimerConstants.PREFERENCE_SAVE_VERSION_INVALID)
         if (saveVersion == TimerConstants.PREFERENCE_SAVE_VERSION) {
-            val timerSecondsJsonString = _sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, null)
+            val timerSecondsJsonString =
+                _sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, null)
             timerSecondsJsonString?.let { json ->
                 timers.clear()
                 val secondsArray = gson.fromJson(json, Array<Float>::class.java)

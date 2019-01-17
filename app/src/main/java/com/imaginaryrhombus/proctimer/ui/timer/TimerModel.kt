@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 /**
  * 一つ一つのタイマー用モデル.
  */
-class TimerModel{
+class TimerModel {
 
     /**
      * タイマー終了時リスナー.
@@ -44,13 +44,13 @@ class TimerModel{
     /**
      * 現在のタイマーが終了しているか.
      */
-    val isEnded : Boolean
+    val isEnded: Boolean
     get() = _seconds <= 0.0f
 
     /**
      * 終了時のコールバック.
      */
-    var onEndListener : OnEndedListener? = null
+    var onEndListener: OnEndedListener? = null
 
     /**
      * 秒数を設定する.
@@ -92,8 +92,7 @@ class TimerModel{
 
             if (isEnded) {
                 onEndListener?.onEnd()
-            }
-            else {
+            } else {
                 tickHandler.postDelayed(this, tickInterval)
             }
         }
@@ -132,7 +131,7 @@ class TimerModel{
      * 時間を経過させる.
      * @param deltaSeconds 経過時間.
      */
-    private fun tick(deltaSeconds :Float) {
+    private fun tick(deltaSeconds: Float) {
         _seconds -= deltaSeconds
     }
 }

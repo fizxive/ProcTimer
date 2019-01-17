@@ -7,14 +7,11 @@ import android.content.res.Resources
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.InputType
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
-import kotlinx.android.synthetic.main.timer_picker_fragment.*
 import kotlinx.android.synthetic.main.timer_picker_fragment.view.*
 
 class TimerPickerFragment : DialogFragment() {
@@ -38,18 +35,18 @@ class TimerPickerFragment : DialogFragment() {
 
         activity?.run {
             timerViewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
-        }  ?: throw Resources.NotFoundException("Activity Not found.")
+        } ?: throw Resources.NotFoundException("Activity Not found.")
 
         timerViewModel.toTimerString().run {
             minutesString = first
             secondsString = second
         }
 
-        val setTimerOnDialogClick = {_: DialogInterface, _: Int ->
+        val setTimerOnDialogClick = { _: DialogInterface, _: Int ->
             timerViewModel.setTimerFrom(minutesString, secondsString)
         }
 
-        val doNothingOnDialogClick = {_: DialogInterface, _: Int ->
+        val doNothingOnDialogClick = { _: DialogInterface, _: Int ->
         }
 
         val builder = AlertDialog.Builder(activity).run {
@@ -66,8 +63,7 @@ class TimerPickerFragment : DialogFragment() {
                 val values = Array(1000) { value -> value.toString() }
 
                 fun findEditTextAndSetInputType(viewGroup: ViewGroup) {
-                    for (i in 0 until viewGroup.childCount)
-                    {
+                    for (i in 0 until viewGroup.childCount) {
                         val child = viewGroup.getChildAt(i)
                         when (child) {
                             is ViewGroup -> findEditTextAndSetInputType(child)
@@ -85,7 +81,7 @@ class TimerPickerFragment : DialogFragment() {
                         minutesString = minutesPicker.displayedValues[newVal]
                     }
                     value = displayedValues.run {
-                        indexOf(find { it == minutesString } ?: first() )
+                        indexOf(find { it == minutesString } ?: first())
                     }
                 }
 
@@ -98,7 +94,7 @@ class TimerPickerFragment : DialogFragment() {
                         secondsString = secondsPicker.displayedValues[newVal]
                     }
                     value = displayedValues.run {
-                        indexOf(find { it == secondsString } ?: first() )
+                        indexOf(find { it == secondsString } ?: first())
                     }
                 }
             }

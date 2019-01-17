@@ -1,7 +1,10 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import kotlin.math.max
 import java.util.concurrent.TimeUnit
 import com.imaginaryrhombus.proctimer.R
@@ -10,7 +13,7 @@ import com.imaginaryrhombus.proctimer.R
  * タイマー用の ViewModel.
  * @param app アプリケーション.(ViewModelProvider を使用する限り、特に意識する必要はない.)
  */
-class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
+class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
 
     /**
      * 複数のタイマーを管理するタイマー本体.
@@ -26,7 +29,7 @@ class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
     /**
      * タイマー本体からの動作中のタイマーの参照.
      */
-    val timer : TimerModel
+    val timer: TimerModel
     get() {
         return multiTimerModel.activeTimerModel
     }
@@ -34,13 +37,13 @@ class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
     /**
      * 現在のタイマーのテキスト.
      */
-    lateinit var currentTimerText : LiveData<String>
+    lateinit var currentTimerText: LiveData<String>
     private set
 
     /**
      * 準備中のタイマーのテキスト.
      */
-    val nextTimerStrings = MutableList (displayNextTimerCount) { MutableLiveData<String>() }
+    val nextTimerStrings = MutableList(displayNextTimerCount) { MutableLiveData<String>() }
 
     /**
      * タイマーが変更されたときのリスナー.
@@ -100,7 +103,7 @@ class TimerViewModel(private val app : Application) : AndroidViewModel(app) {
      * タイマー情報からテキスト情報に変換する.
      * @return 分、秒の順番で格納された文字列.
      */
-    fun toTimerString() : Pair<String, String> {
+    fun toTimerString(): Pair<String, String> {
         val secondsLong = timer.seconds.value!!.toLong()
         return Pair((secondsLong / 60).toString(), (secondsLong % 60).toString())
     }
