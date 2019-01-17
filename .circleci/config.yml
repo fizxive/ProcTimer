@@ -8,11 +8,25 @@ jobs:
             JVM_OPTS : -Xmx4G
         steps:
             - checkout
-            - run : 
+
+            # for danger
+            - restore_cache:
+                keys:
+                    - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+                    - gem-cache-v1-{{ arch }}-{{ .Branch }}
+                    - gem-cache-v1
+            - run: bundle install --path vendor/bundle --clean --jobs=2 --retry=3
+            - save_cache:
+                key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+                paths:
+                    - vendor/bundle
+
+            # add permissison avoid failre
+            - run :
                 name : Chmod permissions
                 command : sudo chmod +x ./gradlew
             - restore_cache:
-                keys : 
+                keys :
                     - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             - run :
                 name : Download Dependencies
@@ -21,9 +35,22 @@ jobs:
                 paths :
                     - ~/.gradle
                 key : jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+
+            # build
+            - run :
+                name : Build
+                command : ./gradlew assembleDebug
+
+            # Run Tests and store results.
             - run :
                 name : Run Tests
                 command : ./gradlew lint test
+            - run :
+                name : Run ktlint
+                command : ./gradlew ktlintcheck
+            - run :
+                name : Run Danger
+                command : bundle exec danger
             - store_artifacts :
                 path : app/build/reports
                 destination : reports
