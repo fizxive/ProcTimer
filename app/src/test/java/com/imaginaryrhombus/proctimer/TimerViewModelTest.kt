@@ -1,7 +1,8 @@
 package com.imaginaryrhombus.proctimer
 
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -22,7 +23,8 @@ class TimerViewModelTest {
     fun testText() {
 
         val timerViewModel = TimerViewModel(testActivity.application)
-        val method = timerViewModel.javaClass.getMethod("createTimerStringFromSeconds", Float::class.java)
+        val method =
+            timerViewModel.javaClass.getMethod("createTimerStringFromSeconds", Float::class.java)
 
         assertNotNull(method)
         method.isAccessible = true

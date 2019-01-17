@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.ui.timer.MultiTimerModel
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -21,7 +23,8 @@ class MultiTimerModelTest {
     /**
      * テスト用の SharedPreferences.
      */
-    private val sharedPreferences : SharedPreferences = testActivity.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences =
+        testActivity.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
     /**
      * まっさらな状態からインスタンスを生成したときの動作を確認する.
@@ -55,8 +58,13 @@ class MultiTimerModelTest {
         val multiTimerModel = MultiTimerModel(testActivity)
 
         assertTrue(sharedPreferences.contains(TimerConstants.PREFERENCE_SAVE_VERSION_NAME))
-        assertEquals(sharedPreferences.getInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION_INVALID), TimerConstants.PREFERENCE_SAVE_VERSION)
-        assertNotEquals(sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, ""), "")
+        assertEquals(
+            sharedPreferences.getInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME,
+                TimerConstants.PREFERENCE_SAVE_VERSION_INVALID),
+            TimerConstants.PREFERENCE_SAVE_VERSION)
+        assertNotEquals(
+            sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, ""),
+            "")
 
         multiTimerModel.addTimer()
         multiTimerModel.setActiveTimerSeconds(10.0f)
@@ -73,5 +81,4 @@ class MultiTimerModelTest {
             assertEquals(timers[index]?.defaultSeconds, timers2[index]?.defaultSeconds)
         }
     }
-
 }
