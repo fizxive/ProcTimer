@@ -1,6 +1,7 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * 時間経過を司る内部クラス

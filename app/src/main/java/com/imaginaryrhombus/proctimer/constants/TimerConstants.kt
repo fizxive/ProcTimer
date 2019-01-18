@@ -41,5 +41,4 @@ class TimerConstants {
          */
         const val TIMER_DEFAULT_COUNTS = 1
     }
-
 }

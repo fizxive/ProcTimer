@@ -23,10 +23,11 @@ class TimerFragment : Fragment() {
     }
 
     private lateinit var viewModel: TimerViewModel
-    private lateinit var binding : TimerFragmentBinding
+    private lateinit var binding: TimerFragmentBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.timer_fragment, container, false)

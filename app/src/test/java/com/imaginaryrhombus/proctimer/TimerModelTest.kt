@@ -1,7 +1,10 @@
 package com.imaginaryrhombus.proctimer
 
 import com.imaginaryrhombus.proctimer.ui.timer.TimerModel
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -9,7 +12,7 @@ import org.robolectric.RobolectricTestRunner
 /**
  * テスト試行回数.
  */
-const val TEST_TIMES : Int = 10
+const val TEST_TIMES: Int = 10
 
 @RunWith(RobolectricTestRunner::class)
 class TimerModelTest {
@@ -60,7 +63,7 @@ class TimerModelTest {
      */
     @Test
     fun testTick() {
-        repeat(TEST_TIMES, fun (_: Int){
+        repeat(TEST_TIMES, fun (_: Int) {
             val testSeconds = TimerModelTestUtility.getRandomFloat() / 2
             val testTickSeconds = TimerModelTestUtility.getRandomFloat() / 2
 
@@ -72,7 +75,8 @@ class TimerModelTest {
             tickMethod.isAccessible = true
             tickMethod.invoke(timerModel, testTickSeconds)
 
-            val actualSeconds = if(testSeconds > testTickSeconds) testSeconds - testTickSeconds else 0.0f
+            val actualSeconds =
+                if (testSeconds > testTickSeconds) testSeconds - testTickSeconds else 0.0f
             assertEquals(timerModel.seconds.value, actualSeconds)
             assertEquals(timerModel.isEnded, actualSeconds <= 0.0f)
         })
