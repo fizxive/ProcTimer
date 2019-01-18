@@ -96,7 +96,8 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
         val minutesLong = minutes.toLong()
         val secondsLong = seconds.toLong()
 
-        multiTimerModel.setActiveTimerSeconds((TimeUnit.MINUTES.toSeconds(minutesLong) + secondsLong).toFloat())
+        multiTimerModel.setActiveTimerSeconds(
+            (TimeUnit.MINUTES.toSeconds(minutesLong) + secondsLong).toFloat())
     }
 
     /**
@@ -148,8 +149,10 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
         fun createTimerStringFromSeconds(inputSeconds: Float): String {
             val timerMilliseconds = max(inputSeconds.times(1000.0f).toLong(), 0)
             val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
-            val milliseconds = timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
+            val seconds = TimeUnit.MILLISECONDS.toSeconds(
+                timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
+            val milliseconds = timerMilliseconds -
+                TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
             return ("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
         }
     }
