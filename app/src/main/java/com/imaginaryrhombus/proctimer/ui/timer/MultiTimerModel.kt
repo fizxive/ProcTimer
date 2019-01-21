@@ -119,9 +119,8 @@ class MultiTimerModel(context: Context) {
     fun getTimers(count: Int, includeActive: Boolean = false): List<TimerModel?> {
         val retCount = if (count.sign == -1) timers.size else count
         val ret = MutableList<TimerModel?>(retCount) { null }
-        // includeActive が false の場合、アクティブタイマーの分だけ数を減らして考える.
-        val timerCount = timers.size - (if (includeActive.not()) 1 else 0)
-        for (i in 0 until (min(timerCount, count))) {
+        val initIndex = if (includeActive) 0 else 1
+        for (i in initIndex until retCount) {
             val timerIndex = if (includeActive) i else i + 1
             ret[i] = getTimer(timerIndex)
         }
