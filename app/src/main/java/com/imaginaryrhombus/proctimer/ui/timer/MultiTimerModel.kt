@@ -68,8 +68,7 @@ class MultiTimerModel(context: Context) {
         timers.clear()
         if (restoreTimerPreferences().not()) {
             for (index in 0 until TimerConstants.TIMER_DEFAULT_COUNTS) {
-                val timer = createTimerModel()
-                timers.add(timer)
+                timers.add(createTimerModel())
             }
             saveTimerPreferences()
         }
