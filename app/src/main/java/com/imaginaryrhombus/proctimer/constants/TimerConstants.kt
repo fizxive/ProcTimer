@@ -39,6 +39,6 @@ class TimerConstants {
         /**
          * タイマーの個数が未定義時の初期個数.
          */
-        const val TIMER_DEFAULT_COUNTS = 1
+        const val TIMER_DEFAULT_COUNTS = 2
     }
 }
