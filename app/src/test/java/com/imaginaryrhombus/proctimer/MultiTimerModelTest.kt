@@ -6,6 +6,7 @@ import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.ui.timer.MultiTimerModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,14 +39,14 @@ class MultiTimerModelTest {
         val firstTimerModel = multiTimerModel.activeTimerModel
         assertEquals(firstTimerModel.seconds.value, TimerConstants.TIMER_DEFAULT_SECONDS)
 
-        val timers = multiTimerModel.getTimers(999, true)
-        assert(timers.first() === firstTimerModel)
+        val timers = multiTimerModel.getTimers(-1, true)
+        assertEquals(timers.size, TimerConstants.TIMER_DEFAULT_COUNTS)
 
-        assertTrue(timers.all {
-            val firstTest = it === timers.first() && it != null
-            val otherTest = it !== timers.first() && it == null
-            firstTest || otherTest
-        })
+        timers.forEach {
+            assertNotNull(it)
+            assertEquals(it?.seconds?.value, TimerConstants.TIMER_DEFAULT_SECONDS)
+            assertEquals(it?.defaultSeconds, TimerConstants.TIMER_DEFAULT_SECONDS)
+        }
     }
 
     /**
