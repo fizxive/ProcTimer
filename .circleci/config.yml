@@ -10,7 +10,7 @@ defaults: &defaults
 
 jobs:
     check:
-        <<: *defaults
+    <<: *defaults
         steps:
             - checkout
             # for danger
