@@ -45,7 +45,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     private val _nextTimerStrings = MutableList(displayNextTimerCount) { MutableLiveData<String>() }
 
-    val nextTimerStrings : List<MutableLiveData<String>>
+    val nextTimerStrings: List<MutableLiveData<String>>
     get() {
         return _nextTimerStrings.toList()
     }
