@@ -78,7 +78,7 @@ class MultiTimerModelTest {
         assertEquals(timers.size, timers2.size)
 
         for (index in 0 until timers.size) {
-            assertEquals(timers[index]?.seconds, timers2[index]?.seconds)
+            assertEquals(timers[index]?.seconds?.value, timers2[index]?.seconds?.value)
             assertEquals(timers[index]?.defaultSeconds, timers2[index]?.defaultSeconds)
         }
     }
