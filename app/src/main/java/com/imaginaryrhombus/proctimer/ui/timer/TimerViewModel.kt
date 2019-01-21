@@ -43,7 +43,12 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
     /**
      * 準備中のタイマーのテキスト.
      */
-    val nextTimerStrings = MutableList(displayNextTimerCount) { MutableLiveData<String>() }
+    private val _nextTimerStrings = MutableList(displayNextTimerCount) { MutableLiveData<String>() }
+
+    val nextTimerStrings : List<MutableLiveData<String>>
+    get() {
+        return _nextTimerStrings.toList()
+    }
 
     /**
      * タイマーが変更されたときのリスナー.
@@ -122,12 +127,12 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     private fun updateTimerText() {
         // 予めタイマーが無い文字列で初期化してからタイマーを取得して文字列を更新する.
-        nextTimerStrings.forEach {
+        _nextTimerStrings.forEach {
             it.postValue(app.applicationContext.getString(R.string.timer_invalid_text))
         }
 
-        val timers = multiTimerModel.getTimers(nextTimerStrings.size)
-        nextTimerStrings.forEachIndexed { index, timerText ->
+        val timers = multiTimerModel.getTimers(_nextTimerStrings.size)
+        _nextTimerStrings.forEachIndexed { index, timerText ->
             timers[index]?.let {
                 timerText.postValue(createTimerStringFromSeconds(it.seconds.value!!))
             }
