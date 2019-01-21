@@ -117,10 +117,11 @@ class MultiTimerModel(context: Context) {
      *
      */
     fun getTimers(count: Int, includeActive: Boolean = false): List<TimerModel?> {
-        val retCount = if (count.sign == -1) timers.size else count
+        // includeActive.not のときは戦闘タイマーの数分差し引いた数を全体の数として扱う.
+        val timersCount = if (includeActive) timers.size else timers.size - 1
+        val retCount = if (count.sign == -1) timersCount else count
         val ret = MutableList<TimerModel?>(retCount) { null }
-        val initIndex = if (includeActive) 0 else 1
-        for (i in initIndex until retCount) {
+        for (i in 0 until min(timersCount, retCount)) {
             val timerIndex = if (includeActive) i else i + 1
             ret[i] = getTimer(timerIndex)
         }
