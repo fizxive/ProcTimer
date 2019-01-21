@@ -7,6 +7,7 @@ import com.imaginaryrhombus.proctimer.ui.timer.MultiTimerModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,6 +47,66 @@ class MultiTimerModelTest {
             assertNotNull(it)
             assertEquals(it?.seconds?.value, TimerConstants.TIMER_DEFAULT_SECONDS)
             assertEquals(it?.defaultSeconds, TimerConstants.TIMER_DEFAULT_SECONDS)
+        }
+    }
+
+    /**
+     * タイマー取得の挙動を確認する.
+     */
+    @Test
+    fun testGetTimer() {
+        sharedPreferences.edit().clear()
+
+        val multiTimerModel = MultiTimerModel(testActivity)
+
+        multiTimerModel.addTimer()
+        multiTimerModel.setActiveTimerSeconds(30.0f)
+        multiTimerModel.next()
+        multiTimerModel.setActiveTimerSeconds(60.0f)
+        multiTimerModel.next()
+        multiTimerModel.setActiveTimerSeconds(90.0f)
+        multiTimerModel.next()
+
+        /**
+         * この時点で、以下のような並びになっているはず.
+         * [30.0f], [60.0f], [90.0f]
+         */
+
+        multiTimerModel.getTimers(-1, true).run {
+            assertEquals(size, 3)
+            assertNotNull(get(0))
+            assertNotNull(get(1))
+            assertNotNull(get(2))
+            assertEquals(get(0)?.seconds?.value, 30.0f)
+            assertEquals(get(1)?.seconds?.value, 60.0f)
+            assertEquals(get(2)?.seconds?.value, 90.0f)
+            assertEquals(get(0)?.defaultSeconds, 30.0f)
+            assertEquals(get(1)?.defaultSeconds, 60.0f)
+            assertEquals(get(2)?.defaultSeconds, 90.0f)
+        }
+
+        multiTimerModel.getTimers(3, true).run {
+            assertEquals(size, 3)
+            assertNotNull(get(0))
+            assertNotNull(get(1))
+            assertNotNull(get(2))
+            assertEquals(get(0)?.seconds?.value, 30.0f)
+            assertEquals(get(1)?.seconds?.value, 60.0f)
+            assertEquals(get(2)?.seconds?.value, 90.0f)
+            assertEquals(get(0)?.defaultSeconds, 30.0f)
+            assertEquals(get(1)?.defaultSeconds, 60.0f)
+            assertEquals(get(2)?.defaultSeconds, 90.0f)
+        }
+
+        multiTimerModel.getTimers(3).run {
+            assertEquals(size, 3)
+            assertNotNull(get(0))
+            assertNotNull(get(1))
+            assertNull(get(2))
+            assertEquals(get(0)?.seconds?.value, 60.0f)
+            assertEquals(get(1)?.seconds?.value, 90.0f)
+            assertEquals(get(0)?.defaultSeconds, 60.0f)
+            assertEquals(get(1)?.defaultSeconds, 90.0f)
         }
     }
 
