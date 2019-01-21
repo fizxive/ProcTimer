@@ -52,7 +52,8 @@ class TimerFragment : Fragment() {
 
                     val alertBuilder = AlertDialog.Builder(this@run).run {
                         setTitle(R.string.timer_end_dialog_text)
-                        setPositiveButton(R.string.timer_end_dialog_button) { _: DialogInterface, _: Int ->
+                        setPositiveButton(R.string.timer_end_dialog_button) {
+                                _: DialogInterface, _: Int ->
                             ringtone.stop()
                             viewModel.nextTimer()
                         }
