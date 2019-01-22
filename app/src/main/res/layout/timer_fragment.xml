@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/timer"
-        tools:context=".ui.timer.TimerFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timer"
+    tools:context=".ui.timer.TimerFragment">
 
     <data>
         <variable name="timerViewModel" type="com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel"/>
@@ -21,8 +21,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="@{timerViewModel.timerText, default=@string/timer_default_text}"
+            android:text="@{timerViewModel.currentTimerText, default=@string/timer_default_text}"
             android:textSize="30sp"/>
+        <TextView
+            android:id="@+id/nextTimerText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{timerViewModel.nextTimerStrings[0], default=@string/timer_invalid_text}"
+            android:textSize="24sp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/currentTimerText" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/nextTimerText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{timerViewModel.nextTimerStrings[1], default=@string/timer_invalid_text}"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/nextTimerText1" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+        />
+        <TextView
+            android:id="@+id/nextTimerText3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{timerViewModel.nextTimerStrings[2], default=@string/timer_invalid_text}"
+            android:textSize="24sp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/nextTimerText2"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+        />
         <Button
             android:id="@+id/startButton"
             android:text="@string/button_start"
@@ -39,6 +65,15 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@+id/startButton" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+        />
+        <Button
+            android:id="@+id/resetButton"
+            android:text="@string/button_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/stopButton" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
         />
 

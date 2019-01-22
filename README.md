@@ -5,7 +5,7 @@ master : [![CircleCI](https://circleci.com/gh/fizxive/ProcTimer/tree/master.svg?
 develop : [![CircleCI](https://circleci.com/gh/fizxive/ProcTimer/tree/develop.svg?style=svg)](https://circleci.com/gh/fizxive/ProcTimer/tree/develop)
 
 ## 使用ソフト
-Android Studio 3.3 RC3
+Android Studio 3.3
 
 ## リンク
 

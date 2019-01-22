@@ -1,49 +1,137 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
-import android.content.Context
-import com.imaginaryrhombus.proctimer.constants.TimerConstants
-import java.io.Closeable
+import android.os.Handler
+import androidx.lifecycle.MutableLiveData
 
 /**
  * 一つ一つのタイマー用モデル.
  */
-class TimerModel(context : Context) : Closeable {
+class TimerModel {
 
-    /// 残り秒数.
-    var seconds = 0.0f
+    /**
+     * タイマー終了時リスナー.
+     */
+    interface OnEndedListener {
+        /**
+         * タイマーが終了したときに呼ばれる.
+         */
+        fun onEnd()
+    }
 
-    /// ローカルデータ読み書き用.
-    private val sharedPreferences = context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+    /**
+     * 残り秒数.
+     */
+    val seconds = MutableLiveData<Float>().apply {
+        value = 0.0f
+    }
 
-    init {
-        sharedPreferences?.let { preferences ->
-            seconds = preferences.getFloat("seconds", 30.0f)
-            adjustSeconds()
+    /**
+     * 残り秒数(バッキングプロパティ).
+     */
+    private var _seconds = 0.0f
+    set(value) {
+        field = value
+        if (field < 0.0f) field = 0.0f
+        seconds.value = field
+    }
+
+    /**
+     * 初期秒数.
+     */
+    var defaultSeconds = 0.0f
+    private set
+
+    /**
+     * 現在のタイマーが終了しているか.
+     */
+    val isEnded: Boolean
+    get() = _seconds <= 0.0f
+
+    /**
+     * 終了時のコールバック.
+     */
+    var onEndListener: OnEndedListener? = null
+
+    /**
+     * 秒数を設定する.
+     */
+    fun setSeconds(seconds: Float) {
+        if (isTicking) stopTick()
+        _seconds = seconds
+        defaultSeconds = _seconds
+    }
+
+    /**
+     * 時間経過の判定を行う間隔.
+     */
+    private val tickInterval = 10L
+
+    /**
+     * 時間経過用のハンドラ.
+     */
+    private val tickHandler = Handler()
+
+    /**
+     * 時間経過制御用クラス.
+     */
+    private var timeTicker = TimeTicker()
+
+    /**
+     * 動作中かのフラグ.
+     */
+    private var isTicking = false
+
+    /**
+     * 時間経過用のワーカー.
+     */
+    private val tickRunner = object : Runnable {
+        override fun run() {
+
+            timeTicker.saveTick()
+            tick(timeTicker.latestTick)
+
+            if (isEnded) {
+                onEndListener?.onEnd()
+            } else {
+                tickHandler.postDelayed(this, tickInterval)
+            }
         }
     }
 
-    override fun close() {
-        sharedPreferences?.edit()?.putFloat("seconds", seconds)?.apply()
+    /**
+     * 時間計測を開始.
+     */
+    fun startTick() {
+        timeTicker.resetTickSeconds()
+        if (isTicking.not()) {
+            tickHandler.post(tickRunner)
+            isTicking = true
+        }
+    }
+
+    /**
+     * 動作している時間計測を停止する.
+     */
+    fun stopTick() {
+        if (isTicking) {
+            tickHandler.removeCallbacks(tickRunner)
+            isTicking = false
+        }
+    }
+
+    /**
+     * 経過時間をリセット.
+     */
+    fun reset() {
+        if (isTicking) stopTick()
+        _seconds = defaultSeconds
     }
 
     /**
      * 時間を経過させる.
      * @param deltaSeconds 経過時間.
      */
-    fun tick(deltaSeconds :Float) {
-        seconds -= deltaSeconds
-        adjustSeconds()
-    }
-
-    /**
-     * 現在のタイマーが終了しているか.
-     */
-    fun isEnded() : Boolean {return seconds <= 0.0f}
-
-    /**
-     * 負の値になっていたら修正する.
-     */
-    private fun adjustSeconds() {
-        if (seconds < 0.0f) seconds = 0.0f
+    private fun tick(deltaSeconds: Float) {
+        _seconds -= deltaSeconds
     }
 }

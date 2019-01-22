@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ChainedTimer</string>
+    <string name="button_start">START</string>
+    <string name="button_stop">STOP</string>
+    <string name="timer_dialog_text">Timer Set</string>
+    <string name="timer_dialog_negative_button">Cancel</string>
+    <string name="timer_dialog_positive_button">Set</string>
+    <string name="timer_end_dialog_text">Timer End</string>
+    <string name="timer_end_dialog_button">Next</string>
+    <string name="button_reset">RESET</string>
+    <string name="timer_default_text">00:00:000</string>
+    <string name="timer_dialog_colon">:</string>
+    <string name="timer_invalid_text">--:--:---</string>
+</resources>
