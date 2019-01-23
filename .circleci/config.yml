@@ -57,6 +57,7 @@ jobs:
                 root: ~/code
                 paths:
                     - .
+
     build:
         <<: *defaults
         steps:
@@ -87,11 +88,50 @@ jobs:
                 paths:
                     - .
 
+    deploy:
+        <<: *defaults
+        steps:
+            - checkout
+            # add permissison avoid failre
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
+            - restore_cache:
+                keys:
+                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+            - run:
+                name: Download Dependencies
+                command: ./gradlew androidDependencies
+            - save_cache:
+                paths:
+                    - ~/.gradle
+                key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+            # build
+            - run:
+                name: Build
+                command: ./gradlew bundle
+            - store_artifacts:
+                path: app/build/outputs/bundle/release/app.aab
+                destination: app.aab
+            - persist_to_workspace:
+                root: ~/code
+                paths:
+                    - .
+
 workflows:
-  version: 2
-  build:
-    jobs:
-      - build
-      - check:
-          requires:
+    version: 2
+    build:
+        jobs:
             - build
+            - check:
+                requires:
+                    - build
+            - deploy
+                requires:
+                    - build
+                    - check
+                filters:
+                    branches:
+                        only: master
+
+
