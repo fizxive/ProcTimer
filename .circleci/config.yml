@@ -126,7 +126,7 @@ workflows:
             - check:
                 requires:
                     - build
-            - deploy
+            - deploy:
                 requires:
                     - build
                     - check
