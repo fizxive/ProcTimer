@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "org.jlleitschuh.gradle.ktlint"
+apply plugin: 'com.google.gms.google-services'
 
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -53,6 +54,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:4.1'
