@@ -148,6 +148,8 @@ workflows:
                         only:
                             - master
                             - develop
+                            - /feature\/.*/
+                            - /hotfix\/.*/
             - check:
                 requires:
                     - decode_json
