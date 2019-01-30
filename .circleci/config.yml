@@ -16,7 +16,10 @@ jobs:
             - run:
                 name: Decode json
                 command: echo $GOOGLE_SERVICES_JSON | base64 --decode --ignore-garbage > app/google-services.json
-
+            - persist_to_workspace:
+                root: ~/code
+                paths:
+                    - .
 
     check:
         <<: *defaults
