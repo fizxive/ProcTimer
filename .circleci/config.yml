@@ -24,7 +24,8 @@ jobs:
     check:
         <<: *defaults
         steps:
-            - checkout
+            - attach_workspace:
+                at: .
             # for danger
             - restore_cache:
                 keys:
@@ -75,7 +76,8 @@ jobs:
     build:
         <<: *defaults
         steps:
-            - checkout
+            - attach_workspace:
+                at: .
             # add permissison avoid failre
             - run:
                 name: Chmod permissions
@@ -105,7 +107,8 @@ jobs:
     deploy:
         <<: *defaults
         steps:
-            - checkout
+            - attach_workspace:
+                at: .
             # add permissison avoid failre
             - run:
                 name: Chmod permissions
@@ -140,11 +143,18 @@ workflows:
             - build:
                 requires:
                     - decode_json
+                filters:
+                    branches:
+                        only:
+                            - master
+                            - develop
             - check:
                 requires:
+                    - decode_json
                     - build
             - deploy:
                 requires:
+                    - decode_json
                     - build
                     - check
                 filters:
