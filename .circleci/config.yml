@@ -45,14 +45,14 @@ jobs:
                 command: sudo chmod +x ./gradlew
             - restore_cache:
                 keys:
-                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             - run:
                 name: Download Dependencies
                 command: ./gradlew androidDependencies
             - save_cache:
                 paths:
                     - ~/.gradle
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # Run Tests and store results.
             - run:
                 name: Run Tests
@@ -84,14 +84,14 @@ jobs:
                 command: sudo chmod +x ./gradlew
             - restore_cache:
                 keys:
-                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             - run:
                 name: Download Dependencies
                 command: ./gradlew androidDependencies
             - save_cache:
                 paths:
                     - ~/.gradle
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # build
             - run:
                 name: Build
@@ -115,14 +115,14 @@ jobs:
                 command: sudo chmod +x ./gradlew
             - restore_cache:
                 keys:
-                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             - run:
                 name: Download Dependencies
                 command: ./gradlew androidDependencies
             - save_cache:
                 paths:
                     - ~/.gradle
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # build
             - run:
                 name: Build
