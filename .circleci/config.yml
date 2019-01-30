@@ -69,6 +69,10 @@ jobs:
                 key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
                 paths:
                     - vendor/bundle
+            # add permissison avoid failre
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
             # Run Tests and store results.
             - run:
                 name: Run Tests
@@ -94,6 +98,10 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
+            # add permissison avoid failre
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
             # build
             - run:
                 name: Build
@@ -111,6 +119,10 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
+            # add permissison avoid failre
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
             # build
             - run:
                 name: Build
