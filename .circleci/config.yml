@@ -4,7 +4,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/code
   docker:
-    - image: circleci/android:api-28@sha256:e87528d81a9e762d80232e1a6c32a3f374195a7ffa0aa3eb2a594bc166d6ae67
+    - image: circleci/android:api-28
   environment:
     JVM_OPTS: -Xmx4G
 
