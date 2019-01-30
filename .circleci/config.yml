@@ -21,6 +21,26 @@ jobs:
                 paths:
                     - .
 
+    download_dependencies:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            # add permissison avoid failre
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
+            - restore_cache:
+                keys:
+                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+            - run:
+                name: Download Dependencies
+                command: ./gradlew androidDependencies
+            - save_cache:
+                paths:
+                    - ~/.gradle
+                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+
     check:
         <<: *defaults
         steps:
@@ -39,20 +59,6 @@ jobs:
                 key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
                 paths:
                     - vendor/bundle
-            # add permissison avoid failre
-            - run:
-                name: Chmod permissions
-                command: sudo chmod +x ./gradlew
-            - restore_cache:
-                keys:
-                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
-            - save_cache:
-                paths:
-                    - ~/.gradle
-                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # Run Tests and store results.
             - run:
                 name: Run Tests
@@ -78,20 +84,6 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
-            # add permissison avoid failre
-            - run:
-                name: Chmod permissions
-                command: sudo chmod +x ./gradlew
-            - restore_cache:
-                keys:
-                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
-            - save_cache:
-                paths:
-                    - ~/.gradle
-                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # build
             - run:
                 name: Build
@@ -109,20 +101,6 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
-            # add permissison avoid failre
-            - run:
-                name: Chmod permissions
-                command: sudo chmod +x ./gradlew
-            - restore_cache:
-                keys:
-                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
-            - save_cache:
-                paths:
-                    - ~/.gradle
-                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # build
             - run:
                 name: Build
@@ -140,9 +118,11 @@ workflows:
     build:
         jobs:
             - decode_json
+            - download_dependencies
             - build:
                 requires:
                     - decode_json
+                    - download_dependencies
                 filters:
                     branches:
                         only:
@@ -153,10 +133,12 @@ workflows:
             - check:
                 requires:
                     - decode_json
+                    - download_dependencies
                     - build
             - deploy:
                 requires:
                     - decode_json
+                    - download_dependencies
                     - build
                     - check
                 filters:
