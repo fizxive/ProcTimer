@@ -1,6 +1,5 @@
 package com.imaginaryrhombus.proctimer.constants
 
-import android.content.Context
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.imaginaryrhombus.proctimer.BuildConfig
 
@@ -12,10 +11,9 @@ class ApplicationUtility {
     companion object {
         /**
          * アップデートが必要か(実行中のアプリが強制アップデート対象か)を確認する.
-         * @param context アプリケーションのコンテキスト.
          * @return 強制アップデートならば true.
          */
-        fun checkUpdateRequired(context: Context): Boolean {
+        fun checkUpdateRequired(): Boolean {
             val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
             val configName = if (BuildConfig.DEBUG) "LEAST_VERSION_DEBUG" else "LEAST_VERSION"
@@ -31,10 +29,7 @@ class ApplicationUtility {
 
                 val requiredVersion = firebaseRemoteConfig.getString(configName)
 
-                val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-                val currentVersion = packageInfo.versionName
-
-                ret = isRequiredUpdate(currentVersion, requiredVersion)
+                ret = isRequiredUpdate(BuildConfig.VERSION_NAME, requiredVersion)
             }
 
             return ret
