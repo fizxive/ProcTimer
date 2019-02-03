@@ -50,15 +50,20 @@ class ApplicationUtility {
             val currentSubIntVersion = currentSubVersion.toIntOrNull() ?: 0
             val requiredSubIntVersion = requiredSubVersion.toIntOrNull() ?: 0
 
-            if (requiredSubIntVersion > currentSubIntVersion) {
-                return true
-            } else if (currentSubIntVersion > requiredSubIntVersion) {
-                return false
-            } else {
-                return isRequiredUpdate(
-                    currentVersion.substringAfter(".", ""),
-                    requiredVersion.substringAfter(".", ""))
+            var ret = false
+
+            when {
+                requiredSubIntVersion > currentSubIntVersion -> {
+                    ret = true
+                }
+                requiredSubIntVersion == currentSubIntVersion -> {
+                    return isRequiredUpdate(
+                        currentVersion.substringAfter(".", ""),
+                        requiredVersion.substringAfter(".", ""))
+                }
             }
+
+            return ret
         }
     }
 }
