@@ -1,4 +1,4 @@
-package com.imaginaryrhombus.proctimer.constants
+package com.imaginaryrhombus.proctimer.application
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.imaginaryrhombus.proctimer.BuildConfig
@@ -29,7 +29,10 @@ class ApplicationUtility {
 
                 val requiredVersion = firebaseRemoteConfig.getString(configName)
 
-                ret = isRequiredUpdate(BuildConfig.VERSION_NAME, requiredVersion)
+                ret = isRequiredUpdate(
+                    BuildConfig.VERSION_NAME,
+                    requiredVersion
+                )
             }
 
             return ret
@@ -59,7 +62,8 @@ class ApplicationUtility {
                 requiredSubIntVersion == currentSubIntVersion -> {
                     return isRequiredUpdate(
                         currentVersion.substringAfter(".", ""),
-                        requiredVersion.substringAfter(".", ""))
+                        requiredVersion.substringAfter(".", "")
+                    )
                 }
             }
 
