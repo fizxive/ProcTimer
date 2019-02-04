@@ -32,7 +32,7 @@ android {
             includeAndroidResources = true
         }
         unitTests.all {
-            maxHeapSize = '3G'
+            maxHeapSize = '2g'
         }
     }
 }
