@@ -10,7 +10,7 @@ import com.imaginaryrhombus.proctimer.application.UpdateChecker
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 
 class TimerActivity : AppCompatActivity(),
-    UpdateChecker.UpdateRequiredListener{
+    UpdateChecker.UpdateRequiredListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -95,5 +95,4 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
 
         return ret
     }
-
 }
