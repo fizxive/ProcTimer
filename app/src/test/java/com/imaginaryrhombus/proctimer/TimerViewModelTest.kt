@@ -14,7 +14,9 @@ class TimerViewModelTest {
     /**
      * テスト用の Activity.
      */
-    private val testActivity = Robolectric.setupActivity(TimerActivity::class.java)!!
+    private val testActivity =
+        checkNotNull(Robolectric.setupActivity(TimerActivity::class.java))
+            {"Activity creation for test failed."}
 
     /**
      * 秒数が正常にフォーマットされているか.
