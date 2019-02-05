@@ -73,8 +73,8 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
      */
     private fun isUpdateRequired(currentVersion: String, requiredVersion: String): Boolean {
 
-        val currentSubVersion = currentVersion.substringBefore(".", "0")
-        val requiredSubVersion = requiredVersion.substringBefore(".", "0")
+        val currentSubVersion = currentVersion.substringBefore(".", currentVersion)
+        val requiredSubVersion = requiredVersion.substringBefore(".", requiredVersion)
 
         val currentSubIntVersion = currentSubVersion.toIntOrNull() ?: 0
         val requiredSubIntVersion = requiredSubVersion.toIntOrNull() ?: 0
@@ -86,10 +86,13 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
                 ret = true
             }
             requiredSubIntVersion == currentSubIntVersion -> {
-                return isUpdateRequired(
-                    currentVersion.substringAfter(".", ""),
-                    requiredVersion.substringAfter(".", "")
-                )
+                val nextCurrentVersion = currentVersion.substringAfter(".", "")
+                val nextRequiredVersion = requiredVersion.substringAfter(".", "")
+                ret = if (nextCurrentVersion.isEmpty() && nextRequiredVersion.isEmpty()) {
+                    false
+                } else {
+                    isUpdateRequired(nextCurrentVersion, nextRequiredVersion)
+                }
             }
         }
 
