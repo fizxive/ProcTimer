@@ -35,9 +35,27 @@ class UpdateCheckerTest {
 
         checkMethod.isAccessible = true
 
-        assertTrue(checkMethod.invoke(updateChecker, "0", "1") as Boolean)
-        assertFalse(checkMethod.invoke(updateChecker, "1", "0") as Boolean)
-        assertFalse(checkMethod.invoke(updateChecker, "1", "1") as Boolean)
-    }
+        fun isUpdateRequired(currentVersion: String, requiredVersion: String): Boolean {
+            return checkMethod.invoke(updateChecker, currentVersion, requiredVersion) as Boolean
+        }
 
+        assertTrue(isUpdateRequired("0", "1"))
+        assertFalse(isUpdateRequired("1", "0"))
+        assertFalse(isUpdateRequired("1", "1"))
+
+        assertTrue(isUpdateRequired("0.1", "1.0"))
+        assertTrue(isUpdateRequired("0.1", "0.2"))
+        assertTrue(isUpdateRequired("1.0", "2.0"))
+        assertFalse(isUpdateRequired("1.1", "1.0"))
+        assertFalse(isUpdateRequired("2.1", "2.1"))
+
+        assertTrue(isUpdateRequired("0.0.1", "1.0.0"))
+        assertTrue(isUpdateRequired("0.0.1", "0.1.0"))
+        assertTrue(isUpdateRequired("0.0.0", "0.0.1"))
+        assertTrue(isUpdateRequired("0.0.1", "0.0.2"))
+        assertFalse(isUpdateRequired("1.1.0", "1.0.0"))
+        assertFalse(isUpdateRequired("2.1.0", "2.1.0"))
+        assertFalse(isUpdateRequired("1.0.1", "1.0.0"))
+        assertFalse(isUpdateRequired("1.0.1", "1.0.1"))
+    }
 }
