@@ -1,5 +1,7 @@
 package com.imaginaryrhombus.proctimer
 
+import androidx.test.core.app.ApplicationProvider
+import com.google.firebase.FirebaseApp
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -11,10 +13,18 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class TimerViewModelTest {
 
+    init {
+        // これを Activity の作成前に行わないと IllegalStateException が発生する.
+        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext())
+    }
+
     /**
      * テスト用の Activity.
      */
-    private val testActivity = Robolectric.setupActivity(TimerActivity::class.java)!!
+    private val testActivity =
+        checkNotNull(Robolectric.setupActivity(TimerActivity::class.java)) {
+            "Activity creation for test failed."
+        }
 
     /**
      * 秒数が正常にフォーマットされているか.

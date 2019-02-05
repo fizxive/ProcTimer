@@ -4,22 +4,67 @@ version: 2
 defaults: &defaults
   working_directory: ~/code
   docker:
-    - image: circleci/android:api-28@sha256:e87528d81a9e762d80232e1a6c32a3f374195a7ffa0aa3eb2a594bc166d6ae67
+    - image: circleci/android:api-28
   environment:
     JVM_OPTS: -Xmx4G
 
 jobs:
-    check:
+    checkout:
         <<: *defaults
         steps:
             - checkout
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    decode_json:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Decode json
+                command: echo $GOOGLE_SERVICES_JSON | base64 --decode --ignore-garbage > app/google-services.json
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    download_dependencies:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            - restore_cache:
+                keys:
+                    - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+            # add permissison avoid failre
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
+            - run:
+                name: Download Dependencies
+                command: ./gradlew androidDependencies
+            - save_cache:
+                paths:
+                    - ~/.gradle
+                key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+
+    check:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
             # for danger
             - restore_cache:
                 keys:
                     - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
                     - gem-cache-v1-{{ arch }}-{{ .Branch }}
                     - gem-cache-v1
-            - run: bundle install --path vendor/bundle --clean --jobs=2 --retry=3
+            - run:
+                name: Bundle Install
+                command: bundle install --path vendor/bundle --clean --jobs=2 --retry=3
             - save_cache:
                 key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
                 paths:
@@ -28,16 +73,6 @@ jobs:
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
-            - restore_cache:
-                keys:
-                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
-            - save_cache:
-                paths:
-                    - ~/.gradle
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # Run Tests and store results.
             - run:
                 name: Run Tests
@@ -54,28 +89,19 @@ jobs:
             - store_test_results:
                 path: app/build/test-results
             - persist_to_workspace:
-                root: ~/code
+                root: .
                 paths:
                     - .
 
     build:
         <<: *defaults
         steps:
-            - checkout
+            - attach_workspace:
+                at: .
             # add permissison avoid failre
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
-            - restore_cache:
-                keys:
-                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
-            - save_cache:
-                paths:
-                    - ~/.gradle
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # build
             - run:
                 name: Build
@@ -84,28 +110,19 @@ jobs:
                 path: app/build/outputs/apk/app-debug.apk
                 destination: app-debug.apk
             - persist_to_workspace:
-                root: ~/code
+                root: .
                 paths:
                     - .
 
     deploy:
         <<: *defaults
         steps:
-            - checkout
+            - attach_workspace:
+                at: .
             # add permissison avoid failre
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
-            - restore_cache:
-                keys:
-                    - jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
-            - save_cache:
-                paths:
-                    - ~/.gradle
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
             # build
             - run:
                 name: Build
@@ -114,7 +131,7 @@ jobs:
                 path: app/build/outputs/bundle/release/app.aab
                 destination: app.aab
             - persist_to_workspace:
-                root: ~/code
+                root: .
                 paths:
                     - .
 
@@ -122,13 +139,22 @@ workflows:
     version: 2
     build:
         jobs:
-            - build
+            - checkout
+            - decode_json:
+                requires:
+                    - checkout
+            - download_dependencies:
+                requires:
+                    - checkout
+            - build:
+                requires:
+                    - decode_json
+                    - download_dependencies
             - check:
                 requires:
                     - build
             - deploy:
                 requires:
-                    - build
                     - check
                 filters:
                     branches:
