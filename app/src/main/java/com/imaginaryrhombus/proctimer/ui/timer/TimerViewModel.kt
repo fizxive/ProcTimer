@@ -110,8 +110,8 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      * @return 分、秒の順番で格納された文字列.
      */
     fun toTimerString(): Pair<String, String> {
-        val secondsLong = checkNotNull(timer.seconds.value)
-            {"This timer is not initialized"}.toLong()
+        val secondsLong =
+            checkNotNull(timer.seconds.value) { "This timer is not initialized" }.toLong()
         return Pair((secondsLong / 60).toString(), (secondsLong % 60).toString())
     }
 
@@ -136,8 +136,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
         _nextTimerStrings.forEachIndexed { index, timerText ->
             timers[index]?.let {
                 timerText.postValue(createTimerStringFromSeconds(
-                    checkNotNull(it.seconds.value)
-                        {"This timer is not initialized"})
+                    checkNotNull(it.seconds.value) { "This timer is not initialized" })
                 )
             }
         }
