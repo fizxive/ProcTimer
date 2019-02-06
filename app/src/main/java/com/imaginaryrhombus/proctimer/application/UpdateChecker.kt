@@ -33,7 +33,7 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
      */
     fun checkUpdateRequired() {
 
-        fetchConfig().addOnCompleteListener {
+        fetchConfig(0).addOnCompleteListener {
             firebaseRemoteConfig.activateFetched()
 
             val requiredVersion = firebaseRemoteConfig.getString(versionKey)
@@ -55,13 +55,13 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
         const val STORE_URL_KEY = "STORE_URL"
     }
 
-    private fun fetchConfig(): Task<Void> {
+    private fun fetchConfig(cacheExpirationSeconds: Long): Task<Void> {
         firebaseRemoteConfig.setDefaults(HashMap<String, Any>().apply {
             put(versionKey, "0.0.0.0")
             put(STORE_URL_KEY, "")
         })
 
-        return firebaseRemoteConfig.fetch()
+        return firebaseRemoteConfig.fetch(cacheExpirationSeconds)
     }
 
     /**
