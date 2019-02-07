@@ -28,8 +28,8 @@ class TimerActivity : AppCompatActivity(),
     override fun onUpdateRequired(updateUrl: String) {
 
         val alertDialog = AlertDialog.Builder(this).apply {
-            setTitle("新しいバージョンがあります")
-            setMessage("ストアに新しいバージョンが公開されています。\nお手数ですがアップデートをお願いいたします。")
+            setTitle(applicationContext.getString(R.string.update_dialog_title))
+            setMessage(applicationContext.getString(R.string.update_dialog_text))
             setPositiveButton("ストアに移動") { _: DialogInterface, _: Int ->
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
