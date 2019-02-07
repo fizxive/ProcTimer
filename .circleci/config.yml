@@ -114,7 +114,7 @@ jobs:
                 paths:
                     - .
 
-    deploy:
+    deploy_debug:
         <<: *defaults
         steps:
             - attach_workspace:
@@ -126,10 +126,25 @@ jobs:
             # build
             - run:
                 name: Build
-                command: ./gradlew bundle
-            - store_artifacts:
-                path: app/build/outputs/bundle/release/app.aab
-                destination: app.aab
+                command: ./gradlew uploadDeployGateDebug
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    deploy_release:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            # add permissison avoid failre
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
+            # build
+            - run:
+                name: Build
+                command: ./gradlew uploadDeployGateRelease
             - persist_to_workspace:
                 root: .
                 paths:
@@ -153,11 +168,20 @@ workflows:
             - check:
                 requires:
                     - build
-            - deploy:
+            - deploy_debug:
                 requires:
                     - check
                 filters:
                     branches:
-                        only: master
+                        only:
+                            - develop
+                            - /develop.+/
+            - deploy_release:
+                requires:
+                    - check
+                filters:
+                    branches:
+                        only:
+                            - master
 
 
