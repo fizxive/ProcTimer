@@ -11,4 +11,6 @@
     <string name="timer_default_text">00:00:000</string>
     <string name="timer_dialog_colon">:</string>
     <string name="timer_invalid_text">--:--:---</string>
+    <string name="update_dialog_text">ストアに新しいバージョンが公開されています。\nお手数ですがアップデートをお願いいたします。</string>
+    <string name="update_dialog_title">新しいバージョンがあります</string>
 </resources>
