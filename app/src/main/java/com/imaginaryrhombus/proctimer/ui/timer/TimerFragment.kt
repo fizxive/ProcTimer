@@ -84,6 +84,14 @@ class TimerFragment : Fragment() {
             viewModel.resetTimer()
         }
 
+        addButton.setOnClickListener {
+            viewModel.addTimer()
+        }
+
+        removeButton.setOnClickListener {
+            viewModel.removeTimer()
+        }
+
         currentTimerText.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
             pickerFragment.show(fragmentManager, "PickerDialog")
