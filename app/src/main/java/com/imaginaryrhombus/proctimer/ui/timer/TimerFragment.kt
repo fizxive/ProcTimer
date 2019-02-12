@@ -68,7 +68,7 @@ class TimerFragment : Fragment() {
         } ?: throw Resources.NotFoundException("Activity Not found.")
 
         binding.timerViewModel = viewModel
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         // 各種リスナー設定.
 
