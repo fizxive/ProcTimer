@@ -84,11 +84,16 @@ class MultiTimerModel(context: Context) {
 
     /**
      * 現在のタイマーを削除する.
+     * @param onFailureListener タイマーが1つのときに削除しようとしたときの動作.
      */
-    fun removeCurrentTimer() {
-        timers.removeAt(currentTimerIndex)
-        currentTimerIndex = adjustedIndexOf(currentTimerIndex)
-        saveTimerPreferences()
+    fun removeCurrentTimer(onFailureListener: () -> Unit = {}) {
+        if (timers.size > 1) {
+            timers.removeAt(currentTimerIndex)
+            currentTimerIndex = adjustedIndexOf(currentTimerIndex)
+            saveTimerPreferences()
+        } else {
+            onFailureListener()
+        }
     }
 
     /**

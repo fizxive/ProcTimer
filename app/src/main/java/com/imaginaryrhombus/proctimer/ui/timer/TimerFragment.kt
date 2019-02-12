@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
@@ -89,7 +90,9 @@ class TimerFragment : Fragment() {
         }
 
         removeButton.setOnClickListener {
-            viewModel.removeTimer()
+            viewModel.removeTimer {
+                Toast.makeText(context, "最後のタイマーは削除できません.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         currentTimerText.setOnClickListener {
