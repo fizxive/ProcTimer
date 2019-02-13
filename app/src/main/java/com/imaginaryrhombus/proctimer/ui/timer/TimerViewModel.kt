@@ -85,6 +85,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     fun addTimer() {
         multiTimerModel.addTimer()
+        updateTimerText()
     }
 
     /**
@@ -93,6 +94,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     fun removeTimer(onFailureListener: () -> Unit = {}) {
         multiTimerModel.removeCurrentTimer(onFailureListener)
+        updateTimerText()
     }
 
     /**
