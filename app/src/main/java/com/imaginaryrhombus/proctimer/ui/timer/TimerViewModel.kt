@@ -81,6 +81,23 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     /**
+     * タイマーの追加を Model に伝える.
+     */
+    fun addTimer() {
+        multiTimerModel.addTimer()
+        updateTimerText()
+    }
+
+    /**
+     * タイマーの削除を Model に伝える.
+     * @param onFailureListener タイマーの削除に失敗したときの動作.
+     */
+    fun removeTimer(onFailureListener: () -> Unit = {}) {
+        multiTimerModel.removeCurrentTimer(onFailureListener)
+        updateTimerText()
+    }
+
+    /**
      * タイマーをリセットする.
      */
     fun resetTimer() {

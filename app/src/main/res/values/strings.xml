@@ -13,4 +13,7 @@
     <string name="timer_invalid_text">--:--:---</string>
     <string name="update_dialog_text">ストアに新しいバージョンが公開されています。\nお手数ですがアップデートをお願いいたします。</string>
     <string name="update_dialog_title">新しいバージョンがあります</string>
+    <string name="button_add">タイマー追加</string>
+    <string name="button_remove">タイマー削除</string>
+    <string name="cannot_delete_last_timer">最後のタイマーは削除できません</string>
 </resources>
