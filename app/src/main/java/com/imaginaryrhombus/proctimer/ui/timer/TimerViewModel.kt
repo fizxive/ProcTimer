@@ -55,7 +55,8 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     private val timerChangedListener = object : MultiTimerModel.OnTimerChangedListener {
         override fun onTimerChanged() {
-            updateTimerText()
+            updateCurrentTimerText()
+            updateNextTimerText()
         }
     }
 
@@ -63,7 +64,8 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
         // 初期化子で設定を行うと 'Type checking has run into a recursive problem.' が発生してしまうのでここで行う.
         multiTimerModel.onTimerChangedListener = timerChangedListener
         // テキストが空白なので、更新する
-        updateTimerText()
+        updateNextTimerText()
+        updateCurrentTimerText()
     }
 
     /**
@@ -85,7 +87,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     fun addTimer() {
         multiTimerModel.addTimer()
-        updateTimerText()
+        updateNextTimerText()
     }
 
     /**
@@ -94,7 +96,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     fun removeTimer(onFailureListener: () -> Unit = {}) {
         multiTimerModel.removeCurrentTimer(onFailureListener)
-        updateTimerText()
+        updateNextTimerText()
     }
 
     /**
@@ -143,7 +145,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
     /**
      * 次のタイマーの表示を更新する.
      */
-    private fun updateTimerText() {
+    private fun updateNextTimerText() {
         // 予めタイマーが無い文字列で初期化してからタイマーを取得して文字列を更新する.
         _nextTimerStrings.forEach {
             it.postValue(app.applicationContext.getString(R.string.timer_invalid_text))
@@ -157,7 +159,12 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
                 )
             }
         }
+    }
 
+    /**
+     * 動作中タイマーの表示を更新する.
+     */
+    private fun updateCurrentTimerText() {
         // 前のタイマーを参照したままになっているので、タイマーのテキストの監視元を改めて設定する.
         currentTimerText = Transformations.map(timer.seconds) {
             createTimerStringFromSeconds(it)
