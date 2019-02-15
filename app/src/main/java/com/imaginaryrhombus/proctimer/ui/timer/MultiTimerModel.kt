@@ -19,6 +19,16 @@ class MultiTimerModel(context: Context) {
          * タイマーが切り替わるときに呼ばれる.
          */
         fun onTimerChanged()
+
+        /**
+         * タイマーが追加されたときに呼ばれる.
+         */
+        fun onTimerAdded()
+
+        /**
+         * タイマーが破棄されたときに呼ばれる.
+         */
+        fun onTimerRemoved()
     }
 
     /**
@@ -79,6 +89,7 @@ class MultiTimerModel(context: Context) {
      */
     fun addTimer() {
         timers.add(createTimerModel())
+        onTimerChangedListener?.onTimerAdded()
         saveTimerPreferences()
     }
 
@@ -90,6 +101,7 @@ class MultiTimerModel(context: Context) {
         if (timers.size > 1) {
             timers.removeAt(currentTimerIndex)
             currentTimerIndex = adjustedIndexOf(currentTimerIndex)
+            onTimerChangedListener?.onTimerRemoved()
             saveTimerPreferences()
         } else {
             onFailureListener()
