@@ -31,7 +31,6 @@ class TimerViewModelTest {
      */
     @Test
     fun testText() {
-        //launch(TimerActivity::class.java).use { scenario ->
         scenarioRule.scenario.use { scenario ->
             scenario.onActivity {
                 val timerViewModel = TimerViewModel(it.application)
