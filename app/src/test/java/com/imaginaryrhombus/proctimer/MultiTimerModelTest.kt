@@ -8,8 +8,6 @@ import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.ui.timer.MultiTimerModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,16 +45,14 @@ class MultiTimerModelTest {
 
         val multiTimerModel = MultiTimerModel(testActivity)
 
-        val firstTimerModel = multiTimerModel.activeTimerModel
-        assertEquals(firstTimerModel.seconds.value, TimerConstants.TIMER_DEFAULT_SECONDS)
+        assertEquals(multiTimerModel.activeTimerSeconds, TimerConstants.TIMER_DEFAULT_SECONDS)
 
-        val timers = multiTimerModel.getTimers(-1, true)
+        val timers = multiTimerModel.timerList
         assertEquals(timers.size, TimerConstants.TIMER_DEFAULT_COUNTS)
 
         timers.forEach {
-            assertNotNull(it)
-            assertEquals(it?.seconds?.value, TimerConstants.TIMER_DEFAULT_SECONDS)
-            assertEquals(it?.defaultSeconds, TimerConstants.TIMER_DEFAULT_SECONDS)
+            assertEquals(it.seconds.value, TimerConstants.TIMER_DEFAULT_SECONDS)
+            assertEquals(it.defaultSeconds, TimerConstants.TIMER_DEFAULT_SECONDS)
         }
     }
 
@@ -70,11 +66,11 @@ class MultiTimerModelTest {
         val multiTimerModel = MultiTimerModel(testActivity)
 
         multiTimerModel.addTimer()
-        multiTimerModel.setActiveTimerSeconds(30.0f)
+        multiTimerModel.activeTimerSeconds = 30.0f
         multiTimerModel.next()
-        multiTimerModel.setActiveTimerSeconds(60.0f)
+        multiTimerModel.activeTimerSeconds = 60.0f
         multiTimerModel.next()
-        multiTimerModel.setActiveTimerSeconds(90.0f)
+        multiTimerModel.activeTimerSeconds = 90.0f
         multiTimerModel.next()
 
         /**
@@ -82,41 +78,14 @@ class MultiTimerModelTest {
          * [30.0f], [60.0f], [90.0f]
          */
 
-        multiTimerModel.getTimers(-1, true).run {
+        multiTimerModel.timerList.run {
             assertEquals(size, 3)
-            assertNotNull(get(0))
-            assertNotNull(get(1))
-            assertNotNull(get(2))
-            assertEquals(get(0)?.seconds?.value, 30.0f)
-            assertEquals(get(1)?.seconds?.value, 60.0f)
-            assertEquals(get(2)?.seconds?.value, 90.0f)
-            assertEquals(get(0)?.defaultSeconds, 30.0f)
-            assertEquals(get(1)?.defaultSeconds, 60.0f)
-            assertEquals(get(2)?.defaultSeconds, 90.0f)
-        }
-
-        multiTimerModel.getTimers(3, true).run {
-            assertEquals(size, 3)
-            assertNotNull(get(0))
-            assertNotNull(get(1))
-            assertNotNull(get(2))
-            assertEquals(get(0)?.seconds?.value, 30.0f)
-            assertEquals(get(1)?.seconds?.value, 60.0f)
-            assertEquals(get(2)?.seconds?.value, 90.0f)
-            assertEquals(get(0)?.defaultSeconds, 30.0f)
-            assertEquals(get(1)?.defaultSeconds, 60.0f)
-            assertEquals(get(2)?.defaultSeconds, 90.0f)
-        }
-
-        multiTimerModel.getTimers(3).run {
-            assertEquals(size, 3)
-            assertNotNull(get(0))
-            assertNotNull(get(1))
-            assertNull(get(2))
-            assertEquals(get(0)?.seconds?.value, 60.0f)
-            assertEquals(get(1)?.seconds?.value, 90.0f)
-            assertEquals(get(0)?.defaultSeconds, 60.0f)
-            assertEquals(get(1)?.defaultSeconds, 90.0f)
+            assertEquals(get(0).seconds.value, 30.0f)
+            assertEquals(get(1).seconds.value, 60.0f)
+            assertEquals(get(2).seconds.value, 90.0f)
+            assertEquals(get(0).defaultSeconds, 30.0f)
+            assertEquals(get(1).defaultSeconds, 60.0f)
+            assertEquals(get(2).defaultSeconds, 90.0f)
         }
     }
 
@@ -139,18 +108,18 @@ class MultiTimerModelTest {
             "")
 
         multiTimerModel.addTimer()
-        multiTimerModel.setActiveTimerSeconds(10.0f)
+        multiTimerModel.activeTimerSeconds = 10.0f
 
         val multiTimerModel2 = MultiTimerModel(testActivity)
 
-        val timers = multiTimerModel.getTimers(-1, true)
-        val timers2 = multiTimerModel2.getTimers(-1, true)
+        val timers = multiTimerModel.timerList
+        val timers2 = multiTimerModel2.timerList
 
         assertEquals(timers.size, timers2.size)
 
         for (index in 0 until timers.size) {
-            assertEquals(timers[index]?.seconds?.value, timers2[index]?.seconds?.value)
-            assertEquals(timers[index]?.defaultSeconds, timers2[index]?.defaultSeconds)
+            assertEquals(timers[index].seconds.value, timers2[index].seconds.value)
+            assertEquals(timers[index].defaultSeconds, timers2[index].defaultSeconds)
         }
     }
 }

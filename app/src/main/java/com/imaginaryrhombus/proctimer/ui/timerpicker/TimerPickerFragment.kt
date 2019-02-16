@@ -43,7 +43,7 @@ class TimerPickerFragment : DialogFragment() {
         }
 
         val setTimerOnDialogClick = { _: DialogInterface, _: Int ->
-            timerViewModel.setTimerFrom(minutesString, secondsString)
+            timerViewModel.setCurrentTimerFrom(minutesString, secondsString)
         }
 
         val doNothingOnDialogClick = { _: DialogInterface, _: Int ->
