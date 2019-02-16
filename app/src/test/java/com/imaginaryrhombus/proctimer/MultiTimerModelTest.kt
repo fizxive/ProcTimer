@@ -45,8 +45,7 @@ class MultiTimerModelTest {
 
         val multiTimerModel = MultiTimerModel(testActivity)
 
-        val firstTimerModel = multiTimerModel.activeTimerModel
-        assertEquals(firstTimerModel.seconds.value, TimerConstants.TIMER_DEFAULT_SECONDS)
+        assertEquals(multiTimerModel.activeTimerSeconds, TimerConstants.TIMER_DEFAULT_SECONDS)
 
         val timers = multiTimerModel.timerList
         assertEquals(timers.size, TimerConstants.TIMER_DEFAULT_COUNTS)
@@ -67,11 +66,11 @@ class MultiTimerModelTest {
         val multiTimerModel = MultiTimerModel(testActivity)
 
         multiTimerModel.addTimer()
-        multiTimerModel.setActiveTimerSeconds(30.0f)
+        multiTimerModel.activeTimerSeconds = 30.0f
         multiTimerModel.next()
-        multiTimerModel.setActiveTimerSeconds(60.0f)
+        multiTimerModel.activeTimerSeconds = 60.0f
         multiTimerModel.next()
-        multiTimerModel.setActiveTimerSeconds(90.0f)
+        multiTimerModel.activeTimerSeconds = 90.0f
         multiTimerModel.next()
 
         /**
@@ -109,7 +108,7 @@ class MultiTimerModelTest {
             "")
 
         multiTimerModel.addTimer()
-        multiTimerModel.setActiveTimerSeconds(10.0f)
+        multiTimerModel.activeTimerSeconds = 10.0f
 
         val multiTimerModel2 = MultiTimerModel(testActivity)
 
