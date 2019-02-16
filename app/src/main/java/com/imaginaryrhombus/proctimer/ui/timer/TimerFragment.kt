@@ -91,7 +91,9 @@ class TimerFragment : Fragment() {
 
         removeButton.setOnClickListener {
             viewModel.removeTimer {
-                Toast.makeText(context, "最後のタイマーは削除できません.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    getString(R.string.cannot_delete_last_timer), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
