@@ -1,20 +1,23 @@
 package com.imaginaryrhombus.proctimer
 
+import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.FirebaseApp
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class UpdateCheckerTest {
 
     init {
-        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext())
+        // JvmStatic, BeforeClass だとランタイムエラーを起こす.
+        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext<Application>())
     }
 
     /**
