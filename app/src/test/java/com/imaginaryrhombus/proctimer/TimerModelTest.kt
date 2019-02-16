@@ -1,5 +1,6 @@
 package com.imaginaryrhombus.proctimer
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.imaginaryrhombus.proctimer.ui.timer.TimerModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -7,14 +8,8 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-/**
- * テスト試行回数.
- */
-const val TEST_TIMES: Int = 10
-
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class TimerModelTest {
 
     /**
@@ -63,22 +58,30 @@ class TimerModelTest {
      */
     @Test
     fun testTick() {
-        repeat(TEST_TIMES, fun (_: Int) {
-            val testSeconds = TimerModelTestUtility.getRandomFloat() / 2
-            val testTickSeconds = TimerModelTestUtility.getRandomFloat() / 2
 
-            val timerModel = TimerModel()
-            timerModel.setSeconds(testSeconds)
+        val timerModel = TimerModel()
+        val tickMethod = timerModel.javaClass.getDeclaredMethod("tick", Float::class.java)
+        tickMethod.isAccessible = true
+        fun callTick(deltaSecond: Float) {
+            tickMethod.invoke(timerModel, deltaSecond)
+        }
 
-            // private メソッドのテストになるのでリフレクションを使用してテスト.
-            val tickMethod = timerModel.javaClass.getDeclaredMethod("tick", Float::class.java)
-            tickMethod.isAccessible = true
-            tickMethod.invoke(timerModel, testTickSeconds)
+        timerModel.setSeconds(60.0f)
+        callTick(30.0f)
+        assertEquals(timerModel.seconds.value, 30.0f)
+        callTick(30.0f)
+        assertEquals(timerModel.seconds.value, 0.0f)
 
-            val actualSeconds =
-                if (testSeconds > testTickSeconds) testSeconds - testTickSeconds else 0.0f
-            assertEquals(timerModel.seconds.value, actualSeconds)
-            assertEquals(timerModel.isEnded, actualSeconds <= 0.0f)
-        })
+        timerModel.setSeconds(15.0f)
+        callTick(20.0f)
+        assertEquals(timerModel.seconds.value, 0.0f)
+
+        timerModel.setSeconds(50.0f)
+        callTick(0.0f)
+        assertEquals(timerModel.seconds.value, 50.0f)
+
+        timerModel.setSeconds(0.0f)
+        callTick(999.0f)
+        assertEquals(timerModel.seconds.value, 0.0f)
     }
 }
