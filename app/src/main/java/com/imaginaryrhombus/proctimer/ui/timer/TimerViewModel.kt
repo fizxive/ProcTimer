@@ -27,18 +27,9 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
     private val displayNextTimerCount = 3
 
     /**
-     * タイマー本体からの動作中のタイマーの参照.
-     */
-    val timer: TimerModel
-    get() {
-        return multiTimerModel.activeTimerModel
-    }
-
-    /**
      * 現在のタイマーのテキスト.
      */
-    lateinit var currentTimerText: LiveData<String>
-    private set
+    val currentTimerText: LiveData<String>
 
     /**
      * 準備中のタイマーのテキスト.
@@ -55,7 +46,15 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     private val timerChangedListener = object : MultiTimerModel.OnTimerChangedListener {
         override fun onTimerChanged() {
-            updateTimerText()
+            updateNextTimerText()
+        }
+
+        override fun onTimerAdded() {
+            updateNextTimerText()
+        }
+
+        override fun onTimerRemoved() {
+            updateNextTimerText()
         }
     }
 
@@ -63,28 +62,50 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
         // 初期化子で設定を行うと 'Type checking has run into a recursive problem.' が発生してしまうのでここで行う.
         multiTimerModel.onTimerChangedListener = timerChangedListener
         // テキストが空白なので、更新する
-        updateTimerText()
+        updateNextTimerText()
+
+        currentTimerText = Transformations.switchMap(multiTimerModel.activeTimerModel) {
+                timerModel ->
+            Transformations.map(timerModel.seconds) { seconds ->
+                createTimerStringFromSeconds(seconds)
+            }
+        }
     }
 
     /**
      * タイマーのスタートを Model に伝える.
      */
     fun startTick() {
-        timer.startTick()
+        multiTimerModel.startCurrentTimer()
     }
 
     /**
      * タイマーの停止を Model に伝える.
      */
     fun stopTick() {
-        timer.stopTick()
+        multiTimerModel.stopCurrentTimer()
+    }
+
+    /**
+     * タイマーの追加を Model に伝える.
+     */
+    fun addTimer() {
+        multiTimerModel.addTimer()
+    }
+
+    /**
+     * タイマーの削除を Model に伝える.
+     * @param onFailureListener タイマーの削除に失敗したときの動作.
+     */
+    fun removeTimer(onFailureListener: () -> Unit = {}) {
+        multiTimerModel.removeCurrentTimer(onFailureListener)
     }
 
     /**
      * タイマーをリセットする.
      */
     fun resetTimer() {
-        timer.reset()
+        multiTimerModel.resetCurrentTimer()
     }
 
     /**
@@ -97,12 +118,12 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
     /**
      * テキスト情報からタイマーを設定する.
      */
-    fun setTimerFrom(minutes: String, seconds: String) {
+    fun setCurrentTimerFrom(minutes: String, seconds: String) {
         val minutesLong = minutes.toLong()
         val secondsLong = seconds.toLong()
 
-        multiTimerModel.setActiveTimerSeconds(
-            (TimeUnit.MINUTES.toSeconds(minutesLong) + secondsLong).toFloat())
+        multiTimerModel.activeTimerSeconds =
+            (TimeUnit.MINUTES.toSeconds(minutesLong) + secondsLong).toFloat()
     }
 
     /**
@@ -111,7 +132,9 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
      */
     fun toTimerString(): Pair<String, String> {
         val secondsLong =
-            checkNotNull(timer.seconds.value) { "This timer is not initialized" }.toLong()
+            checkNotNull(multiTimerModel.activeTimerSeconds) {
+                "This timer is not initialized"
+            }.toLong()
         return Pair((secondsLong / 60).toString(), (secondsLong % 60).toString())
     }
 
@@ -126,24 +149,23 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
     /**
      * 次のタイマーの表示を更新する.
      */
-    private fun updateTimerText() {
+    private fun updateNextTimerText() {
         // 予めタイマーが無い文字列で初期化してからタイマーを取得して文字列を更新する.
         _nextTimerStrings.forEach {
             it.postValue(app.applicationContext.getString(R.string.timer_invalid_text))
         }
 
-        val timers = multiTimerModel.getTimers(_nextTimerStrings.size)
-        _nextTimerStrings.forEachIndexed { index, timerText ->
-            timers[index]?.let {
-                timerText.postValue(createTimerStringFromSeconds(
-                    checkNotNull(it.seconds.value) { "This timer is not initialized" })
-                )
+        val timers = multiTimerModel.timerList
+        var index = 0
+        timers.forEach { timerText ->
+            if (timerText != timers.first()) {
+                timerText.also {
+                    _nextTimerStrings[index++].postValue(
+                        createTimerStringFromSeconds(
+                            checkNotNull(it.seconds.value) { "This timer is not initialized" })
+                    )
+                }
             }
-        }
-
-        // 前のタイマーを参照したままになっているので、タイマーのテキストの監視元を改めて設定する.
-        currentTimerText = Transformations.map(timer.seconds) {
-            createTimerStringFromSeconds(it)
         }
     }
 

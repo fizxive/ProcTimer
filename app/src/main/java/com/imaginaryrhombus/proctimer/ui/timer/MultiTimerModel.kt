@@ -1,10 +1,11 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
-import kotlin.math.min
-import kotlin.math.sign
+import java.util.LinkedList
 
 /**
  * 複数のタイマーを管理する Model.
@@ -19,29 +20,41 @@ class MultiTimerModel(context: Context) {
          * タイマーが切り替わるときに呼ばれる.
          */
         fun onTimerChanged()
+
+        /**
+         * タイマーが追加されたときに呼ばれる.
+         */
+        fun onTimerAdded()
+
+        /**
+         * タイマーが破棄されたときに呼ばれる.
+         */
+        fun onTimerRemoved()
     }
 
     /**
      * 現在の動作しているタイマーを取得する.
+     * これを監視して switchMap で秒を監視するLiveDataを作成するようにする.
      */
-    val activeTimerModel: TimerModel
+    private var _activeTimerModel = MutableLiveData<TimerModel>()
+
+    val activeTimerModel: LiveData<TimerModel>
     get() {
-        return timers[currentTimerIndex]
+        return _activeTimerModel
     }
 
     /**
-     * 動作中タイマーのインデックス.
+     * 全タイマーを取得する.
      */
-    private var currentTimerIndex = 0
-    set(value) {
-        field = value
-        onTimerChangedListener?.onTimerChanged()
+    val timerList: List<TimerModel>
+    get() {
+        return _linkedTimerList.toList()
     }
 
     /**
-     * 全タイマー.
+     * 全タイマーを順番に並べ替えたもの.
      */
-    private var timers = MutableList(0) { TimerModel() }
+    private var _linkedTimerList = LinkedList<TimerModel>()
 
     /**
      * 各タイマー終了時のリスナー.
@@ -52,6 +65,18 @@ class MultiTimerModel(context: Context) {
      * タイマーが切り替わったときのリスナー.
      */
     var onTimerChangedListener: OnTimerChangedListener? = null
+
+    /**
+     * 現在のタイマーのデフォルト秒数を取得・設定する.
+     */
+    var activeTimerSeconds: Float
+        get() {
+            return _linkedTimerList.first.defaultSeconds
+        }
+        set(value) {
+            _linkedTimerList.first.setSeconds(value)
+            saveTimerPreferences()
+        }
 
     /**
      * ローカルデータ読み書き用.
@@ -65,74 +90,69 @@ class MultiTimerModel(context: Context) {
     private val gson = Gson()
 
     init {
-        timers.clear()
+        _linkedTimerList.clear()
         if (restoreTimerPreferences().not()) {
             for (index in 0 until TimerConstants.TIMER_DEFAULT_COUNTS) {
-                timers.add(createTimerModel())
+                _linkedTimerList.addLast(createTimerModel())
             }
             saveTimerPreferences()
         }
+        notifyActiveTimerModel()
     }
 
     /**
      * タイマーを末尾に追加する.
      */
     fun addTimer() {
-        timers.add(createTimerModel())
+        _linkedTimerList.addLast(createTimerModel())
+        onTimerChangedListener?.onTimerAdded()
         saveTimerPreferences()
     }
 
     /**
      * 現在のタイマーを削除する.
+     * @param onFailureListener タイマーが1つのときに削除しようとしたときの動作.
      */
-    fun removeCurrentTimer() {
-        timers.removeAt(currentTimerIndex)
-        currentTimerIndex = adjustedIndexOf(currentTimerIndex)
-        saveTimerPreferences()
+    fun removeCurrentTimer(onFailureListener: () -> Unit = {}) {
+        if (_linkedTimerList.size > 1) {
+            _linkedTimerList.removeFirst()
+            saveTimerPreferences()
+            onTimerChangedListener?.onTimerRemoved()
+            notifyActiveTimerModel()
+        } else {
+            onFailureListener()
+        }
+    }
+
+    /**
+     * 現在のタイマーを動作開始させる.
+     */
+    fun startCurrentTimer() {
+        _linkedTimerList.first.startTick()
+    }
+
+    /**
+     * 現在のタイマーを停止させる.
+     */
+    fun stopCurrentTimer() {
+        _linkedTimerList.first.stopTick()
+    }
+
+    /**
+     * 現在のタイマーをリセットする.
+     */
+    fun resetCurrentTimer() {
+        _linkedTimerList.first.reset()
     }
 
     /**
      * 現在のタイマーをリセットし、次のタイマーに移行する.
      */
     fun next() {
-        activeTimerModel.reset()
-        currentTimerIndex = adjustedIndexOf(currentTimerIndex + 1)
-    }
-
-    /**
-     * 現在のタイマーから一定の量インデックス差分をとったタイマーを返す.
-     * @param deltaFromCurrent 差分量
-     * @return 現在地から差分料をとったタイマー.
-     */
-    private fun getTimer(deltaFromCurrent: Int): TimerModel {
-        return timers[adjustedIndexOf(currentTimerIndex + deltaFromCurrent)]
-    }
-
-    /**
-     * 指定された個数の TimeModel をアクティブに近い順に返す,
-     * @param count 個数, 負数を入力するとすべてのタイマーを取得する.
-     * @param includeActive 現在アクティブなタイマーを含むか.
-     * @return タイマーのリスト.(個数が count よりも少ない場合はその分 null が入る)
-     *
-     */
-    fun getTimers(count: Int, includeActive: Boolean = false): List<TimerModel?> {
-        // includeActive.not のときは戦闘タイマーの数分差し引いた数を全体の数として扱う.
-        val timersCount = if (includeActive) timers.size else timers.size - 1
-        val retCount = if (count.sign == -1) timersCount else count
-        val ret = MutableList<TimerModel?>(retCount) { null }
-        for (i in 0 until min(timersCount, retCount)) {
-            val timerIndex = if (includeActive) i else i + 1
-            ret[i] = getTimer(timerIndex)
-        }
-        return ret.toList()
-    }
-
-    /**
-     * アクティブなタイマーの時間を設定する.
-     */
-    fun setActiveTimerSeconds(seconds: Float) {
-        activeTimerModel.setSeconds(seconds)
-        saveTimerPreferences()
+        resetCurrentTimer()
+        _linkedTimerList.addLast(_linkedTimerList.removeFirst())
+        onTimerChangedListener?.onTimerChanged()
+        notifyActiveTimerModel()
     }
 
     /**
@@ -151,15 +171,6 @@ class MultiTimerModel(context: Context) {
     }
 
     /**
-     * index をタイマーの数に丸めた値を返す.
-     * @param index タイマーを指定するインデックス.
-     * @return 丸められたインデックス.
-     */
-    private fun adjustedIndexOf(index: Int): Int {
-        return index % timers.size
-    }
-
-    /**
      * タイマー終了時の動作.
      */
     private fun onTimerEnd() {
@@ -170,8 +181,10 @@ class MultiTimerModel(context: Context) {
      * タイマーの秒数/個数を SharedPreferences にセーブする.
      */
     private fun saveTimerPreferences() {
-        val timerSecondsArray = Array(timers.size) { index -> timers[index].defaultSeconds }
-        _sharedPreferences.edit().apply {
+        val timerSecondsArray = Array(timerList.size) {
+                index -> timerList[index].defaultSeconds
+        }
+        _sharedPreferences.edit().run {
             putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME,
                 gson.toJson(timerSecondsArray))
             putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME,
@@ -191,16 +204,23 @@ class MultiTimerModel(context: Context) {
             val timerSecondsJsonString =
                 _sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, null)
             timerSecondsJsonString?.let { json ->
-                timers.clear()
+                _linkedTimerList.clear()
                 val secondsArray = gson.fromJson(json, Array<Float>::class.java)
                 secondsArray.forEach {
                     val timerModel = createTimerModel()
                     timerModel.setSeconds(it)
-                    timers.add(timerModel)
+                    _linkedTimerList.addLast(timerModel)
                 }
                 return true
             }
         }
         return false
+    }
+
+    /**
+     * アクティブなタイマーが変わったことを通知する
+     */
+    private fun notifyActiveTimerModel() {
+        _activeTimerModel.postValue(timerList.first())
     }
 }

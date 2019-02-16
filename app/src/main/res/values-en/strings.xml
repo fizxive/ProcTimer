@@ -14,4 +14,7 @@
     <string name="timer_invalid_text">--:--:---</string>
     <string name="update_dialog_title">New version available</string>
     <string name="update_dialog_text">Please update app to new version.</string>
+    <string name="button_add">Add Timer</string>
+    <string name="button_remove">Remove Current Timer</string>
+    <string name="cannot_delete_last_timer">Can\'t remove last timer.</string>
 </resources>

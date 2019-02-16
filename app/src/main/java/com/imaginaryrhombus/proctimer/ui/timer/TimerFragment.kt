@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
@@ -68,7 +69,7 @@ class TimerFragment : Fragment() {
         } ?: throw Resources.NotFoundException("Activity Not found.")
 
         binding.timerViewModel = viewModel
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         // 各種リスナー設定.
 
@@ -82,6 +83,16 @@ class TimerFragment : Fragment() {
 
         resetButton.setOnClickListener {
             viewModel.resetTimer()
+        }
+
+        addButton.setOnClickListener {
+            viewModel.addTimer()
+        }
+
+        removeButton.setOnClickListener {
+            viewModel.removeTimer {
+                Toast.makeText(context, "最後のタイマーは削除できません.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         currentTimerText.setOnClickListener {
