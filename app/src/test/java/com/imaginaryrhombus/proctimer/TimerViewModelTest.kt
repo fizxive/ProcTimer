@@ -35,7 +35,8 @@ class TimerViewModelTest {
             scenario.onActivity {
                 val timerViewModel = TimerViewModel(it.application)
                 val method =
-                    timerViewModel.javaClass.getMethod("createTimerStringFromSeconds", Float::class.java)
+                    timerViewModel.javaClass.getMethod(
+                        "createTimerStringFromSeconds", Float::class.java)
 
                 assertNotNull(method)
                 method.isAccessible = true
