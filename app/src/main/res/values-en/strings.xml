@@ -17,4 +17,5 @@
     <string name="button_add">Add Timer</string>
     <string name="button_remove">Remove Current Timer</string>
     <string name="cannot_delete_last_timer">Can\'t remove last timer.</string>
+    <string name="button_next">Next Timer</string>
 </resources>
