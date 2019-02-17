@@ -89,8 +89,8 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
     /**
      * タイマーの追加を Model に伝える.
      */
-    fun addTimer() {
-        multiTimerModel.addTimer()
+    fun addTimer(onFailureListener: () -> Unit = {}) {
+        multiTimerModel.addTimer(onFailureListener)
     }
 
     /**

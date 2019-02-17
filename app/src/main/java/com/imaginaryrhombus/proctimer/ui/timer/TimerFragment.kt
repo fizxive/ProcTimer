@@ -86,7 +86,11 @@ class TimerFragment : Fragment() {
         }
 
         addButton.setOnClickListener {
-            viewModel.addTimer()
+            viewModel.addTimer {
+                Toast.makeText(context,
+                    getString(R.string.cannot_add_more_timer), Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
         removeButton.setOnClickListener {

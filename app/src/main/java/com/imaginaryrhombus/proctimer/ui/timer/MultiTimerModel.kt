@@ -89,6 +89,16 @@ class MultiTimerModel(context: Context) {
      */
     private val gson = Gson()
 
+    /**
+     * タイマーの最大数.
+     */
+    private val timerMax = 4
+
+    /**
+     * タイマーの最小数.
+     */
+    private val timerMin = 1
+
     init {
         _linkedTimerList.clear()
         if (restoreTimerPreferences().not()) {
@@ -103,10 +113,14 @@ class MultiTimerModel(context: Context) {
     /**
      * タイマーを末尾に追加する.
      */
-    fun addTimer() {
-        _linkedTimerList.addLast(createTimerModel())
-        onTimerChangedListener?.onTimerAdded()
-        saveTimerPreferences()
+    fun addTimer(onFailureListener: () -> Unit = {}) {
+        if (_linkedTimerList.size < timerMax) {
+            _linkedTimerList.addLast(createTimerModel())
+            onTimerChangedListener?.onTimerAdded()
+            saveTimerPreferences()
+        } else {
+            onFailureListener()
+        }
     }
 
     /**
@@ -114,7 +128,7 @@ class MultiTimerModel(context: Context) {
      * @param onFailureListener タイマーが1つのときに削除しようとしたときの動作.
      */
     fun removeCurrentTimer(onFailureListener: () -> Unit = {}) {
-        if (_linkedTimerList.size > 1) {
+        if (_linkedTimerList.size > timerMin) {
             _linkedTimerList.removeFirst()
             saveTimerPreferences()
             onTimerChangedListener?.onTimerRemoved()
