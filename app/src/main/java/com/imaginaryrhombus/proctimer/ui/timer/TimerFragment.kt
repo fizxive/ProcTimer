@@ -86,13 +86,23 @@ class TimerFragment : Fragment() {
         }
 
         addButton.setOnClickListener {
-            viewModel.addTimer()
+            viewModel.addTimer {
+                Toast.makeText(context,
+                    getString(R.string.cannot_add_more_timer), Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
         removeButton.setOnClickListener {
             viewModel.removeTimer {
-                Toast.makeText(context, "最後のタイマーは削除できません.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    getString(R.string.cannot_delete_last_timer), Toast.LENGTH_SHORT)
+                    .show()
             }
+        }
+
+        nextButton.setOnClickListener {
+            viewModel.nextTimer()
         }
 
         currentTimerText.setOnClickListener {
