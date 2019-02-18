@@ -5,7 +5,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 
@@ -17,6 +19,22 @@ class TimerActivity : AppCompatActivity(),
         setContentView(R.layout.timer_activity)
 
         UpdateChecker(this).checkUpdateRequired()
+
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
+            .addOnSuccessListener { pendingDynamicLinkData ->
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
+                }
+                Toast.makeText(applicationContext,
+                    "リンクの処理に成功しました.($deepLink)", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(applicationContext,
+                    "リンクの処理に失敗しました.", Toast.LENGTH_SHORT)
+                    .show()
+            }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
