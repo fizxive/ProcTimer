@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import kotlin.math.max
+import kotlin.math.ceil
 import java.util.concurrent.TimeUnit
 import com.imaginaryrhombus.proctimer.R
 
@@ -169,21 +170,21 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private companion object {
+    companion object {
+        val defaultTimerString = createTimerStringFromSeconds(0.0f)
+
         /**
          * 秒数からフォーマットした文字列に変更.
          * @param inputSeconds 秒数.
          * @note 秒数が負の値の場合は0秒として扱う.
          */
         @JvmStatic
-        fun createTimerStringFromSeconds(inputSeconds: Float): String {
-            val timerMilliseconds = max(inputSeconds.times(1000.0f).toLong(), 0)
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(timerMilliseconds)
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(
-                timerMilliseconds - TimeUnit.MINUTES.toMillis(minutes))
-            val milliseconds = timerMilliseconds -
-                TimeUnit.MINUTES.toMillis(minutes) - TimeUnit.SECONDS.toMillis(seconds)
-            return ("%02d:%02d.%03d".format(minutes, seconds, milliseconds))
+        private fun createTimerStringFromSeconds(inputSeconds: Float): String {
+            val timerSeconds = max(ceil(inputSeconds).toLong(), 0)
+            val minutes = TimeUnit.SECONDS.toMinutes(timerSeconds)
+            val seconds = TimeUnit.SECONDS.toSeconds(
+                timerSeconds - TimeUnit.MINUTES.toSeconds(minutes))
+            return ("%02d:%02d".format(minutes, seconds))
         }
     }
 }
