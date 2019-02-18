@@ -170,16 +170,14 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    companion object {
-        val defaultTimerString = createTimerStringFromSeconds(0.0f)
-
+    private companion object {
         /**
          * 秒数からフォーマットした文字列に変更.
          * @param inputSeconds 秒数.
          * @note 秒数が負の値の場合は0秒として扱う.
          */
         @JvmStatic
-        private fun createTimerStringFromSeconds(inputSeconds: Float): String {
+        fun createTimerStringFromSeconds(inputSeconds: Float): String {
             val timerSeconds = max(ceil(inputSeconds).toLong(), 0)
             val minutes = TimeUnit.SECONDS.toMinutes(timerSeconds)
             val seconds = TimeUnit.SECONDS.toSeconds(
