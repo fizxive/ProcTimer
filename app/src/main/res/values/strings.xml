@@ -8,9 +8,9 @@
     <string name="timer_end_dialog_text">時間終了</string>
     <string name="timer_end_dialog_button">次へ</string>
     <string name="button_reset">リセット</string>
-    <string name="timer_default_text">00:00</string>
+    <string name="timer_default_text">00:00:000</string>
     <string name="timer_dialog_colon">:</string>
-    <string name="timer_invalid_text">--:--</string>
+    <string name="timer_invalid_text">--:--:---</string>
     <string name="update_dialog_text">ストアに新しいバージョンが公開されています。\nお手数ですがアップデートをお願いいたします。</string>
     <string name="update_dialog_title">新しいバージョンがあります</string>
     <string name="button_add">タイマー追加</string>
