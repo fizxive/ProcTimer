@@ -19,8 +19,8 @@ class TimerModelTest {
     fun testInitialize() {
         val timerModel = TimerModel()
 
-        assertEquals(0.0f, timerModel.seconds.value)
-        assertEquals(0.0f, timerModel.defaultSeconds)
+        assertEquals(timerModel.seconds.value, 0.0f)
+        assertEquals(timerModel.defaultSeconds, 0.0f)
         assertTrue(timerModel.isEnded)
         assertNull(timerModel.onEndListener)
     }
@@ -33,23 +33,23 @@ class TimerModelTest {
 
         val timerModel = TimerModel()
         timerModel.setSeconds(5.0f)
-        assertEquals(5.0f, timerModel.seconds.value)
-        assertEquals(5.0f, timerModel.defaultSeconds)
+        assertEquals(timerModel.seconds.value, 5.0f)
+        assertEquals(timerModel.defaultSeconds, 5.0f)
         assertFalse(timerModel.isEnded)
 
         timerModel.setSeconds(99.0f)
-        assertEquals(99.0f, timerModel.seconds.value)
-        assertEquals(99.0f, timerModel.defaultSeconds)
+        assertEquals(timerModel.seconds.value, 99.0f)
+        assertEquals(timerModel.defaultSeconds, 99.0f)
         assertFalse(timerModel.isEnded)
 
         timerModel.setSeconds(0.0f)
-        assertEquals(0.0f, timerModel.seconds.value)
-        assertEquals(0.0f, timerModel.defaultSeconds)
+        assertEquals(timerModel.seconds.value, 0.0f)
+        assertEquals(timerModel.defaultSeconds, 0.0f)
         assertTrue(timerModel.isEnded)
 
         timerModel.setSeconds(-1.0f)
-        assertEquals(0.0f, timerModel.seconds.value)
-        assertEquals(0.0f, timerModel.defaultSeconds)
+        assertEquals(timerModel.seconds.value, 0.0f)
+        assertEquals(timerModel.defaultSeconds, 0.0f)
         assertTrue(timerModel.isEnded)
     }
 
@@ -68,20 +68,20 @@ class TimerModelTest {
 
         timerModel.setSeconds(60.0f)
         callTick(30.0f)
-        assertEquals(30.0f, timerModel.seconds.value)
+        assertEquals(timerModel.seconds.value, 30.0f)
         callTick(30.0f)
-        assertEquals(0.0f, timerModel.seconds.value)
+        assertEquals(timerModel.seconds.value, 0.0f)
 
         timerModel.setSeconds(15.0f)
         callTick(20.0f)
-        assertEquals(0.0f, timerModel.seconds.value)
+        assertEquals(timerModel.seconds.value, 0.0f)
 
         timerModel.setSeconds(50.0f)
         callTick(0.0f)
-        assertEquals(50.0f, timerModel.seconds.value)
+        assertEquals(timerModel.seconds.value, 50.0f)
 
         timerModel.setSeconds(0.0f)
         callTick(999.0f)
-        assertEquals(0.0f, timerModel.seconds.value)
+        assertEquals(timerModel.seconds.value, 0.0f)
     }
 }
