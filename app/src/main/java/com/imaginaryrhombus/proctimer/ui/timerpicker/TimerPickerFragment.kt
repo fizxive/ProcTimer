@@ -74,6 +74,8 @@ class TimerPickerFragment : DialogFragment() {
                 value = displayedValues.run {
                     indexOf(find { it == initMinutesString } ?: first())
                 }
+                isSaveEnabled = false
+                isSaveFromParentEnabled = false
             }
 
             secondsPicker.apply {
@@ -84,6 +86,8 @@ class TimerPickerFragment : DialogFragment() {
                 value = displayedValues.run {
                     indexOf(find { it == initSecondsString } ?: first())
                 }
+                isSaveEnabled = false
+                isSaveFromParentEnabled = false
             }
         }
 
