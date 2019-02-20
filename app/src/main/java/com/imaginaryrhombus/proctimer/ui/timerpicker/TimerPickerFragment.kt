@@ -1,9 +1,7 @@
 package com.imaginaryrhombus.proctimer.ui.timerpicker
 
-import android.app.AlertDialog
-import android.app.Dialog
+import androidx.appcompat.app.AlertDialog
 import android.content.DialogInterface
-import android.content.res.Resources
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.InputType
@@ -16,90 +14,77 @@ import kotlinx.android.synthetic.main.timer_picker_fragment.view.*
 
 class TimerPickerFragment : DialogFragment() {
 
-    companion object {
-        fun newInstance() = TimerPickerFragment()
-    }
     private lateinit var timerViewModel: TimerViewModel
 
-    /**
-     * ダイアログを閉じるときに設定するようの値,分.
-     */
-    private lateinit var minutesString: String
-    /**
-     * ダイアログを閉じるときに設定するようの値,秒.
-     */
-    private lateinit var secondsString: String
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         super.onCreateDialog(savedInstanceState)
 
-        activity?.run {
-            timerViewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
-        } ?: throw Resources.NotFoundException("Activity Not found.")
+        val fragmentActivity = checkNotNull(activity) { "Activity Not found." }
+
+        timerViewModel = ViewModelProviders.of(fragmentActivity).get(TimerViewModel::class.java)
+
+        val initMinutesString: String
+        val initSecondsString: String
 
         timerViewModel.toTimerString().run {
-            minutesString = first
-            secondsString = second
+            initMinutesString = first
+            initSecondsString = second
         }
 
-        val setTimerOnDialogClick = { _: DialogInterface, _: Int ->
-            timerViewModel.setCurrentTimerFrom(minutesString, secondsString)
-        }
+        val dialogView = requireNotNull(
+            fragmentActivity.layoutInflater.inflate(
+                R.layout.timer_picker_fragment, null
+            )
+        )
 
-        val doNothingOnDialogClick = { _: DialogInterface, _: Int ->
-        }
+        val builder = AlertDialog.Builder(requireActivity())
+            .setView(dialogView)
+            .setMessage(R.string.timer_dialog_text)
+            .setPositiveButton(R.string.timer_dialog_positive_button) {
+                _: DialogInterface, _: Int ->
+                dialogView.run {
+                    timerViewModel.setCurrentTimerFrom(
+                        minutesPicker.displayedValues[minutesPicker.value],
+                        secondsPicker.displayedValues[secondsPicker.value]
+                    )
+                }
+            }
+            .setNegativeButton(R.string.timer_dialog_negative_button) {
+                _: DialogInterface, _: Int ->
+            }
 
-        val builder = AlertDialog.Builder(activity).run {
-            setMessage(R.string.timer_dialog_text)
-            setPositiveButton(R.string.timer_dialog_positive_button, setTimerOnDialogClick)
-            setNegativeButton(R.string.timer_dialog_negative_button, doNothingOnDialogClick)
-            this
-        }
-
-        activity?.let { activity ->
-            val inflater = activity.layoutInflater
-            val view = inflater.inflate(R.layout.timer_picker_fragment, null).apply {
-
-                val values = Array(1000) { value -> value.toString() }
-
-                fun findEditTextAndSetInputType(viewGroup: ViewGroup) {
-                    for (i in 0 until viewGroup.childCount) {
-                        val child = viewGroup.getChildAt(i)
-                        when (child) {
-                            is ViewGroup -> findEditTextAndSetInputType(child)
-                            is EditText -> child.inputType = InputType.TYPE_CLASS_NUMBER
+        dialogView.run {
+            fun findEditTextAndSetInputType(viewGroup: ViewGroup) {
+                for (i in 0 until viewGroup.childCount) {
+                    val child = viewGroup.getChildAt(i)
+                    when (child) {
+                        is ViewGroup -> findEditTextAndSetInputType(child)
+                        is EditText -> {
+                            child.inputType = InputType.TYPE_CLASS_NUMBER
                         }
-                    }
-                }
-
-                minutesPicker.apply {
-                    displayedValues = values
-                    minValue = 0
-                    maxValue = values.size - 1
-                    findEditTextAndSetInputType(this)
-                    setOnValueChangedListener { _, _, newVal ->
-                        minutesString = minutesPicker.displayedValues[newVal]
-                    }
-                    value = displayedValues.run {
-                        indexOf(find { it == minutesString } ?: first())
-                    }
-                }
-
-                secondsPicker.apply {
-                    displayedValues = values.copyOfRange(0, 60)
-                    minValue = 0
-                    maxValue = 59
-                    findEditTextAndSetInputType(this)
-                    setOnValueChangedListener { _, _, newVal ->
-                        secondsString = secondsPicker.displayedValues[newVal]
-                    }
-                    value = displayedValues.run {
-                        indexOf(find { it == secondsString } ?: first())
                     }
                 }
             }
 
-            builder.setView(view)
+            minutesPicker.apply {
+                displayedValues = Array(1000) { it.toString() }
+                minValue = displayedValues.indexOf(displayedValues.first())
+                maxValue = displayedValues.indexOf(displayedValues.last())
+                findEditTextAndSetInputType(this)
+                value = displayedValues.run {
+                    indexOf(find { it == initMinutesString } ?: first())
+                }
+            }
+
+            secondsPicker.apply {
+                displayedValues = Array(60) { it.toString() }
+                minValue = displayedValues.indexOf(displayedValues.first())
+                maxValue = displayedValues.indexOf(displayedValues.last())
+                findEditTextAndSetInputType(this)
+                value = displayedValues.run {
+                    indexOf(find { it == initSecondsString } ?: first())
+                }
+            }
         }
 
         val dialog = builder.create()
