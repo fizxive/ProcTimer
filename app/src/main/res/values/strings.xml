@@ -18,4 +18,5 @@
     <string name="cannot_delete_last_timer">最後のタイマーは削除できません</string>
     <string name="button_next">次のタイマー</string>
     <string name="cannot_add_more_timer">これ以上タイマーは追加できません</string>
+    <string name="privacy_text">プライバシーポリシー</string>
 </resources>
