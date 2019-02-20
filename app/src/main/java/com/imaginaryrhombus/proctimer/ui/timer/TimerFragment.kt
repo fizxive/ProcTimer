@@ -115,7 +115,8 @@ class TimerFragment : Fragment() {
         privacy.setOnClickListener {
             // TODO : Remote Config に移動する.
             // TODO : ナビゲーションドロワーを使用して配置したい.
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://pagehosting-d362c.firebaseapp.com/proctimer/privacy-poricy.html"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(
+                "https://pagehosting-d362c.firebaseapp.com/proctimer/privacy-poricy.html"))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
