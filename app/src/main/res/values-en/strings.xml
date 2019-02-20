@@ -19,4 +19,5 @@
     <string name="cannot_delete_last_timer">Can\'t remove last timer.</string>
     <string name="button_next">Next Timer</string>
     <string name="cannot_add_more_timer">Can\'t add timer anymore.</string>
+    <string name="privacy_text">Privacy Poricy</string>
 </resources>
