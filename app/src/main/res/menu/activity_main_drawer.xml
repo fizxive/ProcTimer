@@ -3,7 +3,7 @@
     <group
         android:checkableBehavior="single">
         <item
-            android:id="@+id/menu_home"
+            android:id="@+id/menu_privacy"
             android:icon="@android:drawable/ic_dialog_info"
             android:title="@string/privacy_text" />
     </group>
