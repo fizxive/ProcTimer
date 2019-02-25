@@ -20,4 +20,6 @@
     <string name="button_next">Next Timer</string>
     <string name="cannot_add_more_timer">Can\'t add timer anymore.</string>
     <string name="privacy_text">Privacy Poricy</string>
+    <string name="drawer_open">OPEN</string>
+    <string name="drawer_close">CLOSE</string>
 </resources>

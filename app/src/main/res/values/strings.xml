@@ -19,4 +19,6 @@
     <string name="button_next">次のタイマー</string>
     <string name="cannot_add_more_timer">これ以上タイマーは追加できません</string>
     <string name="privacy_text">プライバシーポリシー</string>
+    <string name="drawer_open">OPEN</string>
+    <string name="drawer_close">CLOSE</string>
 </resources>
