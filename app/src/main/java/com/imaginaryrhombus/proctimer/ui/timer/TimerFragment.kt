@@ -2,10 +2,8 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.res.Resources
 import android.media.RingtoneManager
-import android.net.Uri
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
@@ -110,15 +108,6 @@ class TimerFragment : Fragment() {
         currentTimerText.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
             pickerFragment.show(fragmentManager, "PickerDialog")
-        }
-
-        privacy.setOnClickListener {
-            // TODO : Remote Config に移動する.
-            // TODO : ナビゲーションドロワーを使用して配置したい.
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(
-                "https://pagehosting-d362c.firebaseapp.com/proctimer/privacy-poricy.html"))
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
         }
     }
 }
