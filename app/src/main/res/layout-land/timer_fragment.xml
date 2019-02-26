@@ -20,34 +20,39 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:text="@{timerViewModel.currentTimerText, default=@string/timer_default_text}"
-            android:textSize="56sp"/>
+            android:textSize="112sp"
+            app:layout_constraintBottom_toTopOf="@+id/stopButton"
+            app:layout_constraintHorizontal_bias="0.81"/>
         <TextView
             android:id="@+id/nextTimerText1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{timerViewModel.nextTimerStrings[0], default=@string/timer_invalid_text}"
-            android:textSize="36sp" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/currentTimerText" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:textSize="58sp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/stopButton"
+            app:layout_constraintEnd_toStartOf="@+id/currentTimerText"/>
         <TextView
             android:id="@+id/nextTimerText2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{timerViewModel.nextTimerStrings[1], default=@string/timer_invalid_text}"
-            android:textSize="36sp"
-            app:layout_constraintBottom_toTopOf="@+id/nextTimerText1" app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="58sp"
+            app:layout_constraintBottom_toTopOf="@+id/nextTimerText1"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/currentTimerText"/>
         <TextView
             android:id="@+id/nextTimerText3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{timerViewModel.nextTimerStrings[2], default=@string/timer_invalid_text}"
-            android:textSize="36sp" android:layout_marginBottom="8dp"
+            android:textSize="58sp"
             app:layout_constraintBottom_toTopOf="@+id/nextTimerText2"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/currentTimerText"
         />
         <Button
             android:id="@+id/startButton"
