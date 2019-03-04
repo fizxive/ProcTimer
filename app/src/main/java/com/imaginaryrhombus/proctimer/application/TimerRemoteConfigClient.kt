@@ -6,7 +6,7 @@ import com.imaginaryrhombus.proctimer.constants.TimerRemoteConfigCliantConstants
 /**
  * Firebase RemoteConfig からの情報取得用クライアントクラス.
  */
-class TimerRemoteConfigClient: TimerRemoteConfigClientInterface {
+class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
 
     /**
      * RemoteConfig 本体.
@@ -27,7 +27,11 @@ class TimerRemoteConfigClient: TimerRemoteConfigClientInterface {
      * @param postApply 情報取得後、適用後に実行される.
      * @note 情報取得に失敗した場合はどちらも実行されない.
      */
-    override fun fetchRemoteConfig(cacheExpireSeconds: Long, preApply: () -> Unit, postApply: () -> Unit) {
+    override fun fetchRemoteConfig(
+        cacheExpireSeconds: Long,
+        preApply: () -> Unit,
+        postApply: () -> Unit
+    ) {
         remoteConfig.fetch(cacheExpireSeconds).addOnCompleteListener {
             preApply.invoke()
             remoteConfig.activateFetched()

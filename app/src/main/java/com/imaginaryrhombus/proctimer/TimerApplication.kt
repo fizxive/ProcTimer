@@ -7,7 +7,7 @@ import org.koin.android.ext.android.startKoin
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
-class TimerApplication: Application() {
+class TimerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -20,7 +20,7 @@ class TimerApplication: Application() {
     private val timerComponentModule = module {
         single { TimerComponent(get()) as TimerComponentInterface }
         single { TimerSharedPreferencesComponent(get()) }
-        single { TimerRemoteConfigClient() as TimerRemoteConfigClientInterface}
+        single { TimerRemoteConfigClient() as TimerRemoteConfigClientInterface }
     }
 
     private val timerViewModelModule = module {

@@ -7,7 +7,7 @@ import org.koin.standalone.KoinComponent
 
 class TimerSharedPreferencesComponent(
     timerComponentInterface: TimerComponentInterface
-): KoinComponent {
+) : KoinComponent {
 
     private val sharedPreferences = timerComponentInterface.sharedPreferences
 

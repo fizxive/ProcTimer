@@ -7,7 +7,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.imaginaryrhombus.proctimer.application.TimerComponentInterface
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 
-class TestTimerComponent: TimerComponentInterface {
+class TestTimerComponent : TimerComponentInterface {
     override val sharedPreferences: SharedPreferences
         get() {
             return ApplicationProvider.getApplicationContext<Application>()

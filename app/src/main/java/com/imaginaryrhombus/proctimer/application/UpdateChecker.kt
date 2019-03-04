@@ -9,7 +9,7 @@ import org.koin.standalone.inject
  */
 class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) : KoinComponent {
 
-    private val remoteConfigClient : TimerRemoteConfigClientInterface by inject()
+    private val remoteConfigClient: TimerRemoteConfigClientInterface by inject()
 
     /**
      * アップデートが必要なときに呼ばれるインターフェース.

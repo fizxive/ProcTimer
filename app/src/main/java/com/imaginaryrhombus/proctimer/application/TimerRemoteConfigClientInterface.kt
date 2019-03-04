@@ -12,10 +12,11 @@ interface TimerRemoteConfigClientInterface {
      * @param postApply 情報取得後、適用後に実行される.
      * @note 情報取得に失敗した場合はどちらも実行されない.
      */
-    fun fetchRemoteConfig(cacheExpireSeconds: Long = 60L,
-                          preApply: () -> Unit = {},
-                          postApply: () -> Unit = {})
-
+    fun fetchRemoteConfig(
+        cacheExpireSeconds: Long = 60L,
+        preApply: () -> Unit = {},
+        postApply: () -> Unit = {}
+    )
 
     /**
      * アップデート通知の判断のバージョンを取得する.
