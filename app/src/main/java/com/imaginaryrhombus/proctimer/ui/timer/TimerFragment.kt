@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.Resources
 import android.media.RingtoneManager
-import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,6 +15,7 @@ import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TimerFragment : Fragment() {
 
@@ -23,7 +23,7 @@ class TimerFragment : Fragment() {
         fun newInstance() = TimerFragment()
     }
 
-    private lateinit var viewModel: TimerViewModel
+    private val viewModel: TimerViewModel by viewModel()
     private lateinit var binding: TimerFragmentBinding
 
     override fun onCreateView(
@@ -41,8 +41,6 @@ class TimerFragment : Fragment() {
         // viewModel 初期化, ダイアログの出現の設定.
 
         activity?.run {
-            viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
-
             val timerEndListener = object : TimerModel.OnEndedListener {
                 override fun onEnd() {
 

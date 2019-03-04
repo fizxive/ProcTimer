@@ -2,7 +2,6 @@ package com.imaginaryrhombus.proctimer.ui.timerpicker
 
 import androidx.appcompat.app.AlertDialog
 import android.content.DialogInterface
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.InputType
 import android.view.ViewGroup
@@ -11,17 +10,16 @@ import androidx.fragment.app.DialogFragment
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
 import kotlinx.android.synthetic.main.timer_picker_fragment.view.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class TimerPickerFragment : DialogFragment() {
 
-    private lateinit var timerViewModel: TimerViewModel
+    private val timerViewModel: TimerViewModel by sharedViewModel()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         super.onCreateDialog(savedInstanceState)
 
         val fragmentActivity = checkNotNull(activity) { "Activity Not found." }
-
-        timerViewModel = ViewModelProviders.of(fragmentActivity).get(TimerViewModel::class.java)
 
         val initMinutesString: String
         val initSecondsString: String

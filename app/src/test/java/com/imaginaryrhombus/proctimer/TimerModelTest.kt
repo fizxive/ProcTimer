@@ -8,9 +8,10 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.test.AutoCloseKoinTest
 
 @RunWith(AndroidJUnit4::class)
-class TimerModelTest {
+class TimerModelTest : AutoCloseKoinTest() {
 
     /**
      * インスタンス作成テスト.
