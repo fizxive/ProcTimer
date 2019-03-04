@@ -1,7 +1,11 @@
 package com.imaginaryrhombus.proctimer
 
 import android.app.Application
-import com.imaginaryrhombus.proctimer.application.*
+import com.imaginaryrhombus.proctimer.application.TimerComponent
+import com.imaginaryrhombus.proctimer.application.TimerComponentInterface
+import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClient
+import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
+import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
 import org.koin.android.ext.android.startKoin
 import org.koin.androidx.viewmodel.ext.koin.viewModel
