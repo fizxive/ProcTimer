@@ -2,7 +2,6 @@ package com.imaginaryrhombus.proctimer.ui.timerpicker
 
 import androidx.appcompat.app.AlertDialog
 import android.content.DialogInterface
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.InputType
 import android.view.ViewGroup

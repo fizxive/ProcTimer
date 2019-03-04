@@ -1,21 +1,16 @@
 package com.imaginaryrhombus.proctimer
 
 import android.app.Application
-import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.FirebaseApp
-import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.androidx.viewmodel.ext.android.getViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.ParameterList
 import org.koin.test.AutoCloseKoinTest
 
 @RunWith(AndroidJUnit4::class)
