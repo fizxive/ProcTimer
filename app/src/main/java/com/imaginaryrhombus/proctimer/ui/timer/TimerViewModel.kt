@@ -9,17 +9,19 @@ import kotlin.math.max
 import kotlin.math.ceil
 import java.util.concurrent.TimeUnit
 import com.imaginaryrhombus.proctimer.R
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 
 /**
  * タイマー用の ViewModel.
  * @param app アプリケーション.(ViewModelProvider を使用する限り、特に意識する必要はない.)
  */
-class TimerViewModel(private val app: Application) : AndroidViewModel(app) {
+class TimerViewModel(private val app: Application) : AndroidViewModel(app), KoinComponent {
 
     /**
      * 複数のタイマーを管理するタイマー本体.
      */
-    private var multiTimerModel = MultiTimerModel(app.applicationContext)
+    private var multiTimerModel = MultiTimerModel(get())
 
     /**
      * 準備中のタイマーをテキスト表示する数.

@@ -16,6 +16,7 @@ import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TimerFragment : Fragment() {
 
@@ -23,7 +24,7 @@ class TimerFragment : Fragment() {
         fun newInstance() = TimerFragment()
     }
 
-    private lateinit var viewModel: TimerViewModel
+    private val viewModel: TimerViewModel by viewModel()
     private lateinit var binding: TimerFragmentBinding
 
     override fun onCreateView(
@@ -41,8 +42,6 @@ class TimerFragment : Fragment() {
         // viewModel 初期化, ダイアログの出現の設定.
 
         activity?.run {
-            viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
-
             val timerEndListener = object : TimerModel.OnEndedListener {
                 override fun onEnd() {
 

@@ -1,13 +1,15 @@
 package com.imaginaryrhombus.proctimer.application
 
-import com.google.android.gms.tasks.Task
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.imaginaryrhombus.proctimer.BuildConfig
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 /**
  * アップデートが必要かどうかを確認し、必要な場合はコンストラクタで渡したコールバックを呼ぶクラス.
  */
-class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) {
+class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) : KoinComponent {
+
+    private val remoteConfigClient : TimerRemoteConfigClientInterface by inject()
 
     /**
      * アップデートが必要なときに呼ばれるインターフェース.
@@ -20,48 +22,21 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
         fun onUpdateRequired(updateUrl: String)
     }
 
-    private val firebaseRemoteConfig =
-        requireNotNull(FirebaseRemoteConfig.getInstance()) {
-            "Failed to get Firebase RemoteConfig instance."
-        }
-
-    private val versionKey = if (BuildConfig.DEBUG) DEBUG_VERSION_KEY else RELEASE_VERSION_KEY
-
     /**
      * アップデートが必要か(実行中のアプリが強制アップデート対象か)を確認する.
      * アップデートが必要な場合, コールバックが呼ばれる.
      */
     fun checkUpdateRequired() {
-
-        fetchConfig(0).addOnCompleteListener {
-            firebaseRemoteConfig.activateFetched()
-
-            val requiredVersion = firebaseRemoteConfig.getString(versionKey)
+        remoteConfigClient.fetchRemoteConfig(postApply = {
+            val requiredVersion = remoteConfigClient.leastVersion
 
             if (isUpdateRequired(
-                BuildConfig.VERSION_NAME,
-                requiredVersion
-            )) {
-                updateRequiredListener.onUpdateRequired(
-                    firebaseRemoteConfig.getString(STORE_URL_KEY)
-                )
+                    BuildConfig.VERSION_NAME,
+                    requiredVersion
+                )) {
+                updateRequiredListener.onUpdateRequired(remoteConfigClient.storeUrl)
             }
-        }
-    }
-
-    companion object {
-        const val DEBUG_VERSION_KEY = "LEAST_VERSION_DEBUG"
-        const val RELEASE_VERSION_KEY = "LEAST_VERSION"
-        const val STORE_URL_KEY = "STORE_URL"
-    }
-
-    private fun fetchConfig(cacheExpirationSeconds: Long): Task<Void> {
-        firebaseRemoteConfig.setDefaults(HashMap<String, Any>().apply {
-            put(versionKey, "0.0.0.0")
-            put(STORE_URL_KEY, "")
         })
-
-        return firebaseRemoteConfig.fetch(cacheExpirationSeconds)
     }
 
     /**
