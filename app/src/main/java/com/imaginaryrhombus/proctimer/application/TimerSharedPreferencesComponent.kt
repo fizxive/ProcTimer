@@ -5,15 +5,32 @@ import com.google.gson.reflect.TypeToken
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import org.koin.standalone.KoinComponent
 
+/**
+ * 実際の SharedPreference を扱うクラス.
+ * @param timerComponentInterface コンポーネントインターフェイスを継承した実装クラス.
+ */
 class TimerSharedPreferencesComponent(
     timerComponentInterface: TimerComponentInterface
 ) : KoinComponent {
 
+    /**
+     * SharedPreferences.
+     */
     private val sharedPreferences = timerComponentInterface.sharedPreferences
 
+    /**
+     * Gson オブジェクト.
+     */
     private val gson = Gson()
-    private val timerSecondsTypeToken = object : TypeToken<List<Float>>(){}.type
 
+    /**
+     * List を json 化するための型情報.
+     */
+    private val timerSecondsTypeToken = object : TypeToken<List<Float>>() {}.type
+
+    /**
+     * タイマー秒数の初期値.
+     */
     private val defaultTimerSecondsList = List(TimerConstants.TIMER_DEFAULT_COUNTS) {
         TimerConstants.TIMER_DEFAULT_SECONDS
     }
