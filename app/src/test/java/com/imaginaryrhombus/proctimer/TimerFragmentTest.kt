@@ -30,34 +30,35 @@ class TimerFragmentTest : AutoCloseKoinTest() {
     @Test
     @Config(qualifiers = "+port")
     fun testCreateActivityPortrait() {
-        onView(withId(R.id.currentTimerText)).check(matches(withText("01:00")))
-        onView(withId(R.id.nextTimerText1)).check(matches(withText("01:00")))
-        onView(withId(R.id.nextTimerText2)).check(matches(withText("--:--")))
-        onView(withId(R.id.nextTimerText3)).check(matches(withText("--:--")))
+        testCreateActivityInternal()
     }
 
     @Test
     @Config(qualifiers = "+land")
     fun testCreateActivityLandscape() {
+        testCreateActivityInternal()
+    }
+
+    @Test
+    @Config(qualifiers = "+port")
+    fun testAddTimerPortrait() {
+        testAddTimerInternal()
+    }
+
+    @Test
+    @Config(qualifiers = "+land")
+    fun testAddTimerLandscape() {
+        testAddTimerInternal()
+    }
+
+    private fun testCreateActivityInternal() {
         onView(withId(R.id.currentTimerText)).check(matches(withText("01:00")))
         onView(withId(R.id.nextTimerText1)).check(matches(withText("01:00")))
         onView(withId(R.id.nextTimerText2)).check(matches(withText("--:--")))
         onView(withId(R.id.nextTimerText3)).check(matches(withText("--:--")))
     }
 
-    @Test
-    @Config(qualifiers = "+port")
-    fun testAddTimerPortrait() {
-        onView(withId(R.id.addButton)).perform(click())
-        onView(withId(R.id.currentTimerText)).check(matches(withText("01:00")))
-        onView(withId(R.id.nextTimerText1)).check(matches(withText("01:00")))
-        onView(withId(R.id.nextTimerText2)).check(matches(withText("01:00")))
-        onView(withId(R.id.nextTimerText3)).check(matches(withText("--:--")))
-    }
-
-    @Test
-    @Config(qualifiers = "+land")
-    fun testAddTimerLandscape() {
+    private fun testAddTimerInternal() {
         onView(withId(R.id.addButton)).perform(click())
         onView(withId(R.id.currentTimerText)).check(matches(withText("01:00")))
         onView(withId(R.id.nextTimerText1)).check(matches(withText("01:00")))
