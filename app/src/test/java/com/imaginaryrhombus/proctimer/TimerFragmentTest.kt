@@ -27,28 +27,58 @@ class TimerFragmentTest : AutoCloseKoinTest() {
         get<TimerSharedPreferencesComponent>().reset()
     }
 
+    /**
+     * 縦向きの初期化テスト.
+     */
     @Test
     @Config(qualifiers = "+port")
     fun testCreateActivityPortrait() {
         testCreateActivityInternal()
     }
 
+    /**
+     * 横向きの初期化テスト.
+     */
     @Test
     @Config(qualifiers = "+land")
     fun testCreateActivityLandscape() {
         testCreateActivityInternal()
     }
 
+    /**
+     * 縦向きのタイマー追加テスト.
+     */
     @Test
     @Config(qualifiers = "+port")
     fun testAddTimerPortrait() {
         testAddTimerInternal()
     }
 
+    /**
+     * 横向きのタイマー追加テスト.
+     */
     @Test
     @Config(qualifiers = "+land")
     fun testAddTimerLandscape() {
         testAddTimerInternal()
+    }
+
+    /**
+     * 縦向きのタイマー削除テスト.
+     */
+    @Test
+    @Config(qualifiers = "+port")
+    fun testRemoveTimerPortrait() {
+        testRemoveTimerInternal()
+    }
+
+    /**
+     * 横向きのタイマー削除テスト.
+     */
+    @Test
+    @Config(qualifiers = "+land")
+    fun testRemoveTimerLandscape() {
+        testRemoveTimerInternal()
     }
 
     private fun testCreateActivityInternal() {
@@ -63,6 +93,14 @@ class TimerFragmentTest : AutoCloseKoinTest() {
         onView(withId(R.id.currentTimerText)).check(matches(withText("01:00")))
         onView(withId(R.id.nextTimerText1)).check(matches(withText("01:00")))
         onView(withId(R.id.nextTimerText2)).check(matches(withText("01:00")))
+        onView(withId(R.id.nextTimerText3)).check(matches(withText("--:--")))
+    }
+
+    private fun testRemoveTimerInternal() {
+        onView(withId(R.id.removeButton)).perform(click())
+        onView(withId(R.id.currentTimerText)).check(matches(withText("01:00")))
+        onView(withId(R.id.nextTimerText1)).check(matches(withText("--:--")))
+        onView(withId(R.id.nextTimerText2)).check(matches(withText("--:--")))
         onView(withId(R.id.nextTimerText3)).check(matches(withText("--:--")))
     }
 }
