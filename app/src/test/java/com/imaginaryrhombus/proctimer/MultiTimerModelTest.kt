@@ -1,10 +1,7 @@
 package com.imaginaryrhombus.proctimer
 
-import android.app.Application
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.FirebaseApp
 import com.imaginaryrhombus.proctimer.application.TimerComponentInterface
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
@@ -20,11 +17,6 @@ import org.koin.test.AutoCloseKoinTest
 
 @RunWith(AndroidJUnit4::class)
 class MultiTimerModelTest : AutoCloseKoinTest() {
-
-    init {
-        // JvmStatic, BeforeClass だとランタイムエラーを起こす.
-        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext<Application>())
-    }
 
     /**
      * Activity 生成のための Rule.
