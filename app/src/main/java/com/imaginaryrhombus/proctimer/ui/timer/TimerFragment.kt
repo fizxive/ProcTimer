@@ -15,7 +15,7 @@ import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class TimerFragment : Fragment() {
 
@@ -23,7 +23,7 @@ class TimerFragment : Fragment() {
         fun newInstance() = TimerFragment()
     }
 
-    private val viewModel: TimerViewModel by viewModel()
+    private val viewModel: TimerViewModel by sharedViewModel()
     private lateinit var binding: TimerFragmentBinding
 
     override fun onCreateView(
