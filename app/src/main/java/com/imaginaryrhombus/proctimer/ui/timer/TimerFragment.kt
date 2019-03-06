@@ -40,7 +40,7 @@ class TimerFragment : Fragment() {
 
         // viewModel 初期化, ダイアログの出現の設定.
 
-        activity?.run {
+        requireActivity().run {
             val timerEndListener = object : TimerModel.OnEndedListener {
                 override fun onEnd() {
 
@@ -64,7 +64,7 @@ class TimerFragment : Fragment() {
             }
 
             viewModel.setTimerEndListener(timerEndListener)
-        } ?: throw Resources.NotFoundException("Activity Not found.")
+        }
 
         binding.timerViewModel = viewModel
         binding.lifecycleOwner = this
