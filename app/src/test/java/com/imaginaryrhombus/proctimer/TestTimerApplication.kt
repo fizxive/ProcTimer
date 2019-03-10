@@ -1,6 +1,8 @@
 package com.imaginaryrhombus.proctimer
 
 import android.app.Application
+import androidx.test.core.app.ApplicationProvider
+import com.google.firebase.FirebaseApp
 import com.imaginaryrhombus.proctimer.application.TimerComponentInterface
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClient
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
@@ -18,6 +20,7 @@ class TestTimerApplication : Application() {
             timerComponentModule,
             timerViewModelModule
         ))
+        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext<Application>())
     }
 
     private val timerComponentModule = module {

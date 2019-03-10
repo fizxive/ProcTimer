@@ -2,6 +2,7 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import java.util.LinkedList
@@ -89,6 +90,13 @@ class MultiTimerModel(
      */
     private val timerMin = 1
 
+    /**
+     * タイマーが動作中かどうか確認する.
+     */
+    val isWorking: LiveData<Boolean> = Transformations.switchMap(activeTimerModel) { timerModel ->
+        timerModel.isWorking
+    }
+
     init {
         restoreTimerPreferences()
         notifyActiveTimerModel()
@@ -126,14 +134,14 @@ class MultiTimerModel(
      * 現在のタイマーを動作開始させる.
      */
     fun startCurrentTimer() {
-        _linkedTimerList.first.startTick()
+        _linkedTimerList.first.start()
     }
 
     /**
      * 現在のタイマーを停止させる.
      */
     fun stopCurrentTimer() {
-        _linkedTimerList.first.stopTick()
+        _linkedTimerList.first.stop()
     }
 
     /**

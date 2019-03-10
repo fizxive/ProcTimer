@@ -21,4 +21,5 @@
     <string name="privacy_text">プライバシーポリシー</string>
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>
+    <string name="button_edit">編集</string>
 </resources>

@@ -2,7 +2,6 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.res.Resources
 import android.media.RingtoneManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
@@ -15,7 +14,7 @@ import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class TimerFragment : Fragment() {
 
@@ -23,7 +22,7 @@ class TimerFragment : Fragment() {
         fun newInstance() = TimerFragment()
     }
 
-    private val viewModel: TimerViewModel by viewModel()
+    private val viewModel: TimerViewModel by sharedViewModel()
     private lateinit var binding: TimerFragmentBinding
 
     override fun onCreateView(
@@ -40,7 +39,7 @@ class TimerFragment : Fragment() {
 
         // viewModel 初期化, ダイアログの出現の設定.
 
-        activity?.run {
+        requireActivity().run {
             val timerEndListener = object : TimerModel.OnEndedListener {
                 override fun onEnd() {
 
@@ -64,7 +63,7 @@ class TimerFragment : Fragment() {
             }
 
             viewModel.setTimerEndListener(timerEndListener)
-        } ?: throw Resources.NotFoundException("Activity Not found.")
+        }
 
         binding.timerViewModel = viewModel
         binding.lifecycleOwner = this
@@ -103,7 +102,7 @@ class TimerFragment : Fragment() {
             viewModel.nextTimer()
         }
 
-        currentTimerText.setOnClickListener {
+        editButton.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
             pickerFragment.show(fragmentManager, "PickerDialog")
         }
