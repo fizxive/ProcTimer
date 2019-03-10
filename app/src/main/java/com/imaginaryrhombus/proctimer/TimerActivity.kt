@@ -21,7 +21,7 @@ import org.koin.standalone.inject
 
 class TimerActivity : AppCompatActivity(),
     UpdateChecker.UpdateRequiredListener,
-    KoinComponent{
+    KoinComponent {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
