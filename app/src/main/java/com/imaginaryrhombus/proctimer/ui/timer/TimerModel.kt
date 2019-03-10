@@ -1,6 +1,7 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.os.Handler
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 /**
@@ -56,7 +57,7 @@ class TimerModel {
      * 秒数を設定する.
      */
     fun setSeconds(seconds: Float) {
-        if (isTicking) stopTick()
+        if (_isWorking) stop()
         _seconds = seconds
         defaultSeconds = _seconds
     }
@@ -77,9 +78,18 @@ class TimerModel {
     private var timeTicker = TimeTicker()
 
     /**
-     * 動作中かのフラグ.
+     * 動作中かのフラグ(内部管理用).
      */
-    private var isTicking = false
+    private var _isWorking = false
+    set(value) {
+        field = value
+        isWorking.value = value
+    }
+
+    /**
+     * 動作中華のフラグ.
+     */
+    val isWorking = MutableLiveData<Boolean>()
 
     /**
      * 時間経過用のワーカー.
@@ -101,21 +111,21 @@ class TimerModel {
     /**
      * 時間計測を開始.
      */
-    fun startTick() {
+    fun start() {
         timeTicker.resetTickSeconds()
-        if (isTicking.not()) {
+        if (_isWorking.not()) {
             tickHandler.post(tickRunner)
-            isTicking = true
+            _isWorking = true
         }
     }
 
     /**
      * 動作している時間計測を停止する.
      */
-    fun stopTick() {
-        if (isTicking) {
+    fun stop() {
+        if (_isWorking) {
             tickHandler.removeCallbacks(tickRunner)
-            isTicking = false
+            _isWorking = false
         }
     }
 
@@ -123,7 +133,7 @@ class TimerModel {
      * 経過時間をリセット.
      */
     fun reset() {
-        if (isTicking) stopTick()
+        if (_isWorking) stop()
         _seconds = defaultSeconds
     }
 

@@ -3,11 +3,14 @@ package com.imaginaryrhombus.proctimer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withAlpha
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -81,6 +84,42 @@ class TimerFragmentTest : AutoCloseKoinTest() {
         testRemoveTimerInternal()
     }
 
+    /**
+     * 縦向きのタイマー表示が統一されているかのテスト.
+     */
+    @Test
+    @Config(qualifiers = "+port")
+    fun testTimerAlphaPortrait() {
+        testTimerAlphaInternal()
+    }
+
+    /**
+     * 横向きのタイマー表示が統一されているかのテスト.
+     */
+    @Test
+    @Config(qualifiers = "+land")
+    fun testTimerAlphaLandscape() {
+        testTimerAlphaInternal()
+    }
+
+    /**
+     * 縦向きのタイマー設定テスト.
+     */
+    @Test
+    @Config(qualifiers = "+port")
+    fun testTimerStartPortrait() {
+        testTimerStartInternal()
+    }
+
+    /**
+     * 横向きのタイマー設定テスト.
+     */
+    @Test
+    @Config(qualifiers = "+land")
+    fun testTimerStartLandscape() {
+        testTimerStartInternal()
+    }
+
     private fun testCreateActivityInternal() {
         onView(withId(R.id.currentTimerText)).check(matches(withText("01:00")))
         onView(withId(R.id.nextTimerText1)).check(matches(withText("01:00")))
@@ -102,5 +141,22 @@ class TimerFragmentTest : AutoCloseKoinTest() {
         onView(withId(R.id.nextTimerText1)).check(matches(withText("--:--")))
         onView(withId(R.id.nextTimerText2)).check(matches(withText("--:--")))
         onView(withId(R.id.nextTimerText3)).check(matches(withText("--:--")))
+    }
+
+    private fun testTimerAlphaInternal() {
+        onView(withId(R.id.currentTimerText)).check(matches(withAlpha(1.0f)))
+        onView(withId(R.id.nextTimerText1)).check(matches(withAlpha(1.0f)))
+        onView(withId(R.id.nextTimerText2)).check(matches(withAlpha(0.75f)))
+        onView(withId(R.id.nextTimerText3)).check(matches(withAlpha(0.5f)))
+    }
+
+    private fun testTimerStartInternal() {
+        onView(withId(R.id.startButton)).perform(click())
+        onView(withId(R.id.editButton)).check(matches(not(isEnabled())))
+        onView(withId(R.id.addButton)).check(matches(isEnabled()))
+        onView(withId(R.id.removeButton)).check(matches(isEnabled()))
+        onView(withId(R.id.nextButton)).check(matches(isEnabled()))
+        onView(withId(R.id.stopButton)).check(matches(isEnabled()))
+        onView(withId(R.id.resetButton)).check(matches(isEnabled()))
     }
 }

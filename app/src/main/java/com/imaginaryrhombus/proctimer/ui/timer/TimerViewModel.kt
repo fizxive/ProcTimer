@@ -39,9 +39,20 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app), Koin
      */
     private val _nextTimerStrings = MutableList(displayNextTimerCount) { MutableLiveData<String>() }
 
+    /**
+     * 動作中のタイマーのテキスト.
+     */
     val nextTimerStrings: List<MutableLiveData<String>>
     get() {
         return _nextTimerStrings.toList()
+    }
+
+    /**
+     * タイマーが動作しているか.
+     */
+    val isTimerWorking: LiveData<Boolean>
+    get() {
+        return multiTimerModel.isWorking
     }
 
     /**
