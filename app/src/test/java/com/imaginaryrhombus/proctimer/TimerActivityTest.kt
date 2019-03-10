@@ -20,7 +20,7 @@ import org.koin.test.AutoCloseKoinTest
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
-class TimerFragmentTest : AutoCloseKoinTest() {
+class TimerActivityTest : AutoCloseKoinTest() {
 
     @get:Rule
     val rule = ActivityScenarioRule(TimerActivity::class.java)
@@ -103,21 +103,22 @@ class TimerFragmentTest : AutoCloseKoinTest() {
     }
 
     /**
-     * 縦向きのタイマー設定テスト.
+     * 縦向きのボタンテスト.
      */
     @Test
     @Config(qualifiers = "+port")
-    fun testTimerStartPortrait() {
-        testTimerStartInternal()
+    fun testTimerButtonPortrait() {
+        testTimerButtonInternal()
     }
 
     /**
-     * 横向きのタイマー設定テスト.
+     * 横向きのボタンテスト.
      */
     @Test
     @Config(qualifiers = "+land")
-    fun testTimerStartLandscape() {
-        testTimerStartInternal()
+    fun testTimerButtonLandscape() {
+        testTimerButtonInternal()
+
     }
 
     private fun testCreateActivityInternal() {
@@ -150,9 +151,17 @@ class TimerFragmentTest : AutoCloseKoinTest() {
         onView(withId(R.id.nextTimerText3)).check(matches(withAlpha(0.5f)))
     }
 
-    private fun testTimerStartInternal() {
+    private fun testTimerButtonInternal() {
         onView(withId(R.id.startButton)).perform(click())
         onView(withId(R.id.editButton)).check(matches(not(isEnabled())))
+        onView(withId(R.id.addButton)).check(matches(isEnabled()))
+        onView(withId(R.id.removeButton)).check(matches(isEnabled()))
+        onView(withId(R.id.nextButton)).check(matches(isEnabled()))
+        onView(withId(R.id.stopButton)).check(matches(isEnabled()))
+        onView(withId(R.id.resetButton)).check(matches(isEnabled()))
+
+        onView(withId(R.id.stopButton)).perform(click())
+        onView(withId(R.id.editButton)).check(matches(isEnabled()))
         onView(withId(R.id.addButton)).check(matches(isEnabled()))
         onView(withId(R.id.removeButton)).check(matches(isEnabled()))
         onView(withId(R.id.nextButton)).check(matches(isEnabled()))
