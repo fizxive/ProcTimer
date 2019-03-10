@@ -1,7 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.os.Handler
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 /**

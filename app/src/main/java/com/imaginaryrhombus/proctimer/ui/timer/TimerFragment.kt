@@ -2,7 +2,6 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.res.Resources
 import android.media.RingtoneManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
