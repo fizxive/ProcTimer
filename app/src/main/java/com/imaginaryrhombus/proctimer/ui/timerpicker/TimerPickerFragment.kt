@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatDialogFragment
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
 import kotlinx.android.synthetic.main.timer_picker_fragment.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class TimerPickerFragment : DialogFragment() {
+class TimerPickerFragment : AppCompatDialogFragment() {
 
     private val timerViewModel: TimerViewModel by sharedViewModel()
 
