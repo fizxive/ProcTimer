@@ -39,7 +39,7 @@
             android:textSize="36sp"
             app:layout_constraintBottom_toTopOf="@+id/nextTimerText1" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" android:alpha="0.75"/>
         <TextView
             android:id="@+id/nextTimerText3"
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
             android:textSize="36sp" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/nextTimerText2"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-        />
+            android:alpha="0.5"/>
         <Button
             android:id="@+id/startButton"
             android:text="@string/button_start"

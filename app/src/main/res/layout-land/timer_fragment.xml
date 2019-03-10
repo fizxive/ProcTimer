@@ -23,7 +23,7 @@
             android:text="@{timerViewModel.currentTimerText, default=@string/timer_default_text}"
             android:textSize="56sp"
             app:layout_constraintBottom_toTopOf="@+id/stopButton"
-            app:layout_constraintHorizontal_bias="0.81"/>
+            app:layout_constraintHorizontal_bias="0.80"/>
         <TextView
             android:id="@+id/nextTimerText1"
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/currentTimerText"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/stopButton"/>
+            app:layout_constraintBottom_toTopOf="@+id/stopButton" android:alpha="0.75"/>
         <TextView
             android:id="@+id/nextTimerText3"
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/nextTimerText2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/currentTimerText"/>
+            app:layout_constraintEnd_toStartOf="@+id/currentTimerText" android:alpha="0.5"/>
         <Button
             android:id="@+id/startButton"
             android:text="@string/button_start"
