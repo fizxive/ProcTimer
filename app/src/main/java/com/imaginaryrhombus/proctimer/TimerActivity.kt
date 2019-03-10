@@ -12,14 +12,20 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import kotlinx.android.synthetic.main.timer_activity.*
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 class TimerActivity : AppCompatActivity(),
-    UpdateChecker.UpdateRequiredListener {
+    UpdateChecker.UpdateRequiredListener,
+    KoinComponent {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
+
+    private val remoteConfigCliant: TimerRemoteConfigClientInterface by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Light)
@@ -60,10 +66,8 @@ class TimerActivity : AppCompatActivity(),
                 R.id.menu_privacy -> {
                     val intent = Intent(
                         Intent.ACTION_VIEW,
-                        // TODO : Remote Config から取得するようにする
                         Uri.parse(
-                            "https://pagehosting-d362c.firebaseapp.com/" +
-                                "proctimer/privacy-poricy.html"
+                            remoteConfigCliant.privacyPolicyUrl
                         )
                     )
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
