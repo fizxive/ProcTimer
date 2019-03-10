@@ -118,7 +118,6 @@ class TimerActivityTest : AutoCloseKoinTest() {
     @Config(qualifiers = "+land")
     fun testTimerButtonLandscape() {
         testTimerButtonInternal()
-
     }
 
     private fun testCreateActivityInternal() {
