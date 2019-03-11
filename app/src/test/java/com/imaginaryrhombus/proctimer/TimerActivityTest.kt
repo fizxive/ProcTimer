@@ -34,7 +34,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 縦向きの初期化テスト.
      */
     @Test
-    @Config(qualifiers = "+port")
+    @Config(qualifiers = "port")
     fun testCreateActivityPortrait() {
         testCreateActivityInternal()
     }
@@ -43,7 +43,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 横向きの初期化テスト.
      */
     @Test
-    @Config(qualifiers = "+land")
+    @Config(qualifiers = "land")
     fun testCreateActivityLandscape() {
         testCreateActivityInternal()
     }
@@ -52,7 +52,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 縦向きのタイマー追加テスト.
      */
     @Test
-    @Config(qualifiers = "+port")
+    @Config(qualifiers = "port")
     fun testAddTimerPortrait() {
         testAddTimerInternal()
     }
@@ -61,7 +61,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 横向きのタイマー追加テスト.
      */
     @Test
-    @Config(qualifiers = "+land")
+    @Config(qualifiers = "land")
     fun testAddTimerLandscape() {
         testAddTimerInternal()
     }
@@ -70,7 +70,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 縦向きのタイマー削除テスト.
      */
     @Test
-    @Config(qualifiers = "+port")
+    @Config(qualifiers = "port")
     fun testRemoveTimerPortrait() {
         testRemoveTimerInternal()
     }
@@ -79,7 +79,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 横向きのタイマー削除テスト.
      */
     @Test
-    @Config(qualifiers = "+land")
+    @Config(qualifiers = "land")
     fun testRemoveTimerLandscape() {
         testRemoveTimerInternal()
     }
@@ -88,7 +88,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 縦向きのタイマー表示が統一されているかのテスト.
      */
     @Test
-    @Config(qualifiers = "+port")
+    @Config(qualifiers = "port")
     fun testTimerAlphaPortrait() {
         testTimerAlphaInternal()
     }
@@ -97,7 +97,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 横向きのタイマー表示が統一されているかのテスト.
      */
     @Test
-    @Config(qualifiers = "+land")
+    @Config(qualifiers = "land")
     fun testTimerAlphaLandscape() {
         testTimerAlphaInternal()
     }
@@ -106,7 +106,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 縦向きのボタンテスト.
      */
     @Test
-    @Config(qualifiers = "+port")
+    @Config(qualifiers = "port")
     fun testTimerButtonPortrait() {
         testTimerButtonInternal()
     }
@@ -115,7 +115,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
      * 横向きのボタンテスト.
      */
     @Test
-    @Config(qualifiers = "+land")
+    @Config(qualifiers = "land")
     fun testTimerButtonLandscape() {
         testTimerButtonInternal()
     }
