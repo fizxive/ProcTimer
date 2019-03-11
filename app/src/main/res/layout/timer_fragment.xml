@@ -22,13 +22,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="@{timerViewModel.currentTimerText, default=@string/timer_default_text}"
-            android:textSize="56sp"/>
+            android:textSize="@dimen/current_timer_text_size"/>
         <TextView
             android:id="@+id/nextTimerText1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{timerViewModel.nextTimerStrings[0], default=@string/timer_invalid_text}"
-            android:textSize="36sp" android:layout_marginBottom="8dp"
+            android:textSize="@dimen/sub_timer_text_size" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/currentTimerText" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
         <TextView
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{timerViewModel.nextTimerStrings[1], default=@string/timer_invalid_text}"
-            android:textSize="36sp"
+            android:textSize="@dimen/sub_timer_text_size"
             app:layout_constraintBottom_toTopOf="@+id/nextTimerText1" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="8dp" android:alpha="0.75"/>
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{timerViewModel.nextTimerStrings[2], default=@string/timer_invalid_text}"
-            android:textSize="36sp" android:layout_marginBottom="8dp"
+            android:textSize="@dimen/sub_timer_text_size" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/nextTimerText2"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
             android:alpha="0.5"/>
@@ -54,7 +54,7 @@
             android:text="@string/button_start"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="@dimen/main_button_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/stopButton"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/addButton"/>
@@ -63,7 +63,7 @@
             android:text="@string/button_stop"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="@dimen/main_button_text_size"
             app:layout_constraintStart_toEndOf="@+id/startButton"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/resetButton"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/removeButton"/>
@@ -72,7 +72,7 @@
             android:text="@string/button_reset"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="@dimen/main_button_text_size"
             app:layout_constraintStart_toEndOf="@+id/stopButton" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/nextButton"/>
@@ -82,14 +82,16 @@
             android:layout_height="wrap_content" android:id="@+id/removeButton"
             app:layout_constraintStart_toEndOf="@+id/addButton" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/nextButton"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/sub_button_text_size"/>
         <Button
             android:text="@string/button_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/addButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/removeButton"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/sub_button_text_size"/>
         <Button
             android:text="@string/button_next"
             android:layout_width="0dp"
@@ -97,7 +99,8 @@
             android:id="@+id/nextButton"
             app:layout_constraintStart_toEndOf="@+id/removeButton" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/sub_button_text_size"/>
         <Button
             android:text="@string/button_edit"
             android:layout_width="wrap_content"
@@ -105,7 +108,7 @@
             app:layout_constraintTop_toBottomOf="@+id/currentTimerText" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:enabled="@{!safeUnbox(timerViewModel.isTimerWorking)}"
-        />
+            android:textSize="@dimen/sub_button_text_size"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
