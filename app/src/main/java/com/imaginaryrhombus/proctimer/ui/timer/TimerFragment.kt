@@ -2,11 +2,7 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.Intent
-import android.content.res.Resources
 import android.media.RingtoneManager
-import android.net.Uri
-import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,6 +14,7 @@ import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class TimerFragment : Fragment() {
 
@@ -25,7 +22,7 @@ class TimerFragment : Fragment() {
         fun newInstance() = TimerFragment()
     }
 
-    private lateinit var viewModel: TimerViewModel
+    private val viewModel: TimerViewModel by sharedViewModel()
     private lateinit var binding: TimerFragmentBinding
 
     override fun onCreateView(
@@ -42,9 +39,7 @@ class TimerFragment : Fragment() {
 
         // viewModel 初期化, ダイアログの出現の設定.
 
-        activity?.run {
-            viewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
-
+        requireActivity().run {
             val timerEndListener = object : TimerModel.OnEndedListener {
                 override fun onEnd() {
 
@@ -68,7 +63,7 @@ class TimerFragment : Fragment() {
             }
 
             viewModel.setTimerEndListener(timerEndListener)
-        } ?: throw Resources.NotFoundException("Activity Not found.")
+        }
 
         binding.timerViewModel = viewModel
         binding.lifecycleOwner = this
@@ -107,18 +102,9 @@ class TimerFragment : Fragment() {
             viewModel.nextTimer()
         }
 
-        currentTimerText.setOnClickListener {
+        editButton.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
             pickerFragment.show(fragmentManager, "PickerDialog")
-        }
-
-        privacy.setOnClickListener {
-            // TODO : Remote Config に移動する.
-            // TODO : ナビゲーションドロワーを使用して配置したい.
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(
-                "https://pagehosting-d362c.firebaseapp.com/proctimer/privacy-poricy.html"))
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
         }
     }
 }

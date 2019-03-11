@@ -1,16 +1,18 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
+import androidx.lifecycle.Transformations
+import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import java.util.LinkedList
 
 /**
  * 複数のタイマーを管理する Model.
  */
-class MultiTimerModel(context: Context) {
+class MultiTimerModel(
+    private val timerSharedPreferencesComponent: TimerSharedPreferencesComponent
+) {
 
     /**
      * タイマー切り替わり時のリスナーインターフェース.
@@ -79,17 +81,6 @@ class MultiTimerModel(context: Context) {
         }
 
     /**
-     * ローカルデータ読み書き用.
-     */
-    private val _sharedPreferences =
-        context.getSharedPreferences(TimerConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
-
-    /**
-     * json 読み書き用.
-     */
-    private val gson = Gson()
-
-    /**
      * タイマーの最大数.
      */
     private val timerMax = 4
@@ -99,14 +90,15 @@ class MultiTimerModel(context: Context) {
      */
     private val timerMin = 1
 
+    /**
+     * タイマーが動作中かどうか確認する.
+     */
+    val isWorking: LiveData<Boolean> = Transformations.switchMap(activeTimerModel) { timerModel ->
+        timerModel.isWorking
+    }
+
     init {
-        _linkedTimerList.clear()
-        if (restoreTimerPreferences().not()) {
-            for (index in 0 until TimerConstants.TIMER_DEFAULT_COUNTS) {
-                _linkedTimerList.addLast(createTimerModel())
-            }
-            saveTimerPreferences()
-        }
+        restoreTimerPreferences()
         notifyActiveTimerModel()
     }
 
@@ -142,14 +134,14 @@ class MultiTimerModel(context: Context) {
      * 現在のタイマーを動作開始させる.
      */
     fun startCurrentTimer() {
-        _linkedTimerList.first.startTick()
+        _linkedTimerList.first.start()
     }
 
     /**
      * 現在のタイマーを停止させる.
      */
     fun stopCurrentTimer() {
-        _linkedTimerList.first.stopTick()
+        _linkedTimerList.first.stop()
     }
 
     /**
@@ -195,40 +187,20 @@ class MultiTimerModel(context: Context) {
      * タイマーの秒数/個数を SharedPreferences にセーブする.
      */
     private fun saveTimerPreferences() {
-        val timerSecondsArray = Array(timerList.size) {
-                index -> timerList[index].defaultSeconds
+        timerSharedPreferencesComponent.timerSecondsList = List(timerList.size) {
+            index -> timerList[index].defaultSeconds
         }
-        _sharedPreferences.edit().run {
-            putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME,
-                gson.toJson(timerSecondsArray))
-            putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME,
-                TimerConstants.PREFERENCE_SAVE_VERSION)
-        }.apply()
     }
 
     /**
      * タイマーの秒数/個数を SharedPreferences から復元する.
      * @return 復元に成功した場合は true. 失敗した場合は false.
      */
-    private fun restoreTimerPreferences(): Boolean {
-        val saveVersion = _sharedPreferences.getInt(
-            TimerConstants.PREFERENCE_SAVE_VERSION_NAME,
-            TimerConstants.PREFERENCE_SAVE_VERSION_INVALID)
-        if (saveVersion == TimerConstants.PREFERENCE_SAVE_VERSION) {
-            val timerSecondsJsonString =
-                _sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, null)
-            timerSecondsJsonString?.let { json ->
-                _linkedTimerList.clear()
-                val secondsArray = gson.fromJson(json, Array<Float>::class.java)
-                secondsArray.forEach {
-                    val timerModel = createTimerModel()
-                    timerModel.setSeconds(it)
-                    _linkedTimerList.addLast(timerModel)
-                }
-                return true
-            }
+    private fun restoreTimerPreferences() {
+        _linkedTimerList.clear()
+        timerSharedPreferencesComponent.timerSecondsList.forEach {
+            _linkedTimerList.addLast(TimerModel().apply { setSeconds(it) })
         }
-        return false
     }
 
     /**

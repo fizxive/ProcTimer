@@ -14,7 +14,7 @@ class TimerConstants {
         /**
          * 保存データのバージョン.
          */
-        const val PREFERENCE_SAVE_VERSION = 2
+        const val PREFERENCE_SAVE_VERSION = 3
 
         /**
          * 保存データのバージョンが読めなかったときのデフォルト値.
