@@ -46,6 +46,9 @@ class TimerConstants {
          */
         const val TIMER_THEME_NAME = "theme"
 
+        /**
+         * タイマーのテーマ定数.
+         */
         enum class TimerTheme {
             Light,
             Dark;

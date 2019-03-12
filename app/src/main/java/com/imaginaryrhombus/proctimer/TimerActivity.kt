@@ -68,8 +68,8 @@ class TimerActivity : AppCompatActivity(),
         drawer.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        navigation.setNavigationItemSelectedListener {
-            return@setNavigationItemSelectedListener when (it.itemId) {
+        navigation.setNavigationItemSelectedListener { menuItem ->
+            return@setNavigationItemSelectedListener when (menuItem.itemId) {
                 R.id.menu_privacy -> {
                     val intent = Intent(
                         Intent.ACTION_VIEW,
@@ -90,9 +90,11 @@ class TimerActivity : AppCompatActivity(),
                         getString(R.string.theme_light) to R.style.Light,
                         getString(R.string.theme_dark) to R.style.Dark
                     )
+                    val selectionMap = themeMap.entries.associateBy( {it.value} ) {it.key}
                     val alertDialog = AlertDialog.Builder(this)
                         .setTitle("Set theme")
-                        .setSingleChoiceItems(selection, 0) {_, which ->
+                        .setSingleChoiceItems(selection,
+                            selection.indexOf(selectionMap.getValue(currentTheme))) {_, which ->
                             currentTheme = requireNotNull(themeMap[selection[which]])
                         }
                         .setPositiveButton("OK") {_, _ ->
