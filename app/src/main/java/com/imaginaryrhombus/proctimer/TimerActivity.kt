@@ -15,7 +15,6 @@ import androidx.core.view.GravityCompat
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
-import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.ui.TimerThemeConverter
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import kotlinx.android.synthetic.main.timer_activity.*
