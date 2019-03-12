@@ -96,4 +96,18 @@ class TimerSharedPreferencesComponent(
             .putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, timerSecondsString)
             .apply()
     }
+
+    /**
+     * タイマーのテーマ設定.
+     */
+    var timerTheme: TimerConstants.Companion.TimerTheme
+    get() {
+        return TimerConstants.Companion.TimerTheme.fromInt(
+            sharedPreferences
+                .getInt(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)
+        )
+    }
+    set(value) {
+        sharedPreferences.edit().putInt(TimerConstants.TIMER_THEME_NAME, value.ordinal).apply()
+    }
 }

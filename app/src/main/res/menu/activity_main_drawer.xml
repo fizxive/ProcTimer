@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group>
         <item
             android:id="@+id/menu_privacy"
             android:icon="@android:drawable/ic_dialog_info"
-            android:title="@string/privacy_text" />
+            android:title="@string/privacy_text" android:enabled="true"
+            android:visible="true"/>
+        <item
+            android:id="@+id/change_theme"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/change_theme_text" android:enabled="true"
+            android:visible="true"/>
     </group>
 </menu>

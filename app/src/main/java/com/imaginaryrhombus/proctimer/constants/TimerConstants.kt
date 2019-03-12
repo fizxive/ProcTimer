@@ -1,5 +1,7 @@
 package com.imaginaryrhombus.proctimer.constants
 
+import com.imaginaryrhombus.proctimer.R
+
 /**
  * タイマーに関連する定数の定義.
  */
@@ -40,5 +42,20 @@ class TimerConstants {
          * タイマーの個数が未定義時の初期個数.
          */
         const val TIMER_DEFAULT_COUNTS = 2
+
+        /**
+         * タイマーのテーマ保存用の名前.
+         */
+        const val TIMER_THEME_NAME = "theme"
+
+        enum class TimerTheme {
+            Light,
+            Dark;
+        }
+
+        /**
+         * タイマーのテーマデフォルト値.
+         */
+        val TIMER_THEME_DEFAULT = TimerTheme.Light.ordinal
     }
 }

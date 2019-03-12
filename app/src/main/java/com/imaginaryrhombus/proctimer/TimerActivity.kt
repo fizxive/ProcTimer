@@ -7,13 +7,15 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
+import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
+import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import kotlinx.android.synthetic.main.timer_activity.*
 import org.koin.standalone.KoinComponent
@@ -25,10 +27,14 @@ class TimerActivity : AppCompatActivity(),
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
-    private val remoteConfigCliant: TimerRemoteConfigClientInterface by inject()
+    private val remoteConfigClient: TimerRemoteConfigClientInterface by inject()
+    private val sharedPreferencesComponent: TimerSharedPreferencesComponent by inject()
+
+    private var currentTheme = R.style.Light
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Light)
+        currentTheme = sharedPreferencesComponent.timerTheme.ordinal
+        setTheme(currentTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.timer_activity)
 
@@ -54,7 +60,7 @@ class TimerActivity : AppCompatActivity(),
 
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
-                actionBar?.title = drawer.getDrawerTitle(Gravity.LEFT)
+                actionBar?.title = drawer.getDrawerTitle(GravityCompat.START)
             }
         }
 
@@ -67,11 +73,36 @@ class TimerActivity : AppCompatActivity(),
                     val intent = Intent(
                         Intent.ACTION_VIEW,
                         Uri.parse(
-                            remoteConfigCliant.privacyPolicyUrl
+                            remoteConfigClient.privacyPolicyUrl
                         )
                     )
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
+                    true
+                }
+                R.id.change_theme -> {
+                    val selection = arrayOf(
+                        getString(R.string.theme_light),
+                        getString(R.string.theme_dark)
+                    )
+                    val themeMap = hashMapOf(
+                        getString(R.string.theme_light) to R.style.Light,
+                        getString(R.string.theme_dark) to R.style.Dark
+                    )
+                    val alertDialog = AlertDialog.Builder(this)
+                        .setTitle("Set theme")
+                        .setSingleChoiceItems(selection, 0) {_, which ->
+                            currentTheme = requireNotNull(themeMap[selection[which]])
+                        }
+                        .setPositiveButton("OK") {_, _ ->
+                            sharedPreferencesComponent.timerTheme =
+                                TimerConstants.Companion.TimerTheme.fromInt(currentTheme)
+                            setTheme(currentTheme)
+                            recreate()
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .create()
+                    alertDialog.show()
                     true
                 }
                 else -> {
