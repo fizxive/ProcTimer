@@ -16,6 +16,7 @@ import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterfa
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
+import com.imaginaryrhombus.proctimer.ui.TimerThemeConverter
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import kotlinx.android.synthetic.main.timer_activity.*
 import org.koin.standalone.KoinComponent
@@ -33,7 +34,7 @@ class TimerActivity : AppCompatActivity(),
     private var currentTheme = R.style.Light
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        currentTheme = sharedPreferencesComponent.timerTheme.ordinal
+        currentTheme = TimerThemeConverter.toResourceId(sharedPreferencesComponent.timerTheme)
         setTheme(currentTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.timer_activity)
@@ -96,7 +97,7 @@ class TimerActivity : AppCompatActivity(),
                         }
                         .setPositiveButton("OK") {_, _ ->
                             sharedPreferencesComponent.timerTheme =
-                                TimerConstants.Companion.TimerTheme.fromInt(currentTheme)
+                                TimerThemeConverter.fromResourceId(currentTheme)
                             setTheme(currentTheme)
                             recreate()
                         }

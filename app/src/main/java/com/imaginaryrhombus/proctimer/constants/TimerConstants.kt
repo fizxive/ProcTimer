@@ -1,7 +1,5 @@
 package com.imaginaryrhombus.proctimer.constants
 
-import com.imaginaryrhombus.proctimer.R
-
 /**
  * タイマーに関連する定数の定義.
  */
@@ -16,7 +14,7 @@ class TimerConstants {
         /**
          * 保存データのバージョン.
          */
-        const val PREFERENCE_SAVE_VERSION = 3
+        const val PREFERENCE_SAVE_VERSION = 4
 
         /**
          * 保存データのバージョンが読めなかったときのデフォルト値.
@@ -56,6 +54,6 @@ class TimerConstants {
         /**
          * タイマーのテーマデフォルト値.
          */
-        val TIMER_THEME_DEFAULT = TimerTheme.Light.ordinal
+        val TIMER_THEME_DEFAULT = TimerTheme.Light.name
     }
 }

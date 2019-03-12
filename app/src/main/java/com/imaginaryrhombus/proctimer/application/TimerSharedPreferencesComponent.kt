@@ -3,6 +3,7 @@ package com.imaginaryrhombus.proctimer.application
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
+import com.imaginaryrhombus.proctimer.constants.TimerConstants.Companion
 import org.koin.standalone.KoinComponent
 
 /**
@@ -75,6 +76,7 @@ class TimerSharedPreferencesComponent(
      */
     fun reset() {
         timerSecondsList = defaultTimerSecondsList
+        timerTheme = Companion.TimerTheme.valueOf(TimerConstants.TIMER_THEME_DEFAULT)
         savedVersion = saveVersion
     }
 
@@ -102,12 +104,11 @@ class TimerSharedPreferencesComponent(
      */
     var timerTheme: TimerConstants.Companion.TimerTheme
     get() {
-        return TimerConstants.Companion.TimerTheme.fromInt(
-            sharedPreferences
-                .getInt(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)
-        )
+        return Companion.TimerTheme.valueOf(requireNotNull(sharedPreferences
+                .getString(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)))
+
     }
     set(value) {
-        sharedPreferences.edit().putInt(TimerConstants.TIMER_THEME_NAME, value.ordinal).apply()
+        sharedPreferences.edit().putString(TimerConstants.TIMER_THEME_NAME, value.name).apply()
     }
 }
