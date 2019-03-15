@@ -106,7 +106,6 @@ class TimerSharedPreferencesComponent(
     get() {
         return Companion.TimerTheme.valueOf(requireNotNull(sharedPreferences
                 .getString(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)))
-
     }
     set(value) {
         sharedPreferences.edit().putString(TimerConstants.TIMER_THEME_NAME, value.name).apply()

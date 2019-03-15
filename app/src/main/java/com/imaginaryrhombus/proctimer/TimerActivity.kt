@@ -30,7 +30,7 @@ class TimerActivity : AppCompatActivity(),
     private val remoteConfigClient: TimerRemoteConfigClientInterface by inject()
     private val sharedPreferencesComponent: TimerSharedPreferencesComponent by inject()
 
-    class RevertibleValue<T>(initValue:T) {
+    class RevertibleValue<T>(initValue: T) {
 
         var value = initValue
         set(value) {
@@ -136,11 +136,11 @@ class TimerActivity : AppCompatActivity(),
             getString(R.string.theme_light) to R.style.Light,
             getString(R.string.theme_dark) to R.style.Dark
         )
-        val selectionMap = themeMap.entries.associateBy( {it.value} ) {it.key}
+        val selectionMap = themeMap.entries.associateBy({ it.value }) { it.key }
         val alertDialog = AlertDialog.Builder(this)
             .setTitle(getString(R.string.theme_dialog_title))
             .setSingleChoiceItems(selection,
-                selection.indexOf(selectionMap.getValue(currentTheme.value))) {_, which ->
+                selection.indexOf(selectionMap.getValue(currentTheme.value))) { _, which ->
                 currentTheme.value = requireNotNull(themeMap[selection[which]])
             }
             .setPositiveButton(getString(R.string.button_theme_change)) { _, _ ->
