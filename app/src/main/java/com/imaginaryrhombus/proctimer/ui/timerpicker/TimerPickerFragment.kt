@@ -1,7 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timerpicker
 
 import androidx.appcompat.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.view.ViewGroup
@@ -38,8 +37,7 @@ class TimerPickerFragment : AppCompatDialogFragment() {
         val builder = AlertDialog.Builder(requireActivity())
             .setView(dialogView)
             .setMessage(R.string.timer_dialog_text)
-            .setPositiveButton(R.string.timer_dialog_positive_button) {
-                _: DialogInterface, _: Int ->
+            .setPositiveButton(R.string.button_timer_dialog_positive) { _, _ ->
                 dialogView.run {
                     timerViewModel.setCurrentTimerFrom(
                         minutesPicker.displayedValues[minutesPicker.value],
@@ -47,9 +45,7 @@ class TimerPickerFragment : AppCompatDialogFragment() {
                     )
                 }
             }
-            .setNegativeButton(R.string.timer_dialog_negative_button) {
-                _: DialogInterface, _: Int ->
-            }
+            .setNegativeButton(R.string.button_cancel, null)
 
         dialogView.run {
             fun findEditTextAndSetInputType(viewGroup: ViewGroup) {

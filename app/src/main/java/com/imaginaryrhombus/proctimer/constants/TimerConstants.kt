@@ -14,7 +14,7 @@ class TimerConstants {
         /**
          * 保存データのバージョン.
          */
-        const val PREFERENCE_SAVE_VERSION = 3
+        const val PREFERENCE_SAVE_VERSION = 4
 
         /**
          * 保存データのバージョンが読めなかったときのデフォルト値.
@@ -40,5 +40,23 @@ class TimerConstants {
          * タイマーの個数が未定義時の初期個数.
          */
         const val TIMER_DEFAULT_COUNTS = 2
+
+        /**
+         * タイマーのテーマ保存用の名前.
+         */
+        const val TIMER_THEME_NAME = "theme"
+
+        /**
+         * タイマーのテーマ定数.
+         */
+        enum class TimerTheme {
+            Light,
+            Dark;
+        }
+
+        /**
+         * タイマーのテーマデフォルト値.
+         */
+        val TIMER_THEME_DEFAULT = TimerTheme.Light.name
     }
 }

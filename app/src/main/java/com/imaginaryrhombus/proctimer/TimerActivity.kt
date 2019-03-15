@@ -1,19 +1,21 @@
 package com.imaginaryrhombus.proctimer
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
+import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
+import com.imaginaryrhombus.proctimer.ui.TimerThemeConverter
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import kotlinx.android.synthetic.main.timer_activity.*
 import org.koin.standalone.KoinComponent
@@ -25,10 +27,30 @@ class TimerActivity : AppCompatActivity(),
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
-    private val remoteConfigCliant: TimerRemoteConfigClientInterface by inject()
+    private val remoteConfigClient: TimerRemoteConfigClientInterface by inject()
+    private val sharedPreferencesComponent: TimerSharedPreferencesComponent by inject()
+
+    class RevertibleValue<T>(initValue: T) {
+
+        var value = initValue
+        set(value) {
+            oldValue = field
+            field = value
+        }
+
+        private var oldValue = initValue
+
+        fun revertValue(): RevertibleValue<T> {
+            value = oldValue
+            return this
+        }
+    }
+
+    private var currentTheme = RevertibleValue(R.style.Light)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Light)
+        currentTheme.value = TimerThemeConverter.toResourceId(sharedPreferencesComponent.timerTheme)
+        setTheme(currentTheme.value)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.timer_activity)
 
@@ -54,24 +76,22 @@ class TimerActivity : AppCompatActivity(),
 
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
-                actionBar?.title = drawer.getDrawerTitle(Gravity.LEFT)
+                actionBar?.title = drawer.getDrawerTitle(GravityCompat.START)
             }
         }
 
         drawer.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        navigation.setNavigationItemSelectedListener {
-            return@setNavigationItemSelectedListener when (it.itemId) {
+        navigation.setNavigationItemSelectedListener { menuItem ->
+            drawer.closeDrawer(navigation)
+            return@setNavigationItemSelectedListener when (menuItem.itemId) {
                 R.id.menu_privacy -> {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(
-                            remoteConfigCliant.privacyPolicyUrl
-                        )
-                    )
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    openPrivacyPolicy()
+                    true
+                }
+                R.id.change_theme -> {
+                    openChangeThemeDialog()
                     true
                 }
                 else -> {
@@ -85,6 +105,64 @@ class TimerActivity : AppCompatActivity(),
                 .replace(R.id.frame, TimerFragment.newInstance())
                 .commitNow()
         }
+    }
+
+    private fun openPrivacyPolicy() {
+        val privacyPolicyUrl = remoteConfigClient.privacyPolicyUrl
+        if (privacyPolicyUrl.isNotEmpty()) {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(
+                    privacyPolicyUrl
+                )
+            )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        } else {
+            Toast.makeText(
+                this, getString(R.string.privacy_policy_offline),
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+    }
+
+    private fun openChangeThemeDialog() {
+        val selection = arrayOf(
+            getString(R.string.theme_light),
+            getString(R.string.theme_dark)
+        )
+        val themeMap = hashMapOf(
+            getString(R.string.theme_light) to R.style.Light,
+            getString(R.string.theme_dark) to R.style.Dark
+        )
+        val selectionMap = themeMap.entries.associateBy({ it.value }) { it.key }
+        val alertDialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.theme_dialog_title))
+            .setSingleChoiceItems(selection,
+                selection.indexOf(selectionMap.getValue(currentTheme.value))) { _, which ->
+                currentTheme.value = requireNotNull(themeMap[selection[which]])
+            }
+            .setPositiveButton(getString(R.string.button_theme_change)) { _, _ ->
+                val restartDialog: AlertDialog = AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.reload_activity_message))
+                    .setPositiveButton(getString(R.string.button_reload)) { _, _ ->
+                        sharedPreferencesComponent.timerTheme =
+                            TimerThemeConverter.fromResourceId(currentTheme.value)
+                        setTheme(currentTheme.value)
+                        recreate()
+                    }
+                    .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
+                        currentTheme.revertValue()
+                    }
+                    .create()
+                restartDialog.show()
+            }
+            .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
+                currentTheme.revertValue()
+            }
+            .create()
+        alertDialog.show()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -116,9 +194,9 @@ class TimerActivity : AppCompatActivity(),
     override fun onUpdateRequired(updateUrl: String) {
 
         val alertDialog = AlertDialog.Builder(this).apply {
-            setTitle(applicationContext.getString(R.string.update_dialog_title))
-            setMessage(applicationContext.getString(R.string.update_dialog_text))
-            setPositiveButton("ストアに移動") { _: DialogInterface, _: Int ->
+            setTitle(getString(R.string.update_dialog_title))
+            setMessage(getString(R.string.update_dialog_text))
+            setPositiveButton(getString(R.string.button_move_to_store)) { _, _ ->
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)

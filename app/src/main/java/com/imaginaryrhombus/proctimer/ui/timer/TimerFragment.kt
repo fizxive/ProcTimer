@@ -1,7 +1,6 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.media.RingtoneManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
@@ -50,8 +49,7 @@ class TimerFragment : Fragment() {
 
                     val alertBuilder = AlertDialog.Builder(this@run).run {
                         setTitle(R.string.timer_end_dialog_text)
-                        setPositiveButton(R.string.timer_end_dialog_button) {
-                                _: DialogInterface, _: Int ->
+                        setPositiveButton(R.string.button_timer_end_dialog) { _, _ ->
                             ringtone.stop()
                             viewModel.nextTimer()
                         }
