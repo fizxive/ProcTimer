@@ -30,11 +30,27 @@ class TimerActivity : AppCompatActivity(),
     private val remoteConfigClient: TimerRemoteConfigClientInterface by inject()
     private val sharedPreferencesComponent: TimerSharedPreferencesComponent by inject()
 
-    private var currentTheme = R.style.Light
+    class RevertibleValue<T>(initValue:T) {
+
+        var value = initValue
+        set(value) {
+            oldValue = field
+            field = value
+        }
+
+        private var oldValue = initValue
+
+        fun revertValue(): RevertibleValue<T> {
+            value = oldValue
+            return this
+        }
+    }
+
+    private var currentTheme = RevertibleValue(R.style.Light)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        currentTheme = TimerThemeConverter.toResourceId(sharedPreferencesComponent.timerTheme)
-        setTheme(currentTheme)
+        currentTheme.value = TimerThemeConverter.toResourceId(sharedPreferencesComponent.timerTheme)
+        setTheme(currentTheme.value)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.timer_activity)
 
@@ -70,41 +86,11 @@ class TimerActivity : AppCompatActivity(),
         navigation.setNavigationItemSelectedListener { menuItem ->
             return@setNavigationItemSelectedListener when (menuItem.itemId) {
                 R.id.menu_privacy -> {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(
-                            remoteConfigClient.privacyPolicyUrl
-                        )
-                    )
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    openPrivacyPolicy()
                     true
                 }
                 R.id.change_theme -> {
-                    val selection = arrayOf(
-                        getString(R.string.theme_light),
-                        getString(R.string.theme_dark)
-                    )
-                    val themeMap = hashMapOf(
-                        getString(R.string.theme_light) to R.style.Light,
-                        getString(R.string.theme_dark) to R.style.Dark
-                    )
-                    val selectionMap = themeMap.entries.associateBy( {it.value} ) {it.key}
-                    val alertDialog = AlertDialog.Builder(this)
-                        .setTitle("Set theme")
-                        .setSingleChoiceItems(selection,
-                            selection.indexOf(selectionMap.getValue(currentTheme))) {_, which ->
-                            currentTheme = requireNotNull(themeMap[selection[which]])
-                        }
-                        .setPositiveButton("OK") {_, _ ->
-                            sharedPreferencesComponent.timerTheme =
-                                TimerThemeConverter.fromResourceId(currentTheme)
-                            setTheme(currentTheme)
-                            recreate()
-                        }
-                        .setNegativeButton("Cancel", null)
-                        .create()
-                    alertDialog.show()
+                    openChangeThemeDialog()
                     true
                 }
                 else -> {
@@ -118,6 +104,55 @@ class TimerActivity : AppCompatActivity(),
                 .replace(R.id.frame, TimerFragment.newInstance())
                 .commitNow()
         }
+    }
+
+    private fun openPrivacyPolicy() {
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(
+                remoteConfigClient.privacyPolicyUrl
+            )
+        )
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    private fun openChangeThemeDialog() {
+        val selection = arrayOf(
+            getString(R.string.theme_light),
+            getString(R.string.theme_dark)
+        )
+        val themeMap = hashMapOf(
+            getString(R.string.theme_light) to R.style.Light,
+            getString(R.string.theme_dark) to R.style.Dark
+        )
+        val selectionMap = themeMap.entries.associateBy( {it.value} ) {it.key}
+        val alertDialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.theme_dialog_title))
+            .setSingleChoiceItems(selection,
+                selection.indexOf(selectionMap.getValue(currentTheme.value))) {_, which ->
+                currentTheme.value = requireNotNull(themeMap[selection[which]])
+            }
+            .setPositiveButton("OK") { _, _ ->
+                val restartDialog: AlertDialog = AlertDialog.Builder(this)
+                    .setMessage("変更の適用には表示の再読込が必要です。(動作中のタイマーは停止しません)")
+                    .setPositiveButton("再読込") { _, _ ->
+                        sharedPreferencesComponent.timerTheme =
+                            TimerThemeConverter.fromResourceId(currentTheme.value)
+                        setTheme(currentTheme.value)
+                        recreate()
+                    }
+                    .setNegativeButton("キャンセル") { _, _ ->
+                        currentTheme.revertValue()
+                    }
+                    .create()
+                restartDialog.show()
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                currentTheme.revertValue()
+            }
+            .create()
+        alertDialog.show()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {

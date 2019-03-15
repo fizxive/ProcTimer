@@ -25,4 +25,5 @@
     <string name="change_theme_text">テーマ切り替え</string>
     <string name="theme_light">白</string>
     <string name="theme_dark">黒</string>
+    <string name="theme_dialog_title">テーマ設定</string>
 </resources>
