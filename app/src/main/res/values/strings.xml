@@ -3,10 +3,10 @@
     <string name="button_start">スタート</string>
     <string name="button_stop">ストップ</string>
     <string name="timer_dialog_text">時間設定</string>
-    <string name="timer_dialog_negative_button">キャンセル</string>
-    <string name="timer_dialog_positive_button">設定</string>
+    <string name="button_cancel">キャンセル</string>
+    <string name="button_timer_dialog_positive">設定</string>
     <string name="timer_end_dialog_text">時間終了</string>
-    <string name="timer_end_dialog_button">次へ</string>
+    <string name="button_timer_end_dialog">次へ</string>
     <string name="button_reset">リセット</string>
     <string name="timer_default_text">00:00</string>
     <string name="timer_dialog_colon">:</string>
@@ -26,4 +26,8 @@
     <string name="theme_light">白</string>
     <string name="theme_dark">黒</string>
     <string name="theme_dialog_title">テーマ設定</string>
+    <string name="reload_activity_message">変更の適用には表示の再読込が必要です。(動作中のタイマーは停止しません)</string>
+    <string name="button_reload">再読込</string>
+    <string name="button_theme_change">変更</string>
+    <string name="button_move_to_store">ストアに移動</string>
 </resources>

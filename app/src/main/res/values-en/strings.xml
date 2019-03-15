@@ -4,10 +4,10 @@
     <string name="button_start">START</string>
     <string name="button_stop">STOP</string>
     <string name="timer_dialog_text">Timer Set</string>
-    <string name="timer_dialog_negative_button">Cancel</string>
-    <string name="timer_dialog_positive_button">Set</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_timer_dialog_positive">Set</string>
     <string name="timer_end_dialog_text">Timer End</string>
-    <string name="timer_end_dialog_button">Next</string>
+    <string name="button_timer_end_dialog">Next</string>
     <string name="button_reset">RESET</string>
     <string name="timer_default_text">00:00</string>
     <string name="timer_dialog_colon">:</string>
@@ -27,4 +27,10 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="theme_dialog_title">Change Theme</string>
+    <string name="reload_activity_message">"You need to reload to apply the changes. (The running timer does not stop)\n
+        "
+    </string>
+    <string name="button_reload">Reload</string>
+    <string name="button_theme_change">Change</string>
+    <string name="button_move_to_store">Move to Store</string>
 </resources>

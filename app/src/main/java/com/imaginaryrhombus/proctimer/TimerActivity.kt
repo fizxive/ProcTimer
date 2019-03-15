@@ -1,7 +1,6 @@
 package com.imaginaryrhombus.proctimer
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
@@ -133,22 +132,22 @@ class TimerActivity : AppCompatActivity(),
                 selection.indexOf(selectionMap.getValue(currentTheme.value))) {_, which ->
                 currentTheme.value = requireNotNull(themeMap[selection[which]])
             }
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.button_theme_change)) { _, _ ->
                 val restartDialog: AlertDialog = AlertDialog.Builder(this)
-                    .setMessage("変更の適用には表示の再読込が必要です。(動作中のタイマーは停止しません)")
-                    .setPositiveButton("再読込") { _, _ ->
+                    .setMessage(getString(R.string.reload_activity_message))
+                    .setPositiveButton(getString(R.string.button_reload)) { _, _ ->
                         sharedPreferencesComponent.timerTheme =
                             TimerThemeConverter.fromResourceId(currentTheme.value)
                         setTheme(currentTheme.value)
                         recreate()
                     }
-                    .setNegativeButton("キャンセル") { _, _ ->
+                    .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
                         currentTheme.revertValue()
                     }
                     .create()
                 restartDialog.show()
             }
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
                 currentTheme.revertValue()
             }
             .create()
@@ -184,9 +183,9 @@ class TimerActivity : AppCompatActivity(),
     override fun onUpdateRequired(updateUrl: String) {
 
         val alertDialog = AlertDialog.Builder(this).apply {
-            setTitle(applicationContext.getString(R.string.update_dialog_title))
-            setMessage(applicationContext.getString(R.string.update_dialog_text))
-            setPositiveButton("ストアに移動") { _: DialogInterface, _: Int ->
+            setTitle(getString(R.string.update_dialog_title))
+            setMessage(getString(R.string.update_dialog_text))
+            setPositiveButton(getString(R.string.button_move_to_store)) { _, _ ->
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
