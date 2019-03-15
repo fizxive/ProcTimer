@@ -13,11 +13,13 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
      */
     private val remoteConfig =
         requireNotNull(FirebaseRemoteConfig.getInstance()).apply {
-            setDefaults(HashMap<String, Any>().apply {
-                put(TimerRemoteConfigCliantConstants.versionKey, "0.0.0.0")
-                put(TimerRemoteConfigCliantConstants.storeUrlKey, "")
-                put(TimerRemoteConfigCliantConstants.privacyPolicyKey, "")
-            })
+            setDefaults(
+                hashMapOf<String, Any>(
+                    TimerRemoteConfigCliantConstants.versionKey to "0.0.0.0",
+                    TimerRemoteConfigCliantConstants.storeUrlKey to "",
+                    TimerRemoteConfigCliantConstants.privacyPolicyKey to ""
+                )
+            )
         }
 
     /**
