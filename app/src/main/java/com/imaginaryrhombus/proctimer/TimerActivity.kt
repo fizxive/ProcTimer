@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -107,14 +108,23 @@ class TimerActivity : AppCompatActivity(),
     }
 
     private fun openPrivacyPolicy() {
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse(
-                remoteConfigClient.privacyPolicyUrl
+        val privacyPolicyUrl = remoteConfigClient.privacyPolicyUrl
+        if (privacyPolicyUrl.isNotEmpty()) {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(
+                    privacyPolicyUrl
+                )
             )
-        )
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        } else {
+            Toast.makeText(
+                this, getString(R.string.privacy_policy_offline),
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
     }
 
     private fun openChangeThemeDialog() {

@@ -33,4 +33,7 @@
     <string name="button_reload">Reload</string>
     <string name="button_theme_change">Change</string>
     <string name="button_move_to_store">Move to Store</string>
+    <string name="privacy_policy_offline">Could not get the privacy policy posting address.
+        Make sure the device is connected to the network.
+    </string>
 </resources>

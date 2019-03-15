@@ -30,4 +30,5 @@
     <string name="button_reload">再読込</string>
     <string name="button_theme_change">変更</string>
     <string name="button_move_to_store">ストアに移動</string>
+    <string name="privacy_policy_offline">プライバシーポリシー掲載先が取得できませんでした。デバイスがネットワークに接続されていることを確認してください。</string>
 </resources>
