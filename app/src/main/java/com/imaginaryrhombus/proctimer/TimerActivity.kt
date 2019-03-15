@@ -83,6 +83,7 @@ class TimerActivity : AppCompatActivity(),
         drawerToggle.syncState()
 
         navigation.setNavigationItemSelectedListener { menuItem ->
+            drawer.closeDrawer(navigation)
             return@setNavigationItemSelectedListener when (menuItem.itemId) {
                 R.id.menu_privacy -> {
                     openPrivacyPolicy()
