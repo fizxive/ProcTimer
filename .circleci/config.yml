@@ -6,7 +6,8 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-28
   environment:
-    JVM_OPTS: -Xms2g -Xmx2g
+    JVM_OPTS: -Xms3g -Xmx3g
+    GRADLE_OPTS: -Dorg.gradle.daemon=false
 
 jobs:
     checkout:
@@ -76,10 +77,7 @@ jobs:
             # Run Tests and store results.
             - run:
                 name: Run Tests
-                command: ./gradlew lint test
-            - run:
-                name: Run ktlint
-                command: ./gradlew ktlintcheck
+                command: ./gradlew lint test ktlintcheck
             - run:
                 name: Run Danger
                 command: bundle exec danger
