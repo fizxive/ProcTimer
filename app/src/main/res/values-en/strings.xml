@@ -36,4 +36,7 @@
     <string name="privacy_policy_offline">Could not get the privacy policy posting address.
         Make sure the device is connected to the network.
     </string>
+    <string name="instant_apps_privacy_toast">Please refer to the latest privacy policy from the store page during
+        trial.
+    </string>
 </resources>
