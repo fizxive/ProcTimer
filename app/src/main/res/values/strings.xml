@@ -31,4 +31,5 @@
     <string name="button_theme_change">変更</string>
     <string name="button_move_to_store">ストアに移動</string>
     <string name="privacy_policy_offline">プライバシーポリシー掲載先が取得できませんでした。デバイスがネットワークに接続されていることを確認してください。</string>
+    <string name="instant_apps_privacy_toast">試用中はストアのページより最新版のプライバシーポリシーを参照してください。</string>
 </resources>

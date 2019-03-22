@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import com.google.android.gms.common.wrappers.InstantApps
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
@@ -108,22 +109,29 @@ class TimerActivity : AppCompatActivity(),
     }
 
     private fun openPrivacyPolicy() {
-        val privacyPolicyUrl = remoteConfigClient.privacyPolicyUrl
-        if (privacyPolicyUrl.isNotEmpty()) {
-            val intent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(
-                    privacyPolicyUrl
-                )
-            )
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        } else {
+        if (InstantApps.isInstantApp(applicationContext)) {
             Toast.makeText(
-                this, getString(R.string.privacy_policy_offline),
-                Toast.LENGTH_SHORT
+                this, getString(R.string.instant_apps_privacy_toast), Toast.LENGTH_SHORT
             )
                 .show()
+        } else {
+            val privacyPolicyUrl = remoteConfigClient.privacyPolicyUrl
+            if (privacyPolicyUrl.isNotEmpty()) {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(
+                        privacyPolicyUrl
+                    )
+                )
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    this, getString(R.string.privacy_policy_offline),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
         }
     }
 
