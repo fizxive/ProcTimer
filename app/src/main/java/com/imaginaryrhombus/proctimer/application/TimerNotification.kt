@@ -2,10 +2,12 @@ package com.imaginaryrhombus.proctimer.application
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LiveData
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.TimerActivity
 
@@ -36,13 +38,31 @@ class TimerNotification(context: Context) {
      */
     private val notificationCompatBuilder =
         NotificationCompat.Builder(context, notificationId).apply {
+            setContentTitle(context.getString(R.string.app_name))
+            setContentText("")
             setSmallIcon(R.mipmap.ic_launcher)
+
+            val intent = Intent(context, TimerActivity::class.java)
+            val pendingIntent = PendingIntent
+                .getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+
+            setContentIntent(pendingIntent)
     }
 
     /**
-     * 通知がクリックされたらタイマー画面に飛ばすための Intent.
+     * LiveData に対して設定する監視.
      */
-    private val activityIntent = Intent(context, TimerActivity::class.java)
+    private val timerObserver : (Float) -> Unit = { seconds : Float ->
+        notificationCompatBuilder.setContentText(seconds.toString())
+        if (isVisible) {
+            notifyInternal()
+        }
+    }
+
+    /**
+     * 通知が見えているかどうか.
+     */
+    private var isVisible = false
 
     init {
         // Android O から通知チャンネルの設定が必須になるが、旧バージョンでは使用できないための措置.
@@ -58,32 +78,36 @@ class TimerNotification(context: Context) {
     }
 
     /**
-     * 通知のタイトルを設定する.
-     */
-    fun setTitle(title: String): TimerNotification {
-        notificationCompatBuilder.setContentTitle(title)
-        return this
-    }
-
-    /**
-     * 通知の内容を設定する.
-     */
-    fun setText(text: String): TimerNotification {
-        notificationCompatBuilder.setContentText(text)
-        return this
-    }
-
-    /**
      * 通知を表示、更新する.
+     * @param liveData 通知に表示するデータ.
      */
-    fun show(){
-        notificationManager.notify(notificationTagId, notificationCompatBuilder.build())
+    fun open(liveData: LiveData<Float>){
+        notifyInternal()
+        liveData.observeForever(timerObserver)
+        isVisible = true
     }
 
     /**
      * 通知を閉じる
+     * @param liveData 通知に表示していたデータ.
      */
-    fun close(){
+    fun close(liveData: LiveData<Float>){
+        cancelInternal()
+        liveData.removeObserver(timerObserver)
+        isVisible = false
+    }
+
+    /**
+     * 通知を送信する(内部用).
+     */
+    private fun notifyInternal() {
+        notificationManager.notify(notificationTagId, notificationCompatBuilder.build())
+    }
+
+    /**
+     * 通知をキャンセルする(内部用).
+     */
+    private fun cancelInternal() {
         notificationManager.cancel(notificationTagId)
     }
 }
