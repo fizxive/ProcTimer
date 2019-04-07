@@ -75,9 +75,16 @@ jobs:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
             # Run Tests and store results.
+            # Separate Tests to avoid OOM.
+            - run:
+                name: Run lint
+                command: ./gradlew lint
             - run:
                 name: Run Tests
-                command: ./gradlew lint test ktlintcheck
+                command: ./gradlew test
+            - run:
+                  name: Run ktlintcheck
+                  command: ./gradlew ktlintcheck
             - run:
                 name: Run Danger
                 command: bundle exec danger
