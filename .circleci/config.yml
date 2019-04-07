@@ -166,14 +166,6 @@ workflows:
             - check:
                 requires:
                     - build
-            - deploy_debug:
-                requires:
-                    - check
-                filters:
-                    branches:
-                        only:
-                            - develop
-                            - /develop.+/
             - deploy_release:
                 requires:
                     - check
@@ -181,5 +173,3 @@ workflows:
                     branches:
                         only:
                             - master
-
-
