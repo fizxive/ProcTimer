@@ -153,9 +153,9 @@ class TimerActivityTest : AutoCloseKoinTest() {
     private fun testTimerButtonInternal() {
         onView(withId(R.id.startButton)).perform(click())
         onView(withId(R.id.editButton)).check(matches(not(isEnabled())))
-        onView(withId(R.id.addButton)).check(matches(isEnabled()))
-        onView(withId(R.id.removeButton)).check(matches(isEnabled()))
-        onView(withId(R.id.nextButton)).check(matches(isEnabled()))
+        onView(withId(R.id.addButton)).check(matches(not(isEnabled())))
+        onView(withId(R.id.removeButton)).check(matches(not(isEnabled())))
+        onView(withId(R.id.nextButton)).check(matches(not(isEnabled())))
         onView(withId(R.id.stopButton)).check(matches(isEnabled()))
         onView(withId(R.id.resetButton)).check(matches(isEnabled()))
 
@@ -164,7 +164,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
         onView(withId(R.id.addButton)).check(matches(isEnabled()))
         onView(withId(R.id.removeButton)).check(matches(isEnabled()))
         onView(withId(R.id.nextButton)).check(matches(isEnabled()))
-        onView(withId(R.id.stopButton)).check(matches(isEnabled()))
+        onView(withId(R.id.stopButton)).check(matches(not(isEnabled())))
         onView(withId(R.id.resetButton)).check(matches(isEnabled()))
     }
 }

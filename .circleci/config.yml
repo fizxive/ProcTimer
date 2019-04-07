@@ -40,7 +40,7 @@ jobs:
             - restore_cache:
                 keys:
                     - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
@@ -70,14 +70,21 @@ jobs:
                 key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
                 paths:
                     - vendor/bundle
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
             # Run Tests and store results.
+            # Separate Tests to avoid OOM.
+            - run:
+                name: Run lint
+                command: ./gradlew lint
             - run:
                 name: Run Tests
-                command: ./gradlew lint test ktlintcheck
+                command: ./gradlew test
+            - run:
+                  name: Run ktlintcheck
+                  command: ./gradlew ktlintcheck
             - run:
                 name: Run Danger
                 command: bundle exec danger
@@ -96,7 +103,7 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
@@ -117,7 +124,7 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
@@ -135,7 +142,7 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
@@ -166,14 +173,6 @@ workflows:
             - check:
                 requires:
                     - build
-            - deploy_debug:
-                requires:
-                    - check
-                filters:
-                    branches:
-                        only:
-                            - develop
-                            - /develop.+/
             - deploy_release:
                 requires:
                     - check
@@ -181,5 +180,3 @@ workflows:
                     branches:
                         only:
                             - master
-
-

@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
@@ -103,6 +105,22 @@ class TimerFragment : Fragment() {
         editButton.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
             pickerFragment.show(fragmentManager, "PickerDialog")
+        }
+
+        viewModel.isTimerWorking.observe(this, Observer {
+            setKeepScreenOn(it)
+        })
+    }
+
+    /**
+     * 画面の常時点灯を設定する.
+     */
+    private fun setKeepScreenOn(enabled: Boolean) {
+        val window = requireActivity().window
+        if (enabled) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 }

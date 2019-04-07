@@ -57,7 +57,8 @@
             android:textSize="@dimen/main_button_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/stopButton"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/addButton"/>
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/addButton"
+            android:enabled="@{!safeUnbox(timerViewModel.isTimerWorking)}"/>
         <Button
             android:id="@+id/stopButton"
             android:text="@string/button_stop"
@@ -66,7 +67,8 @@
             android:textSize="@dimen/main_button_text_size"
             app:layout_constraintStart_toEndOf="@+id/startButton"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/resetButton"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/removeButton"/>
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/removeButton"
+            android:enabled="@{safeUnbox(timerViewModel.isTimerWorking)}"/>
         <Button
             android:id="@+id/resetButton"
             android:text="@string/button_reset"
@@ -83,6 +85,7 @@
             app:layout_constraintStart_toEndOf="@+id/addButton" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/nextButton"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:enabled="@{!safeUnbox(timerViewModel.isTimerWorking)}"
             android:textSize="@dimen/sub_button_text_size"/>
         <Button
             android:text="@string/button_add"
@@ -91,6 +94,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/removeButton"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:enabled="@{!safeUnbox(timerViewModel.isTimerWorking)}"
             android:textSize="@dimen/sub_button_text_size"/>
         <Button
             android:text="@string/button_next"
@@ -100,6 +104,7 @@
             app:layout_constraintStart_toEndOf="@+id/removeButton" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:enabled="@{!safeUnbox(timerViewModel.isTimerWorking)}"
             android:textSize="@dimen/sub_button_text_size"/>
         <Button
             android:text="@string/button_edit"
