@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 # define defaults for usage same docker image
 defaults: &defaults
@@ -83,11 +83,12 @@ jobs:
                 name: Run Tests
                 command: ./gradlew test
             - run:
-                  name: Run ktlintcheck
-                  command: ./gradlew ktlintcheck
+                name: Run ktlintcheck
+                command: ./gradlew ktlintcheck
             - run:
                 name: Run Danger
                 command: bundle exec danger
+                when: always
             - store_artifacts:
                 path: app/build/reports
                 destination: reports
