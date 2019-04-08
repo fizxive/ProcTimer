@@ -5,4 +5,5 @@ gem "danger"
 # https://rubygems.org/gems/unf_ext/versions/0.0.7.5-x86-mingw32
 gem 'unf_ext', '0.0.7.2'
 gem "danger-checkstyle_format"
+gem "dotenv"
 gem "fastlane"

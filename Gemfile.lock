@@ -194,6 +194,7 @@ PLATFORMS
 DEPENDENCIES
   danger
   danger-checkstyle_format
+  dotenv
   fastlane
   unf_ext (= 0.0.7.2)
 
