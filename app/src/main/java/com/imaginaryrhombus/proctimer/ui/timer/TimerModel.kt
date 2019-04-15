@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 
 /**
  * 一つ一つのタイマー用モデル.
+ * @param onEndListener 子のタイマー終了時のコールバック.
  */
-class TimerModel {
+class TimerModel(var onEndListener: OnEndedListener? = null) {
 
     /**
      * タイマー終了時リスナー.
@@ -46,11 +47,6 @@ class TimerModel {
      */
     val isEnded: Boolean
     get() = _seconds <= 0.0f
-
-    /**
-     * 終了時のコールバック.
-     */
-    var onEndListener: OnEndedListener? = null
 
     /**
      * 秒数を設定する.
