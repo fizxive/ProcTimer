@@ -19,10 +19,12 @@ android {
         versionName '1.0.2'
         testInstrumentationRunner ".TimerTestRunner"
     }
+    apply from: ".signing/release.gradle", to: android
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     dataBinding {
