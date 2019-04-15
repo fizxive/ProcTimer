@@ -7,6 +7,7 @@ import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponen
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.ui.timer.MultiTimerModel
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -118,6 +119,18 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
         for (index in 0 until timers.size) {
             assertEquals(timers[index].seconds.value, timers2[index].seconds.value)
             assertEquals(timers[index].defaultSeconds, timers2[index].defaultSeconds)
+        }
+    }
+
+    /**
+     * リスナーが未登録でないことを保証する.
+     */
+    @Test
+    fun testListener() {
+        val multiTimerModel = MultiTimerModel(get())
+
+        multiTimerModel.timerList.forEach {
+            assertNotNull(it.onEndListener)
         }
     }
 }
