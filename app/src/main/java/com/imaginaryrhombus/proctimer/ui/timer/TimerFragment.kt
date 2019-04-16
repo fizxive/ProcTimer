@@ -49,13 +49,19 @@ class TimerFragment : Fragment() {
                     val ringtone = RingtoneManager.getRingtone(this@run, ringtoneUri)
                     ringtone.play()
 
-                    val alertBuilder = AlertDialog.Builder(this@run).run {
-                        setTitle(R.string.timer_end_dialog_text)
-                        setPositiveButton(R.string.button_timer_end_dialog) { _, _ ->
+                    val alertBuilder = AlertDialog.Builder(this@run)
+                        .setTitle(R.string.timer_end_dialog_text)
+                        .setPositiveButton(R.string.button_timer_end_dialog_next_button) { _, _ ->
                             ringtone.stop()
                             viewModel.nextTimer()
                         }
-                    }
+                        .setNeutralButton(
+                            R.string.button_timer_end_dialog_next_start_button) { _, _ ->
+                            ringtone.stop()
+                            viewModel.nextTimer()
+                            viewModel.startTick()
+                        }
+
                     val dialog = alertBuilder.create()
                     dialog.setCanceledOnTouchOutside(false)
                     dialog.show()

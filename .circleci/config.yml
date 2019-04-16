@@ -99,27 +99,6 @@ jobs:
                 paths:
                     - .
 
-    build:
-        <<: *defaults
-        steps:
-            - attach_workspace:
-                at: .
-            # add permission avoid failure
-            - run:
-                name: Chmod permissions
-                command: sudo chmod +x ./gradlew
-            # build
-            - run:
-                name: Build
-                command: ./gradlew assembleDebug
-            - store_artifacts:
-                path: app/build/outputs/apk/app-debug.apk
-                destination: app-debug.apk
-            - persist_to_workspace:
-                root: .
-                paths:
-                    - .
-
     deploy_debug:
         <<: *defaults
         steps:
@@ -167,13 +146,10 @@ workflows:
             - download_dependencies:
                 requires:
                     - checkout
-            - build:
+            - check:
                 requires:
                     - decode_json
                     - download_dependencies
-            - check:
-                requires:
-                    - build
             - deploy_release:
                 requires:
                     - check
