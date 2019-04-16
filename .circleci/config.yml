@@ -51,10 +51,10 @@ jobs:
                 command: mkdir .signing
             - run:
                 name: Decode signing setting
-                command: echo $SIGNING_GRADLE | base64 --decode --ignore-garbage > .signing/release.gradle
+                command: echo $SIGNING_GRADLE | base64 --decode --ignore-garbage > app/.signing/release.gradle
             - run:
                 name: Decode java key store
-                command: echo $SIGNING_JKS | base64 --decode --ignore-garbage > .signing/ProcTimer.jks
+                command: echo $SIGNING_JKS | base64 --decode --ignore-garbage > app/.signing/ProcTimer.jks
             - run:
                 name: Decode json
                 command: echo $GOOGLE_SERVICES_JSON | base64 --decode --ignore-garbage > app/google-services.json
