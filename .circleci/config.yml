@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 
 # define defaults for usage same docker image
 defaults: &defaults
@@ -19,11 +19,42 @@ jobs:
                 paths:
                     - .
 
-    decode_json:
+    bundle_install:
         <<: *defaults
         steps:
             - attach_workspace:
                 at: .
+            - restore_cache:
+                keys:
+                    - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+                    - gem-cache-v1-{{ arch }}-{{ .Branch }}
+                    - gem-cache-v1
+            - run:
+                name: Bundle Install
+                command: bundle install --path vendor/bundle --clean --jobs=2 --retry=3
+            - save_cache:
+                key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+                paths:
+                    - vendor/bundle
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    decode_files:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Create .signing directory
+                command: mkdir .signing
+            - run:
+                name: Decode signing setting
+                command: echo $SIGNING_GRADLE | base64 --decode --ignore-garbage > .signing/release.gradle
+            - run:
+                name: Decode java key store
+                command: echo $SIGNING_JKS | base64 --decode --ignore-garbage > .signing/ProcTimer.jks
             - run:
                 name: Decode json
                 command: echo $GOOGLE_SERVICES_JSON | base64 --decode --ignore-garbage > app/google-services.json
@@ -57,19 +88,6 @@ jobs:
         steps:
             - attach_workspace:
                 at: .
-            # for danger
-            - restore_cache:
-                keys:
-                    - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-                    - gem-cache-v1-{{ arch }}-{{ .Branch }}
-                    - gem-cache-v1
-            - run:
-                name: Bundle Install
-                command: bundle install --path vendor/bundle --clean --jobs=2 --retry=3
-            - save_cache:
-                key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-                paths:
-                    - vendor/bundle
             # add permission avoid failure
             - run:
                 name: Chmod permissions
@@ -78,13 +96,13 @@ jobs:
             # Separate Tests to avoid OOM.
             - run:
                 name: Run lint
-                command: ./gradlew lint
+                command: bundle exec fastlane lint
             - run:
                 name: Run Tests
-                command: ./gradlew test
+                command: bundle exec fastlane test
             - run:
                 name: Run ktlintcheck
-                command: ./gradlew ktlintcheck
+                command: bundle exec fastlane ktlint
             - run:
                 name: Run Danger
                 command: bundle exec danger
@@ -140,15 +158,18 @@ workflows:
     build:
         jobs:
             - checkout
-            - decode_json:
+            - decode_files:
+                requires:
+                    - checkout
+            - bundle_install:
                 requires:
                     - checkout
             - download_dependencies:
                 requires:
-                    - checkout
+                    - decode_files
+                    - bundle_install
             - check:
                 requires:
-                    - decode_json
                     - download_dependencies
             - deploy_release:
                 requires:
