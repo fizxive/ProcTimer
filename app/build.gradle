@@ -15,8 +15,8 @@ android {
         applicationId "com.imaginaryrhombus.proctimer"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 19
-        versionName '1.0.3'
+        versionCode 20
+        versionName '1.1.0'
         testInstrumentationRunner ".TimerTestRunner"
     }
     buildTypes {
