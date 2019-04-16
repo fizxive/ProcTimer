@@ -39,6 +39,13 @@ platform :android do
     )
   end
 
+  desc "Runs all checks"
+  lane :all_checks do
+    test
+    lint
+    ktlint
+  end
+
   desc "Submit a new Beta Build to DeployGate"
   lane :beta do
     gradle(

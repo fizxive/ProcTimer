@@ -96,17 +96,9 @@ jobs:
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
-            # Run Tests and store results.
-            # Separate Tests to avoid OOM.
             - run:
-                name: Run lint
-                command: bundle exec fastlane lint
-            - run:
-                name: Run Tests
-                command: bundle exec fastlane test
-            - run:
-                name: Run ktlintcheck
-                command: bundle exec fastlane ktlint
+                name: Run all check
+                command: bundle exec fastlane all_checks
             - run:
                 name: Run Danger
                 command: bundle exec danger

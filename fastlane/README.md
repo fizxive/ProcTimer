@@ -31,6 +31,11 @@ Runs lint
 fastlane android ktlint
 ```
 Runs ktlint
+### android all_checks
+```
+fastlane android all_checks
+```
+Runs all checks
 ### android beta
 ```
 fastlane android beta
