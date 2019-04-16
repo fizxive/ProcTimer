@@ -7,7 +7,6 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_timer_dialog_positive">Set</string>
     <string name="timer_end_dialog_text">Timer End</string>
-    <string name="button_timer_end_dialog">Next</string>
     <string name="button_reset">RESET</string>
     <string name="timer_default_text">00:00</string>
     <string name="timer_dialog_colon">:</string>
@@ -39,4 +38,6 @@
     <string name="instant_apps_privacy_toast">Please refer to the latest privacy policy from the store page during
         trial.
     </string>
+    <string name="button_timer_end_dialog_next_button">Change to next</string>
+    <string name="button_timer_end_dialog_next_start_button">Start next timer</string>
 </resources>
