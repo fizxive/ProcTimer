@@ -47,8 +47,8 @@ jobs:
             - attach_workspace:
                 at: .
             - run:
-                name: Create .signing directory
-                command: mkdir .signing
+                name: Create app/.signing directory
+                command: mkdir -p app/.signing
             - run:
                 name: Decode signing setting
                 command: echo $SIGNING_GRADLE | base64 --decode --ignore-garbage > app/.signing/release.gradle
