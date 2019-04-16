@@ -82,6 +82,10 @@ jobs:
                 paths:
                     - ~/.gradle
                 key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
 
     check:
         <<: *defaults
