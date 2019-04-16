@@ -167,10 +167,9 @@ workflows:
                     - checkout
             - bundle_install:
                 requires:
-                    - checkout
+                    - decode_files
             - download_dependencies:
                 requires:
-                    - decode_files
                     - bundle_install
             - check:
                 requires:
