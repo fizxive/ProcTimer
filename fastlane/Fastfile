@@ -63,9 +63,16 @@ platform :android do
     )
   end
 
-  # desc "Deploy a new version to the Google Play"
-  # lane :deploy do
-  #   gradle(task: "clean assembleRelease")
-  #   upload_to_play_store
-  # end
+  desc "Deploy a new version to the Google Play, Beta track"
+  lane :deploy do
+    gradle(
+      task: "bundle",
+      build_type: "Release"
+    )
+    upload_to_play_store(
+      aab: "app/release/app.aab",
+      track: "beta"
+    )
+  end
+
 end
