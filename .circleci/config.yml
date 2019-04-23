@@ -6,8 +6,7 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-28
   environment:
-    JVM_OPTS: -Xms3g -Xmx3g
-    GRADLE_OPTS: -Dorg.gradle.daemon=false
+    GRADLE_OPTS: -Dorg.gradle.daemon=false -Xms3g -Xmx3g
 
 jobs:
     checkout:
