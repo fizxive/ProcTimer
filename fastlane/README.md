@@ -36,11 +36,16 @@ Runs ktlint
 fastlane android all_checks
 ```
 Runs all checks
-### android beta
+### android deploygate_debug
 ```
-fastlane android beta
+fastlane android deploygate_debug
 ```
-Submit a new Beta Build to DeployGate
+Submit a new Debug Build to DeployGate
+### android deploy
+```
+fastlane android deploy
+```
+Deploy a new version to the Google Play, Beta track
 
 ----
 
