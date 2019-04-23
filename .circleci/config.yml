@@ -125,7 +125,7 @@ jobs:
             # build
             - run:
                 name: Build
-                command: ./gradlew uploadDeployGateDebug
+                command: bundle exec deploygate_debug
             - persist_to_workspace:
                 root: .
                 paths:

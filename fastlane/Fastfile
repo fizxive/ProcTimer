@@ -46,8 +46,8 @@ platform :android do
     ktlint
   end
 
-  desc "Submit a new Beta Build to DeployGate"
-  lane :beta do
+  desc "Submit a new Debug Build to DeployGate"
+  lane :deploygate_debug do
     gradle(
       task: "clean assemble",
       build_type: "Release"
