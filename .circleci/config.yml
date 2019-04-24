@@ -123,14 +123,14 @@ jobs:
                 command: sudo chmod +x ./gradlew
             # build
             - run:
-                name: Build
-                command: bundle exec deploygate_debug
+                name: Build and Upload to DeployGate
+                command: bundle exec fastlane deploygate_debug
             - persist_to_workspace:
                 root: .
                 paths:
                     - .
 
-    deploy_release:
+    deploy_play_store:
         <<: *defaults
         steps:
             - attach_workspace:
@@ -141,8 +141,26 @@ jobs:
                 command: sudo chmod +x ./gradlew
             # build
             - run:
-                name: Build
-                command: ./gradlew uploadDeployGateRelease
+                name: Deploy to Play Store Internal track
+                command: bundle exec fastlane deploy
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    deploy_play_store_artifacts:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            # add permission avoid failure
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
+            # build
+            - run:
+                name: Deploy artifacts to Play Store
+                command: bundle exec fastlane deploy_artifacts
             - persist_to_workspace:
                 root: .
                 paths:
@@ -165,7 +183,7 @@ workflows:
             - check:
                 requires:
                     - download_dependencies
-            - deploy_release:
+            - deploy_debug:
                 requires:
                     - check
                 filters:
