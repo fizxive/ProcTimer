@@ -5,6 +5,8 @@
 
     <dist:module dist:instant="true" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:name=".TimerApplication"
         android:allowBackup="true"
@@ -20,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <service android:name=".application.TimerService" />
 
         <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
 

@@ -1,6 +1,7 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.media.RingtoneManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.imaginaryrhombus.proctimer.R
+import com.imaginaryrhombus.proctimer.application.TimerService
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
@@ -78,6 +80,8 @@ class TimerFragment : Fragment() {
 
         startButton.setOnClickListener {
             viewModel.startTick()
+            val serviceIntent = Intent(requireContext(), TimerService::class.java)
+            requireActivity().startService(serviceIntent)
         }
 
         stopButton.setOnClickListener {
