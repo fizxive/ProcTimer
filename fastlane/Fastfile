@@ -63,7 +63,7 @@ platform :android do
     )
   end
 
-  desc "Deploy a new version to the Google Play, Beta track"
+  desc "Deploy a new version to the Google Play, Alpha track (.aab file only)"
   lane :deploy do
     gradle(
       task: "bundle",
@@ -72,8 +72,22 @@ platform :android do
     upload_to_play_store(
       aab: "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}",
       skip_upload_apk: "true",
-      track: "beta"
+      skip_upload_metadata: "true",
+      skip_upload_images: "true",
+      skip_upload_screenshots: "true",
+      track: "alpha"
     )
+  end
+
+  desc "Deploy artifacts to Google Play (Overwhites old artifacts, be careful)"
+  lane :deploy_artifacts do
+    if prompt(text: "This action will overwhite old artifacts and CAN'T ROLLBACK. Are you sure?", boolean: "true", ci_input: "y")
+      upload_to_play_store(
+        skip_upload_apk: "true",
+        skip_upload_aab: "true",
+        track: "internal"
+      )
+    end
   end
 
 end

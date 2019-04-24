@@ -45,7 +45,12 @@ Submit a new Debug Build to DeployGate
 ```
 fastlane android deploy
 ```
-Deploy a new version to the Google Play, Beta track
+Deploy a new version to the Google Play, Internal track (.aab file only)
+### android deploy_artifacts
+```
+fastlane android deploy_artifacts
+```
+Deploy artifacts to Google Play (Overwhites old artifacts, be careful)
 
 ----
 
