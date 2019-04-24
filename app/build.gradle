@@ -15,14 +15,16 @@ android {
         applicationId "com.imaginaryrhombus.proctimer"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 20
+        versionCode 23
         versionName '1.1.0'
         testInstrumentationRunner ".TimerTestRunner"
     }
+    apply from: ".signing/release.gradle", to: android
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     dataBinding {
@@ -45,7 +47,7 @@ ktlint {
     android = true
     outputToConsole = true
     reporters = [ReporterType.CHECKSTYLE]
-    ignoreFailures = true
+    ignoreFailures = false
     filter {
         exclude("**/generated/**")
         include("**/kotlin/**")
