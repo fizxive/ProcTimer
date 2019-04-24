@@ -70,7 +70,8 @@ platform :android do
       build_type: "Release"
     )
     upload_to_play_store(
-      aab: "app/release/app.aab",
+      aab: "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}",
+      skip_upload_apk: "true",
       track: "beta"
     )
   end
