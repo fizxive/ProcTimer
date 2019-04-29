@@ -21,21 +21,24 @@ platform :android do
   desc "Runs all the tests"
   lane :test do
     gradle(
-      task: "test"
+      task: "test",
+      flags: " --continue"
     )
   end
 
   desc "Runs lint"
   lane :lint do
     gradle(
-      task: "lint"
+      task: "lint",
+      flags: " --continue"
     )
   end
 
   desc "Runs ktlint"
   lane :ktlint do
     gradle(
-      task: "ktlintcheck"
+      task: "ktlintcheck",
+      flags: " --continue"
     )
   end
 
