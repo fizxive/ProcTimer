@@ -36,7 +36,7 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
     ) {
         remoteConfig.fetch(cacheExpireSeconds).addOnCompleteListener {
             preApply.invoke()
-            remoteConfig.activate().addOnCompleteListener{
+            remoteConfig.activate().addOnCompleteListener {
                 postApply.invoke()
             }
         }
