@@ -30,6 +30,9 @@ android {
     dataBinding {
         enabled = true
     }
+    kotlinOptions {
+        allWarningsAsErrors = true
+    }
     testOptions {
         unitTests {
             includeAndroidResources = true
