@@ -27,7 +27,7 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
      * @param cacheExpireSeconds キャッシュが無効化される時間を設定.
      * @param preApply 情報取得後、適用前に実行される.
      * @param postApply 情報取得後、適用後に実行される.
-     * @note 情報取得に失敗した場合はどちらも実行されない.
+     * @note 情報取得に失敗した場合はどちらも実行されない.適用に失敗した場合は実行される.
      */
     override fun fetchRemoteConfig(
         cacheExpireSeconds: Long,
@@ -36,8 +36,9 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
     ) {
         remoteConfig.fetch(cacheExpireSeconds).addOnCompleteListener {
             preApply.invoke()
-            remoteConfig.activateFetched()
-            postApply.invoke()
+            remoteConfig.activate().addOnCompleteListener{
+                postApply.invoke()
+            }
         }
     }
 
