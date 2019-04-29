@@ -22,6 +22,7 @@ platform :android do
   lane :test do
     gradle(
       task: "test"
+      flags: " --continue"
     )
   end
 
@@ -29,6 +30,7 @@ platform :android do
   lane :lint do
     gradle(
       task: "lint"
+      flags: " --continue"
     )
   end
 
@@ -36,6 +38,7 @@ platform :android do
   lane :ktlint do
     gradle(
       task: "ktlintcheck"
+      flags: " --continue"
     )
   end
 
