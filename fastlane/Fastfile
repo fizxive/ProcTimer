@@ -93,4 +93,10 @@ platform :android do
     end
   end
 
+  desc "Deploy everything (Overwhites old artifacts, be careful)"
+  lane :deploy_all do
+    deploy
+    deploy_artifacts
+  end
+
 end
