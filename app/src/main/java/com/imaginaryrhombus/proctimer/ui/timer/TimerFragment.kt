@@ -1,10 +1,14 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.media.RingtoneManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.IBinder
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +31,26 @@ class TimerFragment : Fragment() {
 
     private val viewModel: TimerViewModel by sharedViewModel()
     private lateinit var binding: TimerFragmentBinding
+
+    private var timerService : TimerService? = null
+    private var serviceBound = false
+    private var serviceIntent : Intent? = null
+
+    private var serviceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as TimerService.TimerServiceBinder
+            timerService = binder.service
+            timerService?.setStringLiveData(viewModel.currentTimerText)
+            serviceBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            timerService = null
+            serviceBound = false
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,15 +104,20 @@ class TimerFragment : Fragment() {
 
         startButton.setOnClickListener {
             viewModel.startTick()
-            val serviceIntent = Intent(requireContext(), TimerService::class.java)
-            requireActivity().startService(serviceIntent)
+            serviceIntent = Intent(requireContext(), TimerService::class.java)
+            requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+            requireContext().startService(serviceIntent)
         }
 
         stopButton.setOnClickListener {
+            requireContext().unbindService(serviceConnection)
+            requireContext().stopService(serviceIntent)
             viewModel.stopTick()
         }
 
         resetButton.setOnClickListener {
+            requireContext().unbindService(serviceConnection)
+            requireContext().stopService(serviceIntent)
             viewModel.resetTimer()
         }
 

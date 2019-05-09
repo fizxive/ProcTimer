@@ -10,6 +10,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.imaginaryrhombus.proctimer.R
 
 class TimerService : LifecycleService(){
@@ -37,7 +38,7 @@ class TimerService : LifecycleService(){
             if (mChannel == null) {
                 mChannel = NotificationChannel(
                     notificationChannelId,
-                    notificationName, NotificationManager.IMPORTANCE_DEFAULT
+                    notificationName, NotificationManager.IMPORTANCE_UNSPECIFIED
                 )
                 mChannel.description = notificationDescription
             }
@@ -48,16 +49,8 @@ class TimerService : LifecycleService(){
             setContentTitle(notificationName)
             setContentText("通知の内容")
             setSmallIcon(R.drawable.ic_launcher_foreground)
+            setOnlyAlertOnce(true)
         }
-
-        /*
-        liveData.observe(this, Observer {
-            notificationCompatBuilder.run {
-                setContentText(it.toString())
-            }
-            notificationManager.notify(notificationId, notificationCompatBuilder.build())
-        })
-        */
 
         startForeground(notificationId, notificationCompatBuilder.build())
 
@@ -69,7 +62,10 @@ class TimerService : LifecycleService(){
         return binder
     }
 
-    fun setLiveData(liveData: LiveData<Float>) {
-
+    fun setStringLiveData(liveData: LiveData<String>) {
+        liveData.observe(this, Observer {
+            notificationCompatBuilder.setContentText(it)
+            notificationManager.notify(notificationId, notificationCompatBuilder.build())
+        })
     }
 }
