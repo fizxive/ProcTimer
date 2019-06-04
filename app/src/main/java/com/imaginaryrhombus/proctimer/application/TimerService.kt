@@ -38,7 +38,7 @@ class TimerService : LifecycleService(){
             if (mChannel == null) {
                 mChannel = NotificationChannel(
                     notificationChannelId,
-                    notificationName, NotificationManager.IMPORTANCE_UNSPECIFIED
+                    notificationName, NotificationManager.IMPORTANCE_DEFAULT
                 )
                 mChannel.description = notificationDescription
             }
