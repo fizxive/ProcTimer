@@ -104,20 +104,13 @@ class TimerFragment : Fragment() {
 
         startButton.setOnClickListener {
             viewModel.startTick()
-            serviceIntent = Intent(requireContext(), TimerService::class.java)
-            requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-            requireContext().startService(serviceIntent)
         }
 
         stopButton.setOnClickListener {
-            requireContext().unbindService(serviceConnection)
-            requireContext().stopService(serviceIntent)
             viewModel.stopTick()
         }
 
         resetButton.setOnClickListener {
-            requireContext().unbindService(serviceConnection)
-            requireContext().stopService(serviceIntent)
             viewModel.resetTimer()
         }
 
@@ -148,6 +141,15 @@ class TimerFragment : Fragment() {
 
         viewModel.isTimerWorking.observe(this, Observer {
             setKeepScreenOn(it)
+
+            if (it) {
+                serviceIntent = Intent(requireContext(), TimerService::class.java)
+                requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                requireContext().startService(serviceIntent)
+            } else {
+                requireContext().unbindService(serviceConnection)
+                requireContext().stopService(serviceIntent)
+            }
         })
     }
 
