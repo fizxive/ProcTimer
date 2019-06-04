@@ -34,7 +34,7 @@ class TimerFragment : Fragment() {
 
     private var timerService : TimerService? = null
     private var serviceBound = false
-    private var serviceIntent : Intent? = null
+    private lateinit var serviceIntent : Intent
 
     private var serviceConnection = object : ServiceConnection {
 
