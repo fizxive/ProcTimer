@@ -13,6 +13,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.imaginaryrhombus.proctimer.R
 
+/**
+ * バックグラウンド動作のためのサービス.
+ *
+ * 通知の表示と、表示内容の監視を行う.
+ */
 class TimerService : LifecycleService(){
 
     class TimerServiceBinder(val service: TimerService) : Binder()
@@ -62,6 +67,9 @@ class TimerService : LifecycleService(){
         return binder
     }
 
+    /**
+     * 通知内容に表示する文字列 LiveData の設定.
+     */
     fun setStringLiveData(liveData: LiveData<String>) {
         liveData.observe(this, Observer {
             notificationCompatBuilder.setContentText(it)
