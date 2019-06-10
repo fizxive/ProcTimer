@@ -33,10 +33,12 @@ class TimerFragment : Fragment() {
     private lateinit var binding: TimerFragmentBinding
 
     private var timerService : TimerService? = null
-    private var serviceBound = false
     private lateinit var serviceIntent : Intent
 
     private var serviceConnection = object : ServiceConnection {
+
+        var serviceBound = false
+        private set
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as TimerService.TimerServiceBinder
@@ -145,10 +147,8 @@ class TimerFragment : Fragment() {
             if (it) {
                 serviceIntent = Intent(requireContext(), TimerService::class.java)
                 requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-                requireContext().startService(serviceIntent)
             } else {
                 requireContext().unbindService(serviceConnection)
-                requireContext().stopService(serviceIntent)
             }
         })
     }
