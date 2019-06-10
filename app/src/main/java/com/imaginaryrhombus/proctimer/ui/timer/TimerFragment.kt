@@ -9,6 +9,7 @@ import android.media.RingtoneManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,10 +42,15 @@ class TimerFragment : Fragment() {
         private set
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as TimerService.TimerServiceBinder
-            timerService = binder.service
-            timerService?.setStringLiveData(viewModel.currentTimerText)
-            serviceBound = true
+            if (service != null) {
+                val binder = service as TimerService.TimerServiceBinder
+                timerService = binder.service
+                timerService?.setStringLiveData(viewModel.currentTimerText)
+                serviceBound = true
+            } else {
+                Log.w("ServiceConnection",
+                    "ServiceConnection failure, It can safely be ignored for testing.")
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
