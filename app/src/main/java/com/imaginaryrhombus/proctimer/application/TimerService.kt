@@ -32,7 +32,7 @@ class TimerService : LifecycleService(){
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        val notificationChannelId = "casareal_foreground"
+        val notificationChannelId = "current_timer_notification"
         val notificationName = getString(R.string.app_name)
         val notificationDescription = "現在のタイマー"
 
@@ -52,7 +52,7 @@ class TimerService : LifecycleService(){
 
         notificationCompatBuilder = NotificationCompat.Builder(this, notificationChannelId).apply {
             setContentTitle(notificationName)
-            setContentText("通知の内容")
+            setContentText("")
             setSmallIcon(R.drawable.ic_launcher_foreground)
             setOnlyAlertOnce(true)
         }
