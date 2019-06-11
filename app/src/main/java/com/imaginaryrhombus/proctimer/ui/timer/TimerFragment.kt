@@ -151,10 +151,13 @@ class TimerFragment : Fragment() {
 
             if (it) {
                 serviceIntent = Intent(requireContext(), TimerService::class.java)
+                requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                requireContext().startService(serviceIntent)
                 requireContext()
                     .bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
             } else {
                 requireContext().unbindService(serviceConnection)
+                requireContext().stopService(serviceIntent)
             }
         })
     }
