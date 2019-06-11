@@ -26,7 +26,7 @@ class TimerService : LifecycleService() {
 
     private val notificationId = 97101
 
-    lateinit var notificationCompatBuilder: NotificationCompat.Builder
+    private lateinit var notificationCompatBuilder: NotificationCompat.Builder
 
     private lateinit var notificationManager: NotificationManager
 
