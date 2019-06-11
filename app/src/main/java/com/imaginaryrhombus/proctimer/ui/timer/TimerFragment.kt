@@ -33,8 +33,8 @@ class TimerFragment : Fragment() {
     private val viewModel: TimerViewModel by sharedViewModel()
     private lateinit var binding: TimerFragmentBinding
 
-    private var timerService : TimerService? = null
-    private lateinit var serviceIntent : Intent
+    private var timerService: TimerService? = null
+    private lateinit var serviceIntent: Intent
 
     private var serviceConnection = object : ServiceConnection {
 
@@ -57,7 +57,6 @@ class TimerFragment : Fragment() {
             timerService = null
             serviceBound = false
         }
-
     }
 
     override fun onCreateView(
@@ -152,7 +151,8 @@ class TimerFragment : Fragment() {
 
             if (it) {
                 serviceIntent = Intent(requireContext(), TimerService::class.java)
-                requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                requireContext()
+                    .bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
             } else {
                 requireContext().unbindService(serviceConnection)
             }

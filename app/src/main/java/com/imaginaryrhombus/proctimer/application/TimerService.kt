@@ -18,7 +18,7 @@ import com.imaginaryrhombus.proctimer.R
  *
  * 通知の表示と、表示内容の監視を行う.
  */
-class TimerService : LifecycleService(){
+class TimerService : LifecycleService() {
 
     class TimerServiceBinder(val service: TimerService) : Binder()
 
