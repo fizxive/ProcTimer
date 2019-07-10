@@ -150,14 +150,16 @@ class TimerFragment : Fragment() {
             setKeepScreenOn(it)
 
             if (it) {
-                serviceIntent = Intent(requireContext(), TimerService::class.java)
-                requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-                requireContext().startService(serviceIntent)
-                requireContext()
-                    .bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                requireContext().run {
+                    serviceIntent = Intent(this, TimerService::class.java)
+                    startService(serviceIntent)
+                    bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                }
             } else {
-                requireContext().unbindService(serviceConnection)
-                requireContext().stopService(serviceIntent)
+                requireContext().run {
+                    unbindService(serviceConnection)
+                    stopService(serviceIntent)
+                }
             }
         })
     }
