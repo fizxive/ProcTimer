@@ -82,9 +82,9 @@ platform :android do
     )
   end
 
-  desc "Deploy artifacts to Google Play (Overwhites old artifacts, be careful)"
+  desc "Deploy artifacts to Google Play (Overwrites old artifacts, be careful)"
   lane :deploy_artifacts do
-    if prompt(text: "This action will overwhite old artifacts and CAN'T ROLLBACK. Are you sure?", boolean: "true", ci_input: "y")
+    if prompt(text: "This action will overwrite old artifacts and CAN'T ROLLBACK. Are you sure?", boolean: "true", ci_input: "y")
       upload_to_play_store(
         skip_upload_apk: "true",
         skip_upload_aab: "true",
@@ -93,7 +93,7 @@ platform :android do
     end
   end
 
-  desc "Deploy everything (Overwhites old artifacts, be careful)"
+  desc "Deploy everything (Overwrites old artifacts, be careful)"
   lane :deploy_all do
     deploy
     deploy_artifacts
