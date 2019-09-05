@@ -1,7 +1,8 @@
 package com.imaginaryrhombus.proctimer.application
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.imaginaryrhombus.proctimer.constants.TimerRemoteConfigCliantConstants
+import com.imaginaryrhombus.proctimer.R
+import com.imaginaryrhombus.proctimer.constants.TimerRemoteConfigClientConstants
 
 /**
  * Firebase RemoteConfig からの情報取得用クライアントクラス.
@@ -9,17 +10,18 @@ import com.imaginaryrhombus.proctimer.constants.TimerRemoteConfigCliantConstants
 class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
 
     /**
+     * 空白文字列のダミーテキスト.
+     * 空白かの判断に使用する.
+     * 空白かの判断に使用する.
+     */
+    private val emptyStringDummy = "_empty_"
+
+    /**
      * RemoteConfig 本体.
      */
     private val remoteConfig =
         requireNotNull(FirebaseRemoteConfig.getInstance()).apply {
-            setDefaults(
-                hashMapOf<String, Any>(
-                    TimerRemoteConfigCliantConstants.versionKey to "0.0.0.0",
-                    TimerRemoteConfigCliantConstants.storeUrlKey to "",
-                    TimerRemoteConfigCliantConstants.privacyPolicyKey to ""
-                )
-            )
+            setDefaults(R.xml.timer_remote_config_default)
         }
 
     /**
@@ -47,7 +49,7 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
      */
     override val leastVersion: String
     get() {
-        return remoteConfig.getString(TimerRemoteConfigCliantConstants.versionKey)
+        return remoteConfig.getString(TimerRemoteConfigClientConstants.versionKey)
     }
 
     /**
@@ -55,7 +57,12 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
      */
     override val storeUrl: String
     get() {
-        return remoteConfig.getString(TimerRemoteConfigCliantConstants.storeUrlKey)
+        val ret = remoteConfig.getString(TimerRemoteConfigClientConstants.storeUrlKey)
+        return if (ret == emptyStringDummy) {
+            ""
+        } else {
+            ret
+        }
     }
 
     /**
@@ -63,6 +70,11 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
      */
     override val privacyPolicyUrl: String
     get() {
-        return remoteConfig.getString(TimerRemoteConfigCliantConstants.privacyPolicyKey)
+        val ret = remoteConfig.getString(TimerRemoteConfigClientConstants.privacyPolicyKey)
+        return if (ret == emptyStringDummy) {
+            ""
+        } else {
+            ret
+        }
     }
 }
