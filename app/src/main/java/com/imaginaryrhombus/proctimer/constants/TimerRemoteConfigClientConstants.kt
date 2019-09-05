@@ -5,7 +5,7 @@ import com.imaginaryrhombus.proctimer.BuildConfig
 /**
  * Firebase RemoteConfig 関連の定数を保持するクラス.
  */
-class TimerRemoteConfigCliantConstants {
+class TimerRemoteConfigClientConstants {
     companion object {
         /**
          * 強制アップデートバージョンを取得するキー.
