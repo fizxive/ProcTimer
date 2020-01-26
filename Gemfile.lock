@@ -42,7 +42,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.4)
     emoji_regex (1.0.1)
-    excon (0.65.0)
+    excon (0.71.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     faraday-cookie_jar (0.0.6)
@@ -174,6 +174,7 @@ GEM
     uber (0.1.0)
     unf (0.1.4)
       unf_ext
+    unf_ext (0.0.7.2)
     unf_ext (0.0.7.2-x64-mingw32)
     unicode-display_width (1.6.0)
     word_wrap (1.0.0)
@@ -189,6 +190,7 @@ GEM
       xcpretty (~> 0.2, >= 0.0.7)
 
 PLATFORMS
+  ruby
   x64-mingw32
 
 DEPENDENCIES
