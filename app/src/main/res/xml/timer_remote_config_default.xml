@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>LEAST_VERSION_DEBUG</key>
+        <value>0.0.0.0</value>
+    </entry>
+    <entry>
+        <key>LEAST_VERSION</key>
+        <value>0.0.0.0</value>
+    </entry>
+    <entry>
+        <key>STORE_URL</key>
+        <value>_empty_</value> <!-- 空白文字列の代わりにダミーの文字列を使用する(データが正しく設定できないので) -->
+    </entry>
+    <entry>
+        <key>PRIVACY_POLICY_URL</key>
+        <value>_empty_</value>
+    </entry>
+</defaultsMap>
+    <!-- END xml_defaults -->
