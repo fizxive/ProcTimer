@@ -1,9 +1,15 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.media.RingtoneManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +18,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.imaginaryrhombus.proctimer.R
+import com.imaginaryrhombus.proctimer.application.TimerService
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
 import kotlinx.android.synthetic.main.timer_fragment.*
@@ -25,6 +32,32 @@ class TimerFragment : Fragment() {
 
     private val viewModel: TimerViewModel by sharedViewModel()
     private lateinit var binding: TimerFragmentBinding
+
+    private var timerService: TimerService? = null
+    private lateinit var serviceIntent: Intent
+
+    private var serviceConnection = object : ServiceConnection {
+
+        var serviceBound = false
+        private set
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            if (service != null) {
+                val binder = service as TimerService.TimerServiceBinder
+                timerService = binder.service
+                timerService?.setStringLiveData(viewModel.currentTimerText)
+                serviceBound = true
+            } else {
+                Log.w("ServiceConnection",
+                    "ServiceConnection failure, It can safely be ignored for testing.")
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            timerService = null
+            serviceBound = false
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,6 +148,19 @@ class TimerFragment : Fragment() {
 
         viewModel.isTimerWorking.observe(this, Observer {
             setKeepScreenOn(it)
+
+            if (it) {
+                requireContext().run {
+                    serviceIntent = Intent(this, TimerService::class.java)
+                    startService(serviceIntent)
+                    bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                }
+            } else {
+                requireContext().run {
+                    unbindService(serviceConnection)
+                    stopService(serviceIntent)
+                }
+            }
         })
     }
 
