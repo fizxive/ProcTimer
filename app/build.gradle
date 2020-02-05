@@ -15,8 +15,8 @@ android {
         applicationId "com.imaginaryrhombus.proctimer"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 24
-        versionName '1.1.1'
+        versionCode 25
+        versionName '1.1.2'
         testInstrumentationRunner ".TimerTestRunner"
     }
     apply from: ".signing/release.gradle", to: android
@@ -41,6 +41,11 @@ android {
             maxHeapSize = '2g'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/NOTICE.md'
+    }
+
 }
 
 ktlint {
