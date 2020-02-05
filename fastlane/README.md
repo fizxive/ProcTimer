@@ -50,12 +50,12 @@ Deploy a new version to the Google Play, Alpha track (.aab file only)
 ```
 fastlane android deploy_artifacts
 ```
-Deploy artifacts to Google Play (Overwhites old artifacts, be careful)
+Deploy artifacts to Google Play (Overwrites old artifacts, be careful)
 ### android deploy_all
 ```
 fastlane android deploy_all
 ```
-Deploy everything (Overwhites old artifacts, be careful)
+Deploy everything (Overwrites old artifacts, be careful)
 
 ----
 
