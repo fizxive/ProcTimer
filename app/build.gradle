@@ -10,13 +10,13 @@ apply plugin: 'deploygate'
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.imaginaryrhombus.proctimer"
         minSdkVersion 19
-        targetSdkVersion 28
         versionCode 25
         versionName '1.1.2'
+        targetSdkVersion 30
         testInstrumentationRunner ".TimerTestRunner"
     }
     apply from: ".signing/release.gradle", to: android
