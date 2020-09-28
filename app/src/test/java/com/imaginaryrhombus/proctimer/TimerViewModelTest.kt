@@ -8,7 +8,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.standalone.get
+import org.koin.core.get
 import org.koin.test.AutoCloseKoinTest
 
 @RunWith(AndroidJUnit4::class)

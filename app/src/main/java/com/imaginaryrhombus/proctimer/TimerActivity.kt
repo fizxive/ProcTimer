@@ -19,8 +19,8 @@ import com.imaginaryrhombus.proctimer.application.UpdateChecker
 import com.imaginaryrhombus.proctimer.ui.TimerThemeConverter
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import kotlinx.android.synthetic.main.timer_activity.*
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class TimerActivity : AppCompatActivity(),
     UpdateChecker.UpdateRequiredListener,
