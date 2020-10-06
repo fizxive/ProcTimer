@@ -26,13 +26,12 @@ class TestTimerApplication : Application() {
             androidContext(this@TestTimerApplication)
             modules(timerComponentModule, timerViewModelModule)
         }
-        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext<Application>())
     }
 
     private val timerComponentModule = module {
         single<TimerComponentInterface> { TimerComponent(androidApplication()) }
         single { TimerSharedPreferencesComponent(get()) }
-        single<TimerRemoteConfigClientInterface> { TimerRemoteConfigClient() }
+        single<TimerRemoteConfigClientInterface> { StabRemoteConfigClient() }
     }
 
     private val timerViewModelModule = module {
