@@ -1,15 +1,22 @@
 package com.imaginaryrhombus.proctimer
 
+import android.content.SharedPreferences
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.imaginaryrhombus.proctimer.application.TimerComponentInterface
+import com.google.gson.Gson
+import com.imaginaryrhombus.proctimer.application.TimerComponent
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.ui.timer.MultiTimerModel
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
+import io.mockk.spyk
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Rule
@@ -26,16 +33,26 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
     @Rule
     val scenarioRule = ActivityScenarioRule(TimerActivity::class.java)
 
-    private val sharedPreferencesComponent: TimerSharedPreferencesComponent = get()
+    /**
+     * SharedComponent　を使うためのクラス.
+     * テストごとにモックの必要有無が違うのでアノテーションで inject しないようにする.
+     */
+    private lateinit var sharedPreferencesComponent: TimerSharedPreferencesComponent
 
     /**
      * まっさらな状態からインスタンスを生成したときの動作を確認する.
      */
     @Test
     fun testCreate() {
-        sharedPreferencesComponent.reset()
+        sharedPreferencesComponent = mockk()
 
-        val multiTimerModel = MultiTimerModel(get())
+        every {
+            sharedPreferencesComponent.timerSecondsList
+        } returns listOf<Float>(
+            TimerConstants.TIMER_DEFAULT_SECONDS, TimerConstants.TIMER_DEFAULT_SECONDS
+        )
+
+        val multiTimerModel = MultiTimerModel(sharedPreferencesComponent)
 
         assertEquals(TimerConstants.TIMER_DEFAULT_SECONDS, multiTimerModel.activeTimerSeconds)
 
@@ -46,6 +63,10 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
             assertEquals(TimerConstants.TIMER_DEFAULT_SECONDS, it.seconds.value)
             assertEquals(TimerConstants.TIMER_DEFAULT_SECONDS, it.defaultSeconds)
         }
+
+        verify(exactly = 1) {
+            sharedPreferencesComponent.timerSecondsList
+        }
     }
 
     /**
@@ -53,7 +74,20 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
      */
     @Test
     fun testGetTimer() {
-        sharedPreferencesComponent.reset()
+        sharedPreferencesComponent = mockk()
+
+        // timerSecondsList は Mutable ではないので slot<List<Float>> を使用してキャプチャする
+        val timerListCapture = slot<List<Float>>()
+
+        every {
+            sharedPreferencesComponent.timerSecondsList = capture(timerListCapture)
+        } just runs
+
+        every {
+            sharedPreferencesComponent.timerSecondsList
+        } answers {
+            timerListCapture.captured
+        }
 
         val multiTimerModel = MultiTimerModel(get())
         multiTimerModel.run {
@@ -87,24 +121,36 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
      */
     @Test
     fun testSaveAndRestore() {
+        val mockSharedPreferences = mockk<SharedPreferences>()
+        val mockSharedPreferencesEditor = mockk<SharedPreferences.Editor>()
+        val timerComponent = mockk<TimerComponent>(relaxUnitFun = true)
+        val timerSlot = slot<String>()
+
+        every { timerComponent.sharedPreferences } returns mockSharedPreferences
+
+        every { mockSharedPreferences.getInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, any()) } returns TimerConstants.PREFERENCE_SAVE_VERSION_INVALID
+        every { mockSharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, any()) } answers { timerSlot.captured } //　遅延評価が必要なので answers で返す
+        every { mockSharedPreferences.edit() } returns mockSharedPreferencesEditor
+
+        every { mockSharedPreferencesEditor.putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, capture(timerSlot)) } returns mockSharedPreferencesEditor
+        every { mockSharedPreferencesEditor.putString(TimerConstants.TIMER_THEME_NAME, any()) } returns mockSharedPreferencesEditor
+        every { mockSharedPreferencesEditor.putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, any()) } returns mockSharedPreferencesEditor
+        every { mockSharedPreferencesEditor.apply() } just runs
+
+        sharedPreferencesComponent = spyk(TimerSharedPreferencesComponent(timerComponent))
+
         sharedPreferencesComponent.reset()
 
-        val sharedPreferences = get<TimerComponentInterface>().sharedPreferences
+        val gson = Gson()
+
+        verify {
+            mockSharedPreferencesEditor.putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION)
+            mockSharedPreferencesEditor.putString(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)
+            mockSharedPreferencesEditor.putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, gson.toJson(
+                List(TimerConstants.TIMER_DEFAULT_COUNTS){TimerConstants.TIMER_DEFAULT_SECONDS}))
+        }
 
         val multiTimerModel = MultiTimerModel(get())
-
-        assertTrue(sharedPreferences.contains(TimerConstants.PREFERENCE_SAVE_VERSION_NAME))
-        assertEquals(
-            TimerConstants.PREFERENCE_SAVE_VERSION,
-            sharedPreferences.getInt(
-                TimerConstants.PREFERENCE_SAVE_VERSION_NAME,
-                TimerConstants.PREFERENCE_SAVE_VERSION_INVALID
-            )
-        )
-        assertNotSame(
-            "",
-            sharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, "")
-        )
 
         multiTimerModel.addTimer()
         multiTimerModel.activeTimerSeconds = 10.0f
@@ -127,6 +173,14 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
      */
     @Test
     fun testListener() {
+        sharedPreferencesComponent = mockk()
+
+        every {
+            sharedPreferencesComponent.timerSecondsList
+        } returns listOf<Float>(
+            TimerConstants.TIMER_DEFAULT_SECONDS, TimerConstants.TIMER_DEFAULT_SECONDS
+        )
+
         val multiTimerModel = MultiTimerModel(get())
 
         multiTimerModel.timerList.forEach {
