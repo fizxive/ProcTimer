@@ -1,8 +1,8 @@
 package com.imaginaryrhombus.proctimer.application
 
 import com.imaginaryrhombus.proctimer.BuildConfig
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * アップデートが必要かどうかを確認し、必要な場合はコンストラクタで渡したコールバックを呼ぶクラス.

@@ -21,7 +21,7 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
      */
     private val remoteConfig =
         requireNotNull(FirebaseRemoteConfig.getInstance()).apply {
-            setDefaults(R.xml.timer_remote_config_default)
+            setDefaultsAsync(R.xml.timer_remote_config_default)
         }
 
     /**

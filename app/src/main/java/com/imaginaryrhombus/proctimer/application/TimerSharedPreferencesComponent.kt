@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.imaginaryrhombus.proctimer.constants.TimerConstants
 import com.imaginaryrhombus.proctimer.constants.TimerConstants.Companion
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 /**
  * 実際の SharedPreference を扱うクラス.
