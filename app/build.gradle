@@ -84,7 +84,7 @@ dependencies {
     implementation 'org.koin:koin-androidx-viewmodel:2.1.6'
     kapt 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
     testImplementation 'junit:junit:4.13'
-    testImplementation 'org.robolectric:robolectric:4.2' // 4.4 は SharedPreferences の扱いで java.lang.IllegalStateException を発生させてしまうため避ける TODO : SharedPreference をモックにし、 robolectric 4.4 を動かすようにする(Looper.PAUSEDを使用したい)
+    testImplementation 'org.robolectric:robolectric:4.4'
     testImplementation 'androidx.test:core:1.3.0'
     testImplementation 'androidx.test.ext:junit:1.1.2'
     testImplementation 'androidx.test:runner:1.3.0'
