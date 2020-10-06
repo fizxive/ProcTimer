@@ -1,6 +1,7 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 
 /**
@@ -65,7 +66,7 @@ class TimerModel(var onEndListener: OnEndedListener? = null) {
     /**
      * 時間経過用のハンドラ.
      */
-    private val tickHandler = Handler()
+    private val tickHandler = Handler(Looper.getMainLooper())
 
     /**
      * 時間経過制御用クラス.

@@ -9,8 +9,8 @@ import kotlin.math.max
 import kotlin.math.ceil
 import java.util.concurrent.TimeUnit
 import com.imaginaryrhombus.proctimer.R
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 /**
  * タイマー用の ViewModel.

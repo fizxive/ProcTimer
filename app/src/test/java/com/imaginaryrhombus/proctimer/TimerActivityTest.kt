@@ -15,7 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.standalone.get
+import org.koin.core.get
 import org.koin.test.AutoCloseKoinTest
 import org.robolectric.annotation.Config
 

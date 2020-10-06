@@ -110,10 +110,10 @@ class TimerFragment : Fragment() {
 
         editButton.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
-            pickerFragment.show(fragmentManager, "PickerDialog")
+            pickerFragment.show(parentFragmentManager, "PickerDialog")
         }
 
-        viewModel.isTimerWorking.observe(this, Observer {
+        viewModel.isTimerWorking.observe(viewLifecycleOwner, Observer {
             setKeepScreenOn(it)
         })
     }
