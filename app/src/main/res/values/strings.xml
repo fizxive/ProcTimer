@@ -25,6 +25,8 @@
     <string name="change_theme_text">テーマ切り替え</string>
     <string name="theme_light">白</string>
     <string name="theme_dark">黒</string>
+    <string name="theme_device">デバイスの設定に依存</string>
+    <string name="theme_battery">バッテリーセーバーの設定に依存</string>
     <string name="theme_dialog_title">テーマ設定</string>
     <string name="reload_activity_message">変更の適用には表示の再読込が必要です。(動作中のタイマーは停止しません)</string>
     <string name="button_reload">再読込</string>

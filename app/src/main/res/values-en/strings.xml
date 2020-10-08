@@ -25,6 +25,8 @@
     <string name="change_theme_text">Change Theme</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="theme_device">Depends on device setting</string>
+    <string name="theme_battery">Depends on the battery saver setting</string>
     <string name="theme_dialog_title">Change Theme</string>
     <string name="reload_activity_message">"You need to reload to apply the changes. (The running timer does not stop)\n
         "
