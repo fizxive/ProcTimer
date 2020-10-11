@@ -7,8 +7,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'deploygate'
 apply plugin: 'com.google.firebase.crashlytics'
 
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-
 android {
     compileSdkVersion 30
     defaultConfig {
@@ -49,13 +47,17 @@ android {
 
 }
 
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 ktlint {
-    version = "0.22.0"
+    version = "0.39.0"
     debug = true
     verbose = true
     android = true
     outputToConsole = true
-    reporters = [ReporterType.CHECKSTYLE]
+    reporters {
+        reporter(ReporterType.CHECKSTYLE)
+    }
     ignoreFailures = false
     filter {
         exclude("**/generated/**")
@@ -67,7 +69,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
@@ -75,10 +77,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.google.android.instantapps:instantapps:1.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.firebase:firebase-core:17.5.0'
+    implementation 'com.google.firebase:firebase-core:17.5.1'
     implementation 'com.google.firebase:firebase-crash:16.2.1'
     implementation 'com.google.firebase:firebase-config:19.2.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+    implementation 'com.google.firebase:firebase-iid:20.3.0'
     implementation 'org.koin:koin-android:2.1.6'
     implementation 'org.koin:koin-androidx-scope:2.1.6'
     implementation 'org.koin:koin-androidx-viewmodel:2.1.6'

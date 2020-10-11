@@ -17,9 +17,9 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Rule
 import org.koin.core.get
 import org.koin.test.AutoCloseKoinTest
 
@@ -126,16 +126,34 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
         val timerComponent = mockk<TimerComponent>(relaxUnitFun = true)
         val timerSlot = slot<String>()
 
-        every { timerComponent.sharedPreferences } returns mockSharedPreferences
+        every {
+            timerComponent.sharedPreferences
+        } returns mockSharedPreferences
 
-        every { mockSharedPreferences.getInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, any()) } returns TimerConstants.PREFERENCE_SAVE_VERSION_INVALID
-        every { mockSharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, any()) } answers { timerSlot.captured } //　遅延評価が必要なので answers で返す
-        every { mockSharedPreferences.edit() } returns mockSharedPreferencesEditor
+        every {
+            mockSharedPreferences.getInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, any())
+        } returns TimerConstants.PREFERENCE_SAVE_VERSION_INVALID
+        every {
+            mockSharedPreferences.getString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, any())
+        } answers { timerSlot.captured } // 　遅延評価が必要なので answers で返す
+        every {
+            mockSharedPreferences.edit()
+        } returns mockSharedPreferencesEditor
 
-        every { mockSharedPreferencesEditor.putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, capture(timerSlot)) } returns mockSharedPreferencesEditor
-        every { mockSharedPreferencesEditor.putInt(TimerConstants.TIMER_THEME_NAME, any()) } returns mockSharedPreferencesEditor
-        every { mockSharedPreferencesEditor.putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, any()) } returns mockSharedPreferencesEditor
-        every { mockSharedPreferencesEditor.apply() } just runs
+        every {
+            mockSharedPreferencesEditor.putString(
+                TimerConstants.PREFERENCE_PARAM_SEC_NAME, capture(timerSlot)
+            )
+        } returns mockSharedPreferencesEditor
+        every {
+            mockSharedPreferencesEditor.putInt(TimerConstants.TIMER_THEME_NAME, any())
+        } returns mockSharedPreferencesEditor
+        every {
+            mockSharedPreferencesEditor.putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, any())
+        } returns mockSharedPreferencesEditor
+        every {
+            mockSharedPreferencesEditor.apply()
+        } just runs
 
         sharedPreferencesComponent = spyk(TimerSharedPreferencesComponent(timerComponent))
 
@@ -144,10 +162,20 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
         val gson = Gson()
 
         verify {
-            mockSharedPreferencesEditor.putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION)
-            mockSharedPreferencesEditor.putInt(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)
-            mockSharedPreferencesEditor.putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, gson.toJson(
-                List(TimerConstants.TIMER_DEFAULT_COUNTS){TimerConstants.TIMER_DEFAULT_SECONDS}))
+            mockSharedPreferencesEditor.putInt(
+                TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION
+            )
+            mockSharedPreferencesEditor.putInt(
+                TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT
+            )
+            mockSharedPreferencesEditor.putString(
+                TimerConstants.PREFERENCE_PARAM_SEC_NAME,
+                gson.toJson(
+                    List(TimerConstants.TIMER_DEFAULT_COUNTS) {
+                        TimerConstants.TIMER_DEFAULT_SECONDS
+                    }
+                )
+            )
         }
 
         val multiTimerModel = MultiTimerModel(get())

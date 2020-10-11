@@ -48,33 +48,33 @@ class TimerRemoteConfigClient : TimerRemoteConfigClientInterface {
      * アップデート通知の判断のバージョンを取得する.
      */
     override val leastVersion: String
-    get() {
-        return remoteConfig.getString(TimerRemoteConfigClientConstants.versionKey)
-    }
+        get() {
+            return remoteConfig.getString(TimerRemoteConfigClientConstants.versionKey)
+        }
 
     /**
      * アップデート通知時の遷移先ストアアドレスを取得する.
      */
     override val storeUrl: String
-    get() {
-        val ret = remoteConfig.getString(TimerRemoteConfigClientConstants.storeUrlKey)
-        return if (ret == emptyStringDummy) {
-            ""
-        } else {
-            ret
+        get() {
+            val ret = remoteConfig.getString(TimerRemoteConfigClientConstants.storeUrlKey)
+            return if (ret == emptyStringDummy) {
+                ""
+            } else {
+                ret
+            }
         }
-    }
 
     /**
      * アプリ内メニューから遷移するプライバシーポリシーのアドレスを取得する,
      */
     override val privacyPolicyUrl: String
-    get() {
-        val ret = remoteConfig.getString(TimerRemoteConfigClientConstants.privacyPolicyKey)
-        return if (ret == emptyStringDummy) {
-            ""
-        } else {
-            ret
+        get() {
+            val ret = remoteConfig.getString(TimerRemoteConfigClientConstants.privacyPolicyKey)
+            return if (ret == emptyStringDummy) {
+                ""
+            } else {
+                ret
+            }
         }
-    }
 }

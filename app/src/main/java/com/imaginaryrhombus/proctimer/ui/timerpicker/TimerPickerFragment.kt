@@ -1,10 +1,10 @@
 package com.imaginaryrhombus.proctimer.ui.timerpicker
 
-import androidx.appcompat.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel

@@ -24,7 +24,8 @@ import kotlinx.android.synthetic.main.timer_fragment.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class TimerActivity : AppCompatActivity(),
+class TimerActivity :
+    AppCompatActivity(),
     UpdateChecker.UpdateRequiredListener,
     KoinComponent {
 
@@ -124,18 +125,24 @@ class TimerActivity : AppCompatActivity(),
     }
 
     private fun openChangeThemeDialog() {
-        data class DarkSetting (
+        data class DarkSetting(
             val text: String,
             val mode: Int
         )
         val modes = mutableListOf(
             DarkSetting(getString(R.string.theme_light), AppCompatDelegate.MODE_NIGHT_NO),
             DarkSetting(getString(R.string.theme_dark), AppCompatDelegate.MODE_NIGHT_YES),
-            DarkSetting(getString(R.string.theme_battery), AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+            DarkSetting(
+                getString(R.string.theme_battery),
+                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+            )
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             modes.add(
-                DarkSetting(getString(R.string.theme_device), AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                DarkSetting(
+                    getString(R.string.theme_device),
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                )
             )
         }
         val selections = modes.map { it.text }.toTypedArray()
@@ -155,13 +162,11 @@ class TimerActivity : AppCompatActivity(),
                         sharedPreferencesComponent.timerTheme = mode
                     }
                     .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
-
                     }
                     .create()
                 restartDialog.show()
             }
             .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
-
             }
             .create()
         alertDialog.show()
