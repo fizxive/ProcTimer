@@ -41,17 +41,17 @@ class MultiTimerModel(
     private var _activeTimerModel = MutableLiveData<TimerModel>()
 
     val activeTimerModel: LiveData<TimerModel>
-    get() {
-        return _activeTimerModel
-    }
+        get() {
+            return _activeTimerModel
+        }
 
     /**
      * 全タイマーを取得する.
      */
     val timerList: List<TimerModel>
-    get() {
-        return _linkedTimerList.toList()
-    }
+        get() {
+            return _linkedTimerList.toList()
+        }
 
     /**
      * 全タイマーを順番に並べ替えたもの.
@@ -180,7 +180,8 @@ class MultiTimerModel(
      */
     private fun saveTimerPreferences() {
         timerSharedPreferencesComponent.timerSecondsList = List(timerList.size) {
-            index -> timerList[index].defaultSeconds
+            index ->
+            timerList[index].defaultSeconds
         }
     }
 

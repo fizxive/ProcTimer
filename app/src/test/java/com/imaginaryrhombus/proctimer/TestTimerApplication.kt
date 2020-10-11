@@ -1,13 +1,10 @@
 package com.imaginaryrhombus.proctimer
 
 import android.app.Application
-import androidx.test.core.app.ApplicationProvider
-import com.google.firebase.FirebaseApp
 import com.imaginaryrhombus.proctimer.application.TimerComponent
 import com.imaginaryrhombus.proctimer.application.TimerComponentInterface
-import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClient
-import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
+import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.ui.timer.TimerViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
