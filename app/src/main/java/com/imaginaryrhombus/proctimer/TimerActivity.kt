@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MenuItem
@@ -11,14 +12,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import com.google.android.gms.common.wrappers.InstantApps
 import com.imaginaryrhombus.proctimer.application.TimerRemoteConfigClientInterface
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
 import com.imaginaryrhombus.proctimer.application.UpdateChecker
-import com.imaginaryrhombus.proctimer.ui.TimerThemeConverter
 import com.imaginaryrhombus.proctimer.ui.timer.TimerFragment
 import kotlinx.android.synthetic.main.timer_activity.*
+import kotlinx.android.synthetic.main.timer_fragment.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -31,28 +33,14 @@ class TimerActivity : AppCompatActivity(),
     private val remoteConfigClient: TimerRemoteConfigClientInterface by inject()
     private val sharedPreferencesComponent: TimerSharedPreferencesComponent by inject()
 
-    class RevertibleValue<T>(initValue: T) {
-
-        var value = initValue
-        set(value) {
-            oldValue = field
-            field = value
-        }
-
-        private var oldValue = initValue
-
-        fun revertValue(): RevertibleValue<T> {
-            value = oldValue
-            return this
-        }
-    }
-
-    private var currentTheme = RevertibleValue(R.style.Light)
+    private var currentMode = AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        currentTheme.value = TimerThemeConverter.toResourceId(sharedPreferencesComponent.timerTheme)
-        setTheme(currentTheme.value)
         super.onCreate(savedInstanceState)
+
+        currentMode = sharedPreferencesComponent.timerTheme
+        AppCompatDelegate.setDefaultNightMode(currentMode)
+
         setContentView(R.layout.timer_activity)
 
         UpdateChecker(this).checkUpdateRequired()
@@ -136,38 +124,44 @@ class TimerActivity : AppCompatActivity(),
     }
 
     private fun openChangeThemeDialog() {
-        val selection = arrayOf(
-            getString(R.string.theme_light),
-            getString(R.string.theme_dark)
+        data class DarkSetting (
+            val text: String,
+            val mode: Int
         )
-        val themeMap = hashMapOf(
-            getString(R.string.theme_light) to R.style.Light,
-            getString(R.string.theme_dark) to R.style.Dark
+        val modes = mutableListOf(
+            DarkSetting(getString(R.string.theme_light), AppCompatDelegate.MODE_NIGHT_NO),
+            DarkSetting(getString(R.string.theme_dark), AppCompatDelegate.MODE_NIGHT_YES),
+            DarkSetting(getString(R.string.theme_battery), AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
         )
-        val selectionMap = themeMap.entries.associateBy({ it.value }) { it.key }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            modes.add(
+                DarkSetting(getString(R.string.theme_device), AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            )
+        }
+        val selections = modes.map { it.text }.toTypedArray()
+        var mode = currentMode
+        val currentItem = modes.indexOfFirst { it.mode == currentMode }
         val alertDialog = AlertDialog.Builder(this)
             .setTitle(getString(R.string.theme_dialog_title))
-            .setSingleChoiceItems(selection,
-                selection.indexOf(selectionMap.getValue(currentTheme.value))) { _, which ->
-                currentTheme.value = requireNotNull(themeMap[selection[which]])
+            .setSingleChoiceItems(selections, currentItem) { _, which ->
+                mode = modes[which].mode
             }
             .setPositiveButton(getString(R.string.button_theme_change)) { _, _ ->
                 val restartDialog: AlertDialog = AlertDialog.Builder(this)
                     .setMessage(getString(R.string.reload_activity_message))
                     .setPositiveButton(getString(R.string.button_reload)) { _, _ ->
-                        sharedPreferencesComponent.timerTheme =
-                            TimerThemeConverter.fromResourceId(currentTheme.value)
-                        setTheme(currentTheme.value)
-                        recreate()
+                        AppCompatDelegate.setDefaultNightMode(mode)
+                        currentMode = mode
+                        sharedPreferencesComponent.timerTheme = mode
                     }
                     .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
-                        currentTheme.revertValue()
+
                     }
                     .create()
                 restartDialog.show()
             }
             .setNegativeButton(getString(R.string.button_cancel)) { _, _ ->
-                currentTheme.revertValue()
+
             }
             .create()
         alertDialog.show()

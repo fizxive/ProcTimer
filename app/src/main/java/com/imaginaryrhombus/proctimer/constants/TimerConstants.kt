@@ -1,5 +1,8 @@
 package com.imaginaryrhombus.proctimer.constants
 
+import android.app.AppComponentFactory
+import androidx.appcompat.app.AppCompatDelegate
+
 /**
  * タイマーに関連する定数の定義.
  */
@@ -14,7 +17,7 @@ class TimerConstants {
         /**
          * 保存データのバージョン.
          */
-        const val PREFERENCE_SAVE_VERSION = 4
+        const val PREFERENCE_SAVE_VERSION = 5
 
         /**
          * 保存データのバージョンが読めなかったときのデフォルト値.
@@ -47,16 +50,8 @@ class TimerConstants {
         const val TIMER_THEME_NAME = "theme"
 
         /**
-         * タイマーのテーマ定数.
-         */
-        enum class TimerTheme {
-            Light,
-            Dark;
-        }
-
-        /**
          * タイマーのテーマデフォルト値.
          */
-        val TIMER_THEME_DEFAULT = TimerTheme.Light.name
+        const val TIMER_THEME_DEFAULT = AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
     }
 }

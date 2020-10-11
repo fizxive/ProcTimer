@@ -133,7 +133,7 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
         every { mockSharedPreferences.edit() } returns mockSharedPreferencesEditor
 
         every { mockSharedPreferencesEditor.putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, capture(timerSlot)) } returns mockSharedPreferencesEditor
-        every { mockSharedPreferencesEditor.putString(TimerConstants.TIMER_THEME_NAME, any()) } returns mockSharedPreferencesEditor
+        every { mockSharedPreferencesEditor.putInt(TimerConstants.TIMER_THEME_NAME, any()) } returns mockSharedPreferencesEditor
         every { mockSharedPreferencesEditor.putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, any()) } returns mockSharedPreferencesEditor
         every { mockSharedPreferencesEditor.apply() } just runs
 
@@ -145,7 +145,7 @@ class MultiTimerModelTest : AutoCloseKoinTest() {
 
         verify {
             mockSharedPreferencesEditor.putInt(TimerConstants.PREFERENCE_SAVE_VERSION_NAME, TimerConstants.PREFERENCE_SAVE_VERSION)
-            mockSharedPreferencesEditor.putString(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)
+            mockSharedPreferencesEditor.putInt(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)
             mockSharedPreferencesEditor.putString(TimerConstants.PREFERENCE_PARAM_SEC_NAME, gson.toJson(
                 List(TimerConstants.TIMER_DEFAULT_COUNTS){TimerConstants.TIMER_DEFAULT_SECONDS}))
         }

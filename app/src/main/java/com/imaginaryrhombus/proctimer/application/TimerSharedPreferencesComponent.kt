@@ -76,7 +76,7 @@ class TimerSharedPreferencesComponent(
      */
     fun reset() {
         timerSecondsList = defaultTimerSecondsList
-        timerTheme = Companion.TimerTheme.valueOf(TimerConstants.TIMER_THEME_DEFAULT)
+        timerTheme = TimerConstants.TIMER_THEME_DEFAULT
         savedVersion = saveVersion
     }
 
@@ -102,12 +102,13 @@ class TimerSharedPreferencesComponent(
     /**
      * タイマーのテーマ設定.
      */
-    var timerTheme: TimerConstants.Companion.TimerTheme
+    var timerTheme: Int
     get() {
-        return Companion.TimerTheme.valueOf(requireNotNull(sharedPreferences
-                .getString(TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT)))
+        return sharedPreferences.getInt(
+            TimerConstants.TIMER_THEME_NAME, TimerConstants.TIMER_THEME_DEFAULT
+        )
     }
     set(value) {
-        sharedPreferences.edit().putString(TimerConstants.TIMER_THEME_NAME, value.name).apply()
+        sharedPreferences.edit().putInt(TimerConstants.TIMER_THEME_NAME, value).apply()
     }
 }
