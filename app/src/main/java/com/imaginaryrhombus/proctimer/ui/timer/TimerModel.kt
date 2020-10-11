@@ -31,23 +31,23 @@ class TimerModel(var onEndListener: OnEndedListener? = null) {
      * 残り秒数(バッキングプロパティ).
      */
     private var _seconds = 0.0f
-    set(value) {
-        field = value
-        if (field < 0.0f) field = 0.0f
-        seconds.value = field
-    }
+        set(value) {
+            field = value
+            if (field < 0.0f) field = 0.0f
+            seconds.value = field
+        }
 
     /**
      * 初期秒数.
      */
     var defaultSeconds = 0.0f
-    private set
+        private set
 
     /**
      * 現在のタイマーが終了しているか.
      */
     val isEnded: Boolean
-    get() = _seconds <= 0.0f
+        get() = _seconds <= 0.0f
 
     /**
      * 秒数を設定する.
@@ -77,10 +77,10 @@ class TimerModel(var onEndListener: OnEndedListener? = null) {
      * 動作中かのフラグ(内部管理用).
      */
     private var _isWorking = false
-    set(value) {
-        field = value
-        isWorking.value = value
-    }
+        set(value) {
+            field = value
+            isWorking.value = value
+        }
 
     /**
      * 動作中華のフラグ.

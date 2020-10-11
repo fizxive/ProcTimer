@@ -1,6 +1,5 @@
 package com.imaginaryrhombus.proctimer.constants
 
-import android.app.AppComponentFactory
 import androidx.appcompat.app.AppCompatDelegate
 
 /**

@@ -2,14 +2,14 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
 import android.media.RingtoneManager
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
@@ -56,7 +56,8 @@ class TimerFragment : Fragment() {
                             viewModel.nextTimer()
                         }
                         .setNeutralButton(
-                            R.string.button_timer_end_dialog_next_start_button) { _, _ ->
+                            R.string.button_timer_end_dialog_next_start_button
+                        ) { _, _ ->
                             ringtone.stop()
                             viewModel.nextTimer()
                             viewModel.startTick()
@@ -90,16 +91,20 @@ class TimerFragment : Fragment() {
 
         addButton.setOnClickListener {
             viewModel.addTimer {
-                Toast.makeText(context,
-                    getString(R.string.cannot_add_more_timer), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    context,
+                    getString(R.string.cannot_add_more_timer), Toast.LENGTH_SHORT
+                )
                     .show()
             }
         }
 
         removeButton.setOnClickListener {
             viewModel.removeTimer {
-                Toast.makeText(context,
-                    getString(R.string.cannot_delete_last_timer), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    context,
+                    getString(R.string.cannot_delete_last_timer), Toast.LENGTH_SHORT
+                )
                     .show()
             }
         }
@@ -113,9 +118,12 @@ class TimerFragment : Fragment() {
             pickerFragment.show(parentFragmentManager, "PickerDialog")
         }
 
-        viewModel.isTimerWorking.observe(viewLifecycleOwner, Observer {
-            setKeepScreenOn(it)
-        })
+        viewModel.isTimerWorking.observe(
+            viewLifecycleOwner,
+            Observer {
+                setKeepScreenOn(it)
+            }
+        )
     }
 
     /**
