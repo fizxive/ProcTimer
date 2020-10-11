@@ -7,8 +7,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'deploygate'
 apply plugin: 'com.google.firebase.crashlytics'
 
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-
 android {
     compileSdkVersion 30
     defaultConfig {
@@ -49,13 +47,17 @@ android {
 
 }
 
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 ktlint {
-    version = "0.22.0"
+    version = "0.39.0"
     debug = true
     verbose = true
     android = true
     outputToConsole = true
-    reporters = [ReporterType.CHECKSTYLE]
+    reporters {
+        reporter(ReporterType.CHECKSTYLE)
+    }
     ignoreFailures = false
     filter {
         exclude("**/generated/**")
