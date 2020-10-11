@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.MenuItem
@@ -127,12 +128,16 @@ class TimerActivity : AppCompatActivity(),
             val text: String,
             val mode: Int
         )
-        val modes = listOf(
+        val modes = mutableListOf(
             DarkSetting(getString(R.string.theme_light), AppCompatDelegate.MODE_NIGHT_NO),
             DarkSetting(getString(R.string.theme_dark), AppCompatDelegate.MODE_NIGHT_YES),
-            DarkSetting(getString(R.string.theme_device), AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM),
-            DarkSetting(getString(R.string.theme_battery), AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY),
+            DarkSetting(getString(R.string.theme_battery), AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            modes.add(
+                DarkSetting(getString(R.string.theme_device), AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            )
+        }
         val selections = modes.map { it.text }.toTypedArray()
         var mode = currentMode
         val currentItem = modes.indexOfFirst { it.mode == currentMode }
