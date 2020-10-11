@@ -31,5 +31,4 @@ class StabRemoteConfigClient : TimerRemoteConfigClientInterface {
 
     override val privacyPolicyUrl: String
         get() = ""
-
 }

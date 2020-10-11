@@ -27,16 +27,19 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
      * アップデートが必要な場合, コールバックが呼ばれる.
      */
     fun checkUpdateRequired() {
-        remoteConfigClient.fetchRemoteConfig(postApply = {
-            val requiredVersion = remoteConfigClient.leastVersion
+        remoteConfigClient.fetchRemoteConfig(
+            postApply = {
+                val requiredVersion = remoteConfigClient.leastVersion
 
-            if (isUpdateRequired(
-                    BuildConfig.VERSION_NAME,
-                    requiredVersion
-                )) {
-                updateRequiredListener.onUpdateRequired(remoteConfigClient.storeUrl)
+                if (isUpdateRequired(
+                        BuildConfig.VERSION_NAME,
+                        requiredVersion
+                    )
+                ) {
+                    updateRequiredListener.onUpdateRequired(remoteConfigClient.storeUrl)
+                }
             }
-        })
+        )
     }
 
     /**
