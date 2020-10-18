@@ -3,10 +3,10 @@ package com.imaginaryrhombus.proctimer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withAlpha
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.imaginaryrhombus.proctimer.application.TimerSharedPreferencesComponent
@@ -15,7 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.standalone.get
+import org.koin.core.get
 import org.koin.test.AutoCloseKoinTest
 import org.robolectric.annotation.Config
 
@@ -153,9 +153,9 @@ class TimerActivityTest : AutoCloseKoinTest() {
     private fun testTimerButtonInternal() {
         onView(withId(R.id.startButton)).perform(click())
         onView(withId(R.id.editButton)).check(matches(not(isEnabled())))
-        onView(withId(R.id.addButton)).check(matches(isEnabled()))
-        onView(withId(R.id.removeButton)).check(matches(isEnabled()))
-        onView(withId(R.id.nextButton)).check(matches(isEnabled()))
+        onView(withId(R.id.addButton)).check(matches(not(isEnabled())))
+        onView(withId(R.id.removeButton)).check(matches(not(isEnabled())))
+        onView(withId(R.id.nextButton)).check(matches(not(isEnabled())))
         onView(withId(R.id.stopButton)).check(matches(isEnabled()))
         onView(withId(R.id.resetButton)).check(matches(isEnabled()))
 
@@ -164,7 +164,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
         onView(withId(R.id.addButton)).check(matches(isEnabled()))
         onView(withId(R.id.removeButton)).check(matches(isEnabled()))
         onView(withId(R.id.nextButton)).check(matches(isEnabled()))
-        onView(withId(R.id.stopButton)).check(matches(isEnabled()))
+        onView(withId(R.id.stopButton)).check(matches(not(isEnabled())))
         onView(withId(R.id.resetButton)).check(matches(isEnabled()))
     }
 }

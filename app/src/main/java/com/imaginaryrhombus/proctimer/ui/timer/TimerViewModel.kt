@@ -5,12 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import kotlin.math.max
-import kotlin.math.ceil
-import java.util.concurrent.TimeUnit
 import com.imaginaryrhombus.proctimer.R
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import java.util.concurrent.TimeUnit
+import kotlin.math.ceil
+import kotlin.math.max
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 /**
  * タイマー用の ViewModel.
@@ -43,17 +43,17 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app), Koin
      * 動作中のタイマーのテキスト.
      */
     val nextTimerStrings: List<MutableLiveData<String>>
-    get() {
-        return _nextTimerStrings.toList()
-    }
+        get() {
+            return _nextTimerStrings.toList()
+        }
 
     /**
      * タイマーが動作しているか.
      */
     val isTimerWorking: LiveData<Boolean>
-    get() {
-        return multiTimerModel.isWorking
-    }
+        get() {
+            return multiTimerModel.isWorking
+        }
 
     /**
      * タイマーが変更されたときのリスナー.
@@ -79,7 +79,7 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app), Koin
         updateNextTimerText()
 
         currentTimerText = Transformations.switchMap(multiTimerModel.activeTimerModel) {
-                timerModel ->
+            timerModel ->
             Transformations.map(timerModel.seconds) { seconds ->
                 createTimerStringFromSeconds(seconds)
             }
@@ -176,7 +176,8 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app), Koin
                 timerText.also {
                     _nextTimerStrings[index++].postValue(
                         createTimerStringFromSeconds(
-                            checkNotNull(it.seconds.value) { "This timer is not initialized" })
+                            checkNotNull(it.seconds.value) { "This timer is not initialized" }
+                        )
                     )
                 }
             }
@@ -194,7 +195,8 @@ class TimerViewModel(private val app: Application) : AndroidViewModel(app), Koin
             val timerSeconds = max(ceil(inputSeconds).toLong(), 0)
             val minutes = TimeUnit.SECONDS.toMinutes(timerSeconds)
             val seconds = TimeUnit.SECONDS.toSeconds(
-                timerSeconds - TimeUnit.MINUTES.toSeconds(minutes))
+                timerSeconds - TimeUnit.MINUTES.toSeconds(minutes)
+            )
             return ("%02d:%02d".format(minutes, seconds))
         }
     }

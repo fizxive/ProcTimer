@@ -2,13 +2,15 @@ package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
 import android.media.RingtoneManager
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
@@ -47,13 +49,20 @@ class TimerFragment : Fragment() {
                     val ringtone = RingtoneManager.getRingtone(this@run, ringtoneUri)
                     ringtone.play()
 
-                    val alertBuilder = AlertDialog.Builder(this@run).run {
-                        setTitle(R.string.timer_end_dialog_text)
-                        setPositiveButton(R.string.button_timer_end_dialog) { _, _ ->
+                    val alertBuilder = AlertDialog.Builder(this@run)
+                        .setTitle(R.string.timer_end_dialog_text)
+                        .setPositiveButton(R.string.button_timer_end_dialog_next_button) { _, _ ->
                             ringtone.stop()
                             viewModel.nextTimer()
                         }
-                    }
+                        .setNeutralButton(
+                            R.string.button_timer_end_dialog_next_start_button
+                        ) { _, _ ->
+                            ringtone.stop()
+                            viewModel.nextTimer()
+                            viewModel.startTick()
+                        }
+
                     val dialog = alertBuilder.create()
                     dialog.setCanceledOnTouchOutside(false)
                     dialog.show()
@@ -82,16 +91,20 @@ class TimerFragment : Fragment() {
 
         addButton.setOnClickListener {
             viewModel.addTimer {
-                Toast.makeText(context,
-                    getString(R.string.cannot_add_more_timer), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    context,
+                    getString(R.string.cannot_add_more_timer), Toast.LENGTH_SHORT
+                )
                     .show()
             }
         }
 
         removeButton.setOnClickListener {
             viewModel.removeTimer {
-                Toast.makeText(context,
-                    getString(R.string.cannot_delete_last_timer), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    context,
+                    getString(R.string.cannot_delete_last_timer), Toast.LENGTH_SHORT
+                )
                     .show()
             }
         }
@@ -102,7 +115,26 @@ class TimerFragment : Fragment() {
 
         editButton.setOnClickListener {
             val pickerFragment = TimerPickerFragment()
-            pickerFragment.show(fragmentManager, "PickerDialog")
+            pickerFragment.show(parentFragmentManager, "PickerDialog")
+        }
+
+        viewModel.isTimerWorking.observe(
+            viewLifecycleOwner,
+            Observer {
+                setKeepScreenOn(it)
+            }
+        )
+    }
+
+    /**
+     * 画面の常時点灯を設定する.
+     */
+    private fun setKeepScreenOn(enabled: Boolean) {
+        val window = requireActivity().window
+        if (enabled) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 }

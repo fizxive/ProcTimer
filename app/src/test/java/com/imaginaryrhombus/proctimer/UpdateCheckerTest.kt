@@ -25,7 +25,8 @@ class UpdateCheckerTest : AutoCloseKoinTest() {
         val updateChecker = UpdateChecker(updateListener)
 
         val checkMethod = updateChecker.javaClass.getDeclaredMethod(
-            "isUpdateRequired", String::class.java, String::class.java)
+            "isUpdateRequired", String::class.java, String::class.java
+        )
 
         assertNotNull(checkMethod)
 

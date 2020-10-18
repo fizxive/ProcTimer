@@ -7,7 +7,6 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_timer_dialog_positive">Set</string>
     <string name="timer_end_dialog_text">Timer End</string>
-    <string name="button_timer_end_dialog">Next</string>
     <string name="button_reset">RESET</string>
     <string name="timer_default_text">00:00</string>
     <string name="timer_dialog_colon">:</string>
@@ -26,6 +25,8 @@
     <string name="change_theme_text">Change Theme</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="theme_device">Depends on device setting</string>
+    <string name="theme_battery">Depends on the battery saver setting</string>
     <string name="theme_dialog_title">Change Theme</string>
     <string name="reload_activity_message">"You need to reload to apply the changes. (The running timer does not stop)\n
         "
@@ -39,4 +40,6 @@
     <string name="instant_apps_privacy_toast">Please refer to the latest privacy policy from the store page during
         trial.
     </string>
+    <string name="button_timer_end_dialog_next_button">Change to next</string>
+    <string name="button_timer_end_dialog_next_start_button">Start next timer</string>
 </resources>

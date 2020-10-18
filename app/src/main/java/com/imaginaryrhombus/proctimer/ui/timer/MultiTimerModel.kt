@@ -12,7 +12,7 @@ import java.util.LinkedList
  */
 class MultiTimerModel(
     private val timerSharedPreferencesComponent: TimerSharedPreferencesComponent
-) {
+) : TimerModel.OnEndedListener {
 
     /**
      * タイマー切り替わり時のリスナーインターフェース.
@@ -41,17 +41,17 @@ class MultiTimerModel(
     private var _activeTimerModel = MutableLiveData<TimerModel>()
 
     val activeTimerModel: LiveData<TimerModel>
-    get() {
-        return _activeTimerModel
-    }
+        get() {
+            return _activeTimerModel
+        }
 
     /**
      * 全タイマーを取得する.
      */
     val timerList: List<TimerModel>
-    get() {
-        return _linkedTimerList.toList()
-    }
+        get() {
+            return _linkedTimerList.toList()
+        }
 
     /**
      * 全タイマーを順番に並べ替えたもの.
@@ -166,20 +166,12 @@ class MultiTimerModel(
      * @note この関数を通さないと終了時リスナーが働かない.
      */
     private fun createTimerModel(): TimerModel {
-        return TimerModel().apply {
-            onEndListener = object : TimerModel.OnEndedListener {
-                override fun onEnd() {
-                    onTimerEnd()
-                }
-            }
+        return TimerModel(this).apply {
             setSeconds(TimerConstants.TIMER_DEFAULT_SECONDS)
         }
     }
 
-    /**
-     * タイマー終了時の動作.
-     */
-    private fun onTimerEnd() {
+    override fun onEnd() {
         onEachTimerEndedListener?.onEnd()
     }
 
@@ -188,7 +180,8 @@ class MultiTimerModel(
      */
     private fun saveTimerPreferences() {
         timerSharedPreferencesComponent.timerSecondsList = List(timerList.size) {
-            index -> timerList[index].defaultSeconds
+            index ->
+            timerList[index].defaultSeconds
         }
     }
 
@@ -199,7 +192,7 @@ class MultiTimerModel(
     private fun restoreTimerPreferences() {
         _linkedTimerList.clear()
         timerSharedPreferencesComponent.timerSecondsList.forEach {
-            _linkedTimerList.addLast(TimerModel().apply { setSeconds(it) })
+            _linkedTimerList.addLast(createTimerModel().apply { setSeconds(it) })
         }
     }
 

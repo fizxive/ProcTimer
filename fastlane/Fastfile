@@ -1,0 +1,102 @@
+opt_out_usage
+
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(
+      task: "test",
+      flags: " --continue"
+    )
+  end
+
+  desc "Runs lint"
+  lane :lint do
+    gradle(
+      task: "lint",
+      flags: " --continue"
+    )
+  end
+
+  desc "Runs ktlint"
+  lane :ktlint do
+    gradle(
+      task: "ktlintcheck",
+      flags: " --continue"
+    )
+  end
+
+  desc "Runs all checks"
+  lane :all_checks do
+    test
+    lint
+    ktlint
+  end
+
+  desc "Submit a new Debug Build to DeployGate"
+  lane :deploygate_debug do
+    gradle(
+      task: "clean assemble",
+      build_type: "Release"
+    )
+    changelog_from_git_commits(
+      between: ["develop", "HEAD"],
+      date_format: "short",
+      merge_commit_filtering: 'exclude_merges'
+    )
+    deploygate(
+      apk: "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}",
+      message: "Git commits:\n\n#{lane_context[SharedValues::FL_CHANGELOG]}"
+    )
+  end
+
+  desc "Deploy a new version to the Google Play, Alpha track (.aab file only)"
+  lane :deploy do
+    gradle(
+      task: "bundle",
+      build_type: "Release"
+    )
+    upload_to_play_store(
+      aab: "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}",
+      skip_upload_apk: "true",
+      skip_upload_metadata: "true",
+      skip_upload_images: "true",
+      skip_upload_screenshots: "true",
+      track: "alpha"
+    )
+  end
+
+  desc "Deploy artifacts to Google Play (Overwrites old artifacts, be careful)"
+  lane :deploy_artifacts do
+    if prompt(text: "This action will overwrite old artifacts and CAN'T ROLLBACK. Are you sure?", boolean: "true", ci_input: "y")
+      upload_to_play_store(
+        skip_upload_apk: "true",
+        skip_upload_aab: "true",
+        track: "internal"
+      )
+    end
+  end
+
+  desc "Deploy everything (Overwrites old artifacts, be careful)"
+  lane :deploy_all do
+    deploy
+    deploy_artifacts
+  end
+
+end

@@ -1,8 +1,8 @@
 package com.imaginaryrhombus.proctimer.application
 
 import com.imaginaryrhombus.proctimer.BuildConfig
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * アップデートが必要かどうかを確認し、必要な場合はコンストラクタで渡したコールバックを呼ぶクラス.
@@ -27,16 +27,19 @@ class UpdateChecker(private val updateRequiredListener: UpdateRequiredListener) 
      * アップデートが必要な場合, コールバックが呼ばれる.
      */
     fun checkUpdateRequired() {
-        remoteConfigClient.fetchRemoteConfig(postApply = {
-            val requiredVersion = remoteConfigClient.leastVersion
+        remoteConfigClient.fetchRemoteConfig(
+            postApply = {
+                val requiredVersion = remoteConfigClient.leastVersion
 
-            if (isUpdateRequired(
-                    BuildConfig.VERSION_NAME,
-                    requiredVersion
-                )) {
-                updateRequiredListener.onUpdateRequired(remoteConfigClient.storeUrl)
+                if (isUpdateRequired(
+                        BuildConfig.VERSION_NAME,
+                        requiredVersion
+                    )
+                ) {
+                    updateRequiredListener.onUpdateRequired(remoteConfigClient.storeUrl)
+                }
             }
-        })
+        )
     }
 
     /**

@@ -1,0 +1,2 @@
+json_key_file("./api-8210870941917245812-701747-54c900a0f594.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.imaginaryrhombus.proctimer") # e.g. com.krausefx.app

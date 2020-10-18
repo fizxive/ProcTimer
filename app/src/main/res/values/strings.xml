@@ -6,7 +6,7 @@
     <string name="button_cancel">キャンセル</string>
     <string name="button_timer_dialog_positive">設定</string>
     <string name="timer_end_dialog_text">時間終了</string>
-    <string name="button_timer_end_dialog">次へ</string>
+    <string name="button_timer_end_dialog_next_button">次に切替</string>
     <string name="button_reset">リセット</string>
     <string name="timer_default_text">00:00</string>
     <string name="timer_dialog_colon">:</string>
@@ -25,6 +25,8 @@
     <string name="change_theme_text">テーマ切り替え</string>
     <string name="theme_light">白</string>
     <string name="theme_dark">黒</string>
+    <string name="theme_device">デバイスの設定に依存</string>
+    <string name="theme_battery">バッテリーセーバーの設定に依存</string>
     <string name="theme_dialog_title">テーマ設定</string>
     <string name="reload_activity_message">変更の適用には表示の再読込が必要です。(動作中のタイマーは停止しません)</string>
     <string name="button_reload">再読込</string>
@@ -32,4 +34,5 @@
     <string name="button_move_to_store">ストアに移動</string>
     <string name="privacy_policy_offline">プライバシーポリシー掲載先が取得できませんでした。デバイスがネットワークに接続されていることを確認してください。</string>
     <string name="instant_apps_privacy_toast">試用中はストアのページより最新版のプライバシーポリシーを参照してください。</string>
+    <string name="button_timer_end_dialog_next_start_button">次のタイマーを開始</string>
 </resources>

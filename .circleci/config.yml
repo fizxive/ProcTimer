@@ -6,8 +6,7 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-28
   environment:
-    JVM_OPTS: -Xms3g -Xmx3g
-    GRADLE_OPTS: -Dorg.gradle.daemon=false
+    GRADLE_OPTS: -Dorg.gradle.daemon=false -Xms2g -Xmx2g
 
 jobs:
     checkout:
@@ -19,11 +18,42 @@ jobs:
                 paths:
                     - .
 
-    decode_json:
+    bundle_install:
         <<: *defaults
         steps:
             - attach_workspace:
                 at: .
+            - restore_cache:
+                keys:
+                    - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+                    - gem-cache-v1-{{ arch }}-{{ .Branch }}
+                    - gem-cache-v1
+            - run:
+                name: Bundle Install
+                command: bundle install --path vendor/bundle --clean --jobs=2 --retry=3
+            - save_cache:
+                key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+                paths:
+                    - vendor/bundle
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    decode_files:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Create app/.signing directory
+                command: mkdir -p app/.signing
+            - run:
+                name: Decode signing setting
+                command: echo $SIGNING_GRADLE | base64 --decode --ignore-garbage > app/.signing/release.gradle
+            - run:
+                name: Decode java key store
+                command: echo $SIGNING_JKS | base64 --decode --ignore-garbage > app/.signing/ProcTimer.jks
             - run:
                 name: Decode json
                 command: echo $GOOGLE_SERVICES_JSON | base64 --decode --ignore-garbage > app/google-services.json
@@ -40,7 +70,7 @@ jobs:
             - restore_cache:
                 keys:
                     - jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
@@ -51,36 +81,27 @@ jobs:
                 paths:
                     - ~/.gradle
                 key: jars-cache-v1-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
 
     check:
         <<: *defaults
         steps:
             - attach_workspace:
                 at: .
-            # for danger
-            - restore_cache:
-                keys:
-                    - gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-                    - gem-cache-v1-{{ arch }}-{{ .Branch }}
-                    - gem-cache-v1
-            - run:
-                name: Bundle Install
-                command: bundle install --path vendor/bundle --clean --jobs=2 --retry=3
-            - save_cache:
-                key: gem-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-                paths:
-                    - vendor/bundle
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
-            # Run Tests and store results.
             - run:
-                name: Run Tests
-                command: ./gradlew lint test ktlintcheck
+                name: Run all check
+                command: bundle exec fastlane all_checks
             - run:
                 name: Run Danger
                 command: bundle exec danger
+                when: always
             - store_artifacts:
                 path: app/build/reports
                 destination: reports
@@ -91,58 +112,55 @@ jobs:
                 paths:
                     - .
 
-    build:
-        <<: *defaults
-        steps:
-            - attach_workspace:
-                at: .
-            # add permissison avoid failre
-            - run:
-                name: Chmod permissions
-                command: sudo chmod +x ./gradlew
-            # build
-            - run:
-                name: Build
-                command: ./gradlew assembleDebug
-            - store_artifacts:
-                path: app/build/outputs/apk/app-debug.apk
-                destination: app-debug.apk
-            - persist_to_workspace:
-                root: .
-                paths:
-                    - .
-
     deploy_debug:
         <<: *defaults
         steps:
             - attach_workspace:
                 at: .
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
             # build
             - run:
-                name: Build
-                command: ./gradlew uploadDeployGateDebug
+                name: Build and Upload to DeployGate
+                command: bundle exec fastlane deploygate_debug
             - persist_to_workspace:
                 root: .
                 paths:
                     - .
 
-    deploy_release:
+    deploy_play_store:
         <<: *defaults
         steps:
             - attach_workspace:
                 at: .
-            # add permissison avoid failre
+            # add permission avoid failure
             - run:
                 name: Chmod permissions
                 command: sudo chmod +x ./gradlew
             # build
             - run:
-                name: Build
-                command: ./gradlew uploadDeployGateRelease
+                name: Deploy to Play Store Internal track
+                command: bundle exec fastlane deploy
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    deploy_play_store_artifacts:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: .
+            # add permission avoid failure
+            - run:
+                name: Chmod permissions
+                command: sudo chmod +x ./gradlew
+            # build
+            - run:
+                name: Deploy artifacts to Play Store
+                command: bundle exec fastlane deploy_artifacts
             - persist_to_workspace:
                 root: .
                 paths:
@@ -153,33 +171,22 @@ workflows:
     build:
         jobs:
             - checkout
-            - decode_json:
+            - decode_files:
                 requires:
                     - checkout
+            - bundle_install:
+                requires:
+                    - decode_files
             - download_dependencies:
                 requires:
-                    - checkout
-            - build:
-                requires:
-                    - decode_json
-                    - download_dependencies
+                    - bundle_install
             - check:
                 requires:
-                    - build
+                    - download_dependencies
             - deploy_debug:
                 requires:
                     - check
                 filters:
                     branches:
                         only:
-                            - develop
-                            - /develop.+/
-            - deploy_release:
-                requires:
-                    - check
-                filters:
-                    branches:
-                        only:
                             - master
-
-

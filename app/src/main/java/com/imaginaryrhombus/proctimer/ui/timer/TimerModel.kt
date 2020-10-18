@@ -1,12 +1,14 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 
 /**
  * 一つ一つのタイマー用モデル.
+ * @param onEndListener 子のタイマー終了時のコールバック.
  */
-class TimerModel {
+class TimerModel(var onEndListener: OnEndedListener? = null) {
 
     /**
      * タイマー終了時リスナー.
@@ -29,28 +31,23 @@ class TimerModel {
      * 残り秒数(バッキングプロパティ).
      */
     private var _seconds = 0.0f
-    set(value) {
-        field = value
-        if (field < 0.0f) field = 0.0f
-        seconds.value = field
-    }
+        set(value) {
+            field = value
+            if (field < 0.0f) field = 0.0f
+            seconds.value = field
+        }
 
     /**
      * 初期秒数.
      */
     var defaultSeconds = 0.0f
-    private set
+        private set
 
     /**
      * 現在のタイマーが終了しているか.
      */
     val isEnded: Boolean
-    get() = _seconds <= 0.0f
-
-    /**
-     * 終了時のコールバック.
-     */
-    var onEndListener: OnEndedListener? = null
+        get() = _seconds <= 0.0f
 
     /**
      * 秒数を設定する.
@@ -69,7 +66,7 @@ class TimerModel {
     /**
      * 時間経過用のハンドラ.
      */
-    private val tickHandler = Handler()
+    private val tickHandler = Handler(Looper.getMainLooper())
 
     /**
      * 時間経過制御用クラス.
@@ -80,10 +77,10 @@ class TimerModel {
      * 動作中かのフラグ(内部管理用).
      */
     private var _isWorking = false
-    set(value) {
-        field = value
-        isWorking.value = value
-    }
+        set(value) {
+            field = value
+            isWorking.value = value
+        }
 
     /**
      * 動作中華のフラグ.
