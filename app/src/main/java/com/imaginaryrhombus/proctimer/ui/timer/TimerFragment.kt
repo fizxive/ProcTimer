@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
@@ -91,21 +91,21 @@ class TimerFragment : Fragment() {
 
         addButton.setOnClickListener {
             viewModel.addTimer {
-                Toast.makeText(
-                    context,
-                    getString(R.string.cannot_add_more_timer), Toast.LENGTH_SHORT
-                )
-                    .show()
+                Snackbar.make(
+                    requireView(),
+                    R.string.cannot_add_more_timer,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
 
         removeButton.setOnClickListener {
             viewModel.removeTimer {
-                Toast.makeText(
-                    context,
-                    getString(R.string.cannot_delete_last_timer), Toast.LENGTH_SHORT
-                )
-                    .show()
+                Snackbar.make(
+                    requireView(),
+                    R.string.cannot_delete_last_timer,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
 
