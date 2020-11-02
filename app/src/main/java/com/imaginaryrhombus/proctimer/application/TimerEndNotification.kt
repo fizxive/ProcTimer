@@ -6,9 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Message
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LiveData
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.TimerActivity
 
@@ -49,7 +47,7 @@ class TimerEndNotification(context: Context) {
                 .getActivity(context, 0, intent, 0)
 
             setContentIntent(pendingIntent)
-    }
+        }
 
     /**
      * 通知が見えているかどうか.
@@ -73,7 +71,7 @@ class TimerEndNotification(context: Context) {
      * 通知を表示、更新する.
      * @param message 通知に表示するメッセージ.
      */
-    fun open(message: String){
+    fun open(message: String) {
         notificationCompatBuilder.setContentText(message)
         notificationManager.notify(notificationTagId, notificationCompatBuilder.build())
     }
@@ -81,7 +79,7 @@ class TimerEndNotification(context: Context) {
     /**
      * 通知を閉じる
      */
-    fun close(){
+    fun close() {
         notificationManager.cancel(notificationTagId)
     }
 }

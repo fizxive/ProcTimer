@@ -1,11 +1,9 @@
 package com.imaginaryrhombus.proctimer.ui.timer
 
 import android.app.AlertDialog
-import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Bundle
 import android.os.Handler
-import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +14,13 @@ import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.imaginaryrhombus.proctimer.R
 import com.imaginaryrhombus.proctimer.application.TimerEndNotification
-import com.imaginaryrhombus.proctimer.application.TimerNotification
 import com.imaginaryrhombus.proctimer.databinding.TimerFragmentBinding
 import com.imaginaryrhombus.proctimer.ui.timerpicker.TimerPickerFragment
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.android.synthetic.main.timer_fragment.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.*
 
 class TimerFragment : Fragment() {
 
@@ -64,14 +60,21 @@ class TimerFragment : Fragment() {
                         val timerEndNotification = TimerEndNotification(requireContext())
                         val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                         val endTimeString = dateFormat.format(Date())
-                        timerEndNotification.open(getString(R.string.notify_ended).format(endTimeString))
-                        Handler(mainLooper).postDelayed({
-                            ringtone.stop()
-                        }, 3000)
+                        timerEndNotification.open(
+                            getString(R.string.notify_ended).format(endTimeString)
+                        )
+                        Handler(mainLooper).postDelayed(
+                            {
+                                ringtone.stop()
+                            },
+                            3000
+                        )
                     } else {
                         val alertBuilder = AlertDialog.Builder(this@run)
                             .setTitle(R.string.timer_end_dialog_text)
-                            .setPositiveButton(R.string.button_timer_end_dialog_next_button) { _, _ ->
+                            .setPositiveButton(
+                                R.string.button_timer_end_dialog_next_button
+                            ) { _, _ ->
                                 ringtone.stop()
                                 viewModel.nextTimer()
                             }

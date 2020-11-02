@@ -47,12 +47,12 @@ class TimerNotification(context: Context) {
                 .getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
             setContentIntent(pendingIntent)
-    }
+        }
 
     /**
      * LiveData に対して設定する監視.
      */
-    private val timerObserver : (Float) -> Unit = { seconds : Float ->
+    private val timerObserver: (Float) -> Unit = { seconds: Float ->
         notificationCompatBuilder.setContentText(seconds.toString())
         if (isVisible) {
             notifyInternal()
@@ -81,7 +81,7 @@ class TimerNotification(context: Context) {
      * 通知を表示、更新する.
      * @param liveData 通知に表示するデータ.
      */
-    fun open(liveData: LiveData<Float>){
+    fun open(liveData: LiveData<Float>) {
         notifyInternal()
         liveData.observeForever(timerObserver)
         isVisible = true
@@ -91,7 +91,7 @@ class TimerNotification(context: Context) {
      * 通知を閉じる
      * @param liveData 通知に表示していたデータ.
      */
-    fun close(liveData: LiveData<Float>){
+    fun close(liveData: LiveData<Float>) {
         cancelInternal()
         liveData.removeObserver(timerObserver)
         isVisible = false
