@@ -22,7 +22,7 @@ platform :android do
   lane :test do
     gradle(
       task: "test",
-      flags: " --continue"
+      flags: "--continue"
     )
   end
 
@@ -30,7 +30,7 @@ platform :android do
   lane :lint do
     gradle(
       task: "lint",
-      flags: " --continue"
+      flags: "--continue"
     )
   end
 
@@ -38,15 +38,16 @@ platform :android do
   lane :ktlint do
     gradle(
       task: "ktlintcheck",
-      flags: " --continue"
+      flags: "--continue"
     )
   end
 
   desc "Runs all checks"
   lane :all_checks do
-    test
-    lint
-    ktlint
+    gradle(
+      tasks: ["lint", "ktlintcheck", "test"],
+      flags: "--continue"
+    )
   end
 
   desc "Submit a new Debug Build to DeployGate"
