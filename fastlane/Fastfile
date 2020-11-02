@@ -44,9 +44,9 @@ platform :android do
 
   desc "Runs all checks"
   lane :all_checks do
-    test
     lint
     ktlint
+    test
   end
 
   desc "Submit a new Debug Build to DeployGate"
