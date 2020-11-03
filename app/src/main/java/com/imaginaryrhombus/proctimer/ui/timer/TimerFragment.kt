@@ -54,7 +54,7 @@ class TimerFragment : Fragment() {
                     val ringtone = RingtoneManager.getRingtone(this@run, ringtoneUri)
                     ringtone.play()
 
-                    if (binding.continueBox?.isChecked == true) {
+                    if (binding.continueBox.isChecked) {
                         viewModel.nextTimer()
                         viewModel.startTick()
                         val timerEndNotification = TimerEndNotification(requireContext())
