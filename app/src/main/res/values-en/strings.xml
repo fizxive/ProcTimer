@@ -42,4 +42,6 @@
     </string>
     <string name="button_timer_end_dialog_next_button">Change to next</string>
     <string name="button_timer_end_dialog_next_start_button">Start next timer</string>
+    <string name="checkbox_continue">Auto start next timer</string>
+    <string name="notify_ended">Timer ended at %s</string>
 </resources>

@@ -35,4 +35,6 @@
     <string name="privacy_policy_offline">プライバシーポリシー掲載先が取得できませんでした。デバイスがネットワークに接続されていることを確認してください。</string>
     <string name="instant_apps_privacy_toast">試用中はストアのページより最新版のプライバシーポリシーを参照してください。</string>
     <string name="button_timer_end_dialog_next_start_button">次のタイマーを開始</string>
+    <string name="checkbox_continue">自動的に次のタイマーを開始</string>
+    <string name="notify_ended">%s にタイマーが終了しました</string>
 </resources>

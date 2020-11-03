@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import androidx.test.espresso.matcher.ViewMatchers.withAlpha
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -125,6 +126,7 @@ class TimerActivityTest : AutoCloseKoinTest() {
         onView(withId(R.id.nextTimerText1)).check(matches(withText("01:00")))
         onView(withId(R.id.nextTimerText2)).check(matches(withText("--:--")))
         onView(withId(R.id.nextTimerText3)).check(matches(withText("--:--")))
+        onView(withId(R.id.continueBox)).check(matches(isNotChecked()))
     }
 
     private fun testAddTimerInternal() {
